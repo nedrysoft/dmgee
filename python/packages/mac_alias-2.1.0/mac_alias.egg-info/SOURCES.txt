@@ -1,0 +1,11 @@
+README.rst
+setup.py
+mac_alias/__init__.py
+mac_alias/alias.py
+mac_alias/bookmark.py
+mac_alias/osx.py
+mac_alias/utils.py
+mac_alias.egg-info/PKG-INFO
+mac_alias.egg-info/SOURCES.txt
+mac_alias.egg-info/dependency_links.txt
+mac_alias.egg-info/top_level.txt

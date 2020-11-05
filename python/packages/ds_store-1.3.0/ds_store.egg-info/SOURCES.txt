@@ -1,0 +1,11 @@
+README.rst
+setup.py
+ds_store/__init__.py
+ds_store/buddy.py
+ds_store/store.py
+ds_store.egg-info/PKG-INFO
+ds_store.egg-info/SOURCES.txt
+ds_store.egg-info/dependency_links.txt
+ds_store.egg-info/requires.txt
+ds_store.egg-info/top_level.txt
+scripts/ds_store

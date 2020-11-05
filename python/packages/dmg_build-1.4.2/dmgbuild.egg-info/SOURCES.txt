@@ -1,0 +1,15 @@
+README.rst
+setup.py
+dmgbuild/__init__.py
+dmgbuild/badge.py
+dmgbuild/colors.py
+dmgbuild/core.py
+dmgbuild/licensing.py
+dmgbuild/resources.py
+dmgbuild.egg-info/PKG-INFO
+dmgbuild.egg-info/SOURCES.txt
+dmgbuild.egg-info/dependency_links.txt
+dmgbuild.egg-info/requires.txt
+dmgbuild.egg-info/top_level.txt
+dmgbuild/resources/builtin-arrow.tiff
+scripts/dmgbuild
