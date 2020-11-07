@@ -26,8 +26,8 @@
 #include <QDebug>
 
 Nedrysoft::Ribbon::RibbonWidget::RibbonWidget(QWidget *parent) :
-    QTabWidget(parent)
-{
+    QTabWidget(parent) {
+
     m_tabBar = new RibbonTabBar(this);
 
     setTabBar(m_tabBar);
@@ -40,8 +40,7 @@ Nedrysoft::Ribbon::RibbonWidget::RibbonWidget(QWidget *parent) :
 #endif
 }
 
-void Nedrysoft::Ribbon::RibbonWidget::paintEvent(QPaintEvent *event)
-{
+void Nedrysoft::Ribbon::RibbonWidget::paintEvent(QPaintEvent *event) {
     Q_UNUSED(event)
     QPainter painter(this);
     auto rect = this->rect();

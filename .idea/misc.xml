@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CMakeWorkspace" PROJECT_DIR="$PROJECT_DIR$" />
+  <component name="CidrRootsConfiguration">
+    <excludeRoots>
+      <file path="$PROJECT_DIR$/bin" />
+      <file path="$PROJECT_DIR$/python" />
+    </excludeRoots>
+  </component>
   <component name="ProjectPlainTextFileTypeManager">
     <file url="file://$PROJECT_DIR$/src/app.qrc" />
   </component>

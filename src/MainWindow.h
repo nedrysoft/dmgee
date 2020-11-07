@@ -22,10 +22,10 @@
 #ifndef NEDRYSOFT_MAINWINDOW_H
 #define NEDRYSOFT_MAINWINDOW_H
 
-#include <QMainWindow>
-#include <QFileOpenEvent>
-#include "SplashScreen.h"
 #include "Image.h"
+#include "SplashScreen.h"
+#include <QFileOpenEvent>
+#include <QMainWindow>
 
 namespace Ui {
     class MainWindow;
@@ -38,68 +38,80 @@ namespace Nedrysoft {
      * @details             Provides the main window for the application.
      */
     class MainWindow :
-            public QMainWindow
-    {
-        private:
-            Q_OBJECT
+        public QMainWindow {
+            private:
+                Q_OBJECT
 
-        public:
-            /**
-             * @brief           Constructs the main window.
-             *
-             * @param[in]       splashScreen is a pointer to the splashscreen that was created
-             *                  by the main thread at startup.
-             */
-            MainWindow(Nedrysoft::SplashScreen *splashScreen);
+            public:
+                /**
+                 * @brief           Constructs the main window.
+                 *
+                 * @param[in]       splashScreen is a pointer to the splashscreen that was created
+                 *                  by the main thread at startup.
+                 */
+                MainWindow(Nedrysoft::SplashScreen *splashScreen);
 
-            /**
-             * @brief           Destroys the main window.
-             */
-            ~MainWindow();
+                /**
+                 * @brief           Destroys the main window.
+                 */
+                ~MainWindow();
 
-            /**
-             * @brief           Handles opening links via URL.
-             *
-             * @param[in]       url is the requested url.
-             */
-            void handleOpenByUrl(const QUrl &url);
+                /**
+                 * @brief           Handles opening links via URL.
+                 *
+                 * @param[in]       url is the requested url.
+                 */
+                void handleOpenByUrl(const QUrl &url);
 
-            /**
-             * @brief           Returns the last instance of the class
-             *
-             * @returns         a pointer to the MainWindow instance.
-             */
-            static MainWindow *getInstance();
+                /**
+                 * @brief           Returns the last instance of the class
+                 *
+                 * @returns         a pointer to the MainWindow instance.
+                 */
+                static MainWindow *getInstance();
 
-        protected:
+            protected:
+                /**
+                 * @brief           Event handler for window close event
+                 *
+                 * @param[in]       closeEvent contains the information about the event including accpt/regect functions
+                 */
+                virtual void closeEvent(QCloseEvent *closeEvent) override;
 
-            /**
-             * @brief           Event handler for window close event
-             *
-             * @param[in]       closeEvent contains the information about the event including accpt/regect functions
-             */
-            virtual void closeEvent(QCloseEvent *closeEvent) override;
+            private:
+                /**
+                 * @brief           Event filter mathod
+                 *
+                 * @details         This event filter is using qApp as a target, this allows us to receive events from the
+                 *                  operating system such as opening registered file types or handling the regex101:// URL
+                 *                  scheme.
+                 *
+                 * @param[in]       obj is the object that has caused this event
+                 * @param[in]       event contains the details of the event, such as file name or the url path.
+                 *
+                 * @returns         true if the event is handled; otherwise false.
+                 */
+                Q_SLOT bool eventFilter(QObject *obj, QEvent *event) override;
 
-        private:
-            /**
-             * @brief           Event filter mathod
-             *
-             * @details         This event filter is using qApp as a target, this allows us to receive events from the
-             *                  operating system such as opening registered file types or handling the regex101:// URL
-             *                  scheme.
-             *
-             * @param[in]       obj is the object that has caused this event
-             * @param[in]       event contains the details of the event, such as file name or the url path.
-             *
-             * @returns         true if the event is handled; otherwise false.
-             */
-            Q_SLOT bool eventFilter(QObject *obj, QEvent *event) override;
+                /**
+                 * @brief           Processes the DMG background image with open cv
+                 *
+                 * @details         Attempts to locate points of interest in the image which should be considered
+                 *                  as snap points.
+                 */
+                void processBackground();
 
-        private:
-            Ui::MainWindow *ui;                                     //! ui class for the main window
-            static MainWindow *m_instance;                          //! instance of the main window
-            Image *m_backgroundImage;
-            QPixmap m_backgroundPixmap;
+            private:
+                Ui::MainWindow *ui;                                     //! ui class for the main window
+                static MainWindow *m_instance;                          //! instance of the main window
+                int m_minimumPixelArea;                                 //! minimum pixel area for a feature
+                Image m_backgroundImage;                                //! the background image in our intermediate format
+                QPixmap m_backgroundPixmap;                             //! the background image as a cached pixmap
+                QList<QPointF> m_centroids;                             //! list of centroids discovered from image
+
+                QSize m_grid;                                           //! grid size
+                bool m_gridIsVisible;                                   //! grid visiblity
+                bool m_gridShouldSnap;                                  //! whether the grid should be used to snap to
     };
 }
 

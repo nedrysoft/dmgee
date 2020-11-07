@@ -22,60 +22,51 @@
 #include <QtPlugin>
 
 RibbonGroupPlugin::RibbonGroupPlugin(QObject *parent)
-    : QObject(parent)
-{
+    : QObject(parent) {
 }
 
-void RibbonGroupPlugin::initialize(QDesignerFormEditorInterface * /* core */)
-{
+void RibbonGroupPlugin::initialize(QDesignerFormEditorInterface *core) {
+    Q_UNUSED(core);
+
     if (initialized)
         return;
 
     initialized = true;
 }
 
-bool RibbonGroupPlugin::isInitialized() const
-{
+bool RibbonGroupPlugin::isInitialized() const {
     return initialized;
 }
 
-QWidget *RibbonGroupPlugin::createWidget(QWidget *parent)
-{
+QWidget *RibbonGroupPlugin::createWidget(QWidget *parent) {
     return new Nedrysoft::Ribbon::RibbonGroup(parent);
 }
 
-QString RibbonGroupPlugin::name() const
-{
+QString RibbonGroupPlugin::name() const {
     return QStringLiteral("Nedrysoft::Ribbon::RibbonGroup");
 }
 
-QString RibbonGroupPlugin::group() const
-{
+QString RibbonGroupPlugin::group() const {
     return QStringLiteral("Ribbon Widgets");
 }
 
-QIcon RibbonGroupPlugin::icon() const
-{
+QIcon RibbonGroupPlugin::icon() const {
     return QIcon();
 }
 
-QString RibbonGroupPlugin::toolTip() const
-{
+QString RibbonGroupPlugin::toolTip() const {
     return QString();
 }
 
-QString RibbonGroupPlugin::whatsThis() const
-{
+QString RibbonGroupPlugin::whatsThis() const {
     return QString();
 }
 
-bool RibbonGroupPlugin::isContainer() const
-{
+bool RibbonGroupPlugin::isContainer() const {
     return true;
 }
 
-QString RibbonGroupPlugin::domXml() const
-{
+QString RibbonGroupPlugin::domXml() const {
     return "<ui language=\"c++\" displayname=\"Ribbon Group\">\n"
            " <widget class=\"Nedrysoft::Ribbon::RibbonGroup\" name=\"ribbonGroup\">\n"
 
@@ -96,7 +87,6 @@ QString RibbonGroupPlugin::domXml() const
            "</ui>\n";
 }
 
-QString RibbonGroupPlugin::includeFile() const
-{
+QString RibbonGroupPlugin::includeFile() const {
     return QStringLiteral("Ribbon/RibbonGroup.h");
 }

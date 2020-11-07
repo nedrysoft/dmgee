@@ -24,8 +24,15 @@
 #include <IL/ilu.h>
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
-
 #include <math.h>
+
+Nedrysoft::Image::Image() :
+        m_data(nullptr),
+        m_width(0),
+        m_height(0),
+        m_stride(0),
+        m_imageId(0) {
+}
 
 Nedrysoft::Image::Image(QString filename, bool loadContent, int width, int height) :
         m_data(nullptr),

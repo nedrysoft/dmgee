@@ -24,8 +24,6 @@
 
 #include <QSplashScreen>
 
-class QLabel;
-
 namespace Nedrysoft {
     /**
      * @brief               RegExSplashScreen class
@@ -33,32 +31,31 @@ namespace Nedrysoft {
      * @details             A dialog box that provides a custom splash screen.
      */
     class SplashScreen :
-            public QSplashScreen
-    {
-        private:
-            Q_OBJECT
+        public QSplashScreen {
+            private:
+                Q_OBJECT
 
-        public:
-            /**
-             * @brief           Constructs a splash screen dialog.
-             */
-            SplashScreen();
+            public:
+                /**
+                 * @brief           Constructs a splash screen dialog.
+                 */
+                SplashScreen();
 
-            /**
-             * @brief           Destructor for the splash screen dialog.
-             */
-            ~SplashScreen();
+                /**
+                 * @brief           Destructor for the splash screen dialog.
+                 */
+                ~SplashScreen();
 
-        protected:
-            /**
-             * @brief           Draw contents of splash screen
-             *
-             * @details         Draws the splash screen, uses the default implementation and then overlays version
-             *                  information over the top
-             *
-             * @param[in]       painter is the painter to draw to.
-             */
-            virtual void drawContents(QPainter *painter) override;
+            protected:
+                /**
+                 * @brief           Draw contents of splash screen
+                 *
+                 * @details         Draws the splash screen, uses the default implementation and then overlays version
+                 *                  information over the top
+                 *
+                 * @param[in]       painter is the painter to draw to.
+                 */
+                virtual void drawContents(QPainter *painter) override;
     };
 }
 

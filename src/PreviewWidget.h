@@ -22,26 +22,64 @@
 #ifndef NEDRYSOFT_PREVIEWWIDGET_H
 #define NEDRYSOFT_PREVIEWWIDGET_H
 
-#include <QWidget>
 #include <QPixmap>
+#include <QWidget>
 
 namespace Nedrysoft {
-
+    /**
+     * @brief       Widget that draws a preview of the DMG (including snap targets)
+     */
     class PreviewWidget :
-            public QWidget
-    {
-        Q_OBJECT
+        public QWidget {
+            private:
+                Q_OBJECT
 
-        public:
-            PreviewWidget(QWidget *parent = nullptr);
+            public:
+                /**
+                 * @brief           Constructs a preview widget.
+                 *
+                 * @param[in]       parent is the the owner of the dialog.
+                 */
+                PreviewWidget(QWidget *parent = nullptr);
 
-            void setPixmap(QPixmap pixmap);
-        protected:
+                /**
+                 * @brief           Sets the background pixmap to be used
+                 *
+                 * @param[in]       pixmap is the pixmap to be used as the background image
+                 */
+                void setPixmap(QPixmap pixmap);
 
-            void paintEvent(QPaintEvent *event) override;
+                /**
+                 * @brief           Sets the snapping centroid locations
+                 *
+                 * @param[in]       centroids list of snap points
+                 */
+                void setCentroids(QList<QPointF> centroids);
 
-        private:
-            QPixmap m_pixmap;
+                /**
+                 * @brief           Sets the grid for the widget
+                 *
+                 * @param[in]       size is the pitch of the grid
+                 * @param[in]       visible true if grid shown; otherwise false.
+                 * @paramin]        snap true if cursor should snap to grid; otherwise false.
+                 */
+                void setGrid(QSize size, bool visible, bool snap);
+
+            protected:
+                /**
+                 * @brief           Handles the repainting of the image
+                 * @param[in]       event contains the details about the paint event request
+                 */
+                void paintEvent(QPaintEvent *event) override;
+
+            private:
+                QPixmap m_pixmap;                           //! the background image pixmap
+                QPixmap m_targetPixmap;                     //! target snap location image
+                QList<QPointF> m_centroids;                 //! centroid points
+
+                QSize m_gridSize;                           //! grid size
+                bool m_gridIsVisible;                       //! whether the grid is drawn
+                bool m_gridShouldSNap;                      //! whether the cursor should snap to the grid
     };
 }
 

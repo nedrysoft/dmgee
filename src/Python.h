@@ -22,19 +22,21 @@
 #ifndef NEDRYSOFT_PYTHON_H
 #define NEDRYSOFT_PYTHON_H
 
-#define PY_SSIZE_T_CLEAN
-#include <Python.h>
-#include <string>
-#include <list>
 #include <QString>
 #include <QStringList>
+
+//! @note these must be included in this order otherwise compilation will fail
+
+#include <list>
+#include <string>
+#define PY_SSIZE_T_CLEAN
+#include <Python.h>
 
 namespace Nedrysoft {
     /**
      * @brief       Convenience class for executing python code using libpython
      */
-    class Python
-    {
+    class Python {
         public:
             /**
              * @brief       Constructs a python instance

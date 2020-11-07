@@ -13,5 +13,12 @@
         <file>../assets/Open_Sans/OpenSans-Regular.ttf</file>
         <file>../assets/Open_Sans/OpenSans-SemiBold.ttf</file>
         <file>../assets/Open_Sans/OpenSans-SemiBoldItalic.ttf</file>
+
+        <file>../assets/target.png</file>
+
+        <file>../assets/noun_Arrow_3439025.png</file>
+        <file>../assets/noun_Arrow_3439356.png</file>
+        <file>../assets/noun_Arrow_3439025-inverted.png</file>
+        <file>../assets/noun_Arrow_3439356-inverted.png</file>
     </qresource>
 </RCC>

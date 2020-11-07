@@ -28,8 +28,7 @@ namespace Nedrysoft {
     /**
      * @brief   Provides methods to get the system font.
      */
-    class Font
-    {
+    class Font {
         public:
             /**
              * @brief       Gets the name of the font used in the GUI of macOS

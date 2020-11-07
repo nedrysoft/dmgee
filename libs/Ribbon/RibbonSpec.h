@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef NEDRYSOFT_RIBBON_RIBBONSPEC_H
-#define NEDRYSOFT_RIBBON_RIBBONSPEC_H
+#ifndef NEDRYSOFT_RIBBONSPEC_H
+#define NEDRYSOFT_RIBBONSPEC_H
 
 #if defined(RIBBON_DESIGNER_EXPORT)
 #include <QtUiPlugin/QDesignerExportWidget>
@@ -31,4 +31,4 @@
 #endif
 #endif
 
-#endif // NEDRYSOFT_RIBBON_RIBBONSPEC_H
+#endif // NEDRYSOFT_RIBBONSPEC_H

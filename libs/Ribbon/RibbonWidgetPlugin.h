@@ -17,33 +17,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef NEDRYSOFT_RIBBON_RIBBONWIDGETPLUGIN_H
-#define NEDRYSOFT_RIBBON_RIBBONWIDGETPLUGIN_H
+#ifndef NEDRYSOFT_RIBBONWIDGETPLUGIN_H
+#define NEDRYSOFT_RIBBONWIDGETPLUGIN_H
 
 #include <QtUiPlugin/QDesignerCustomWidgetInterface>
 
-class RibbonWidgetPlugin : public QObject, public QDesignerCustomWidgetInterface
-{
-    Q_OBJECT
-    Q_INTERFACES(QDesignerCustomWidgetInterface)
+class RibbonWidgetPlugin :
+    public QObject,
+    public QDesignerCustomWidgetInterface {
+        private:
+            Q_OBJECT
+            Q_INTERFACES(QDesignerCustomWidgetInterface)
 
-public:
-    explicit RibbonWidgetPlugin(QObject *parent = nullptr);
+        public:
+            explicit RibbonWidgetPlugin(QObject *parent = nullptr);
 
-    bool isContainer() const override;
-    bool isInitialized() const override;
-    QIcon icon() const override;
-    QString domXml() const override;
-    QString group() const override;
-    QString includeFile() const override;
-    QString name() const override;
-    QString toolTip() const override;
-    QString whatsThis() const override;
-    QWidget *createWidget(QWidget *parent) override;
-    void initialize(QDesignerFormEditorInterface *core) override;
+            bool isContainer() const override;
+            bool isInitialized() const override;
+            QIcon icon() const override;
+            QString domXml() const override;
+            QString group() const override;
+            QString includeFile() const override;
+            QString name() const override;
+            QString toolTip() const override;
+            QString whatsThis() const override;
+            QWidget *createWidget(QWidget *parent) override;
+            void initialize(QDesignerFormEditorInterface *core) override;
 
-private:
-    bool initialized = false;
+        private:
+            bool initialized = false;
 };
 
-#endif // NEDRYSOFT_RIBBON_RIBBONWIDGETPLUGIN_H
+#endif // NEDRYSOFT_RIBBONWIDGETPLUGIN_H

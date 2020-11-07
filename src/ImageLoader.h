@@ -25,8 +25,11 @@
 #include <QString>
 
  namespace Nedrysoft {
-     class ImageLoader
-     {
+     /**
+      * @brief      Provides functions for loading imagee nativelt on macOS, it uses NSImage to load the image
+      *             or to obtain the image from a given filename or type (i.e the Applications folder image)
+      */
+     class ImageLoader {
          public:
              /**
              * @brief       loads an image via NSImage and returns a TIFF

@@ -17,14 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "RibbonFontManager.h"
 #include "RibbonTabBar.h"
 #include "RibbonWidget.h"
-#include "RibbonFontManager.h"
 #include "ThemeSupport.h"
+#include <QApplication>
+#include <QDebug>
 #include <QPaintEvent>
 #include <QPainter>
-#include <QDebug>
-#include <QApplication>
 #include <QWindow>
 
 #if defined(Q_OS_MACOS)
@@ -34,8 +34,8 @@ constexpr int DefaultFontSize = 10;
 #endif
 
 Nedrysoft::Ribbon::RibbonTabBar::RibbonTabBar(QWidget *parent) :
-    QTabBar(parent)
-{
+    QTabBar(parent) {
+
     auto fontManager = Nedrysoft::Ribbon::RibbonFontManager::getInstance();
 
     m_normalFont = QFont(fontManager->normalFont(), DefaultFontSize);
@@ -50,8 +50,7 @@ Nedrysoft::Ribbon::RibbonTabBar::RibbonTabBar(QWidget *parent) :
 #endif
 }
 
-bool Nedrysoft::Ribbon::RibbonTabBar::eventFilter(QObject *obj, QEvent *event)
-{
+bool Nedrysoft::Ribbon::RibbonTabBar::eventFilter(QObject *obj, QEvent *event) {
     Q_UNUSED(obj)
 
     static auto lastTabIndex = -1;
@@ -100,8 +99,7 @@ bool Nedrysoft::Ribbon::RibbonTabBar::eventFilter(QObject *obj, QEvent *event)
     return false;
 }
 
-QSize Nedrysoft::Ribbon::RibbonTabBar::tabSizeHint(int index) const
-{
+QSize Nedrysoft::Ribbon::RibbonTabBar::tabSizeHint(int index) const {
     auto size = QTabBar::tabSizeHint(index);
 
     size.setHeight(Ribbon::TabBarHeight);
@@ -109,8 +107,7 @@ QSize Nedrysoft::Ribbon::RibbonTabBar::tabSizeHint(int index) const
     return size;
 }
 
-void Nedrysoft::Ribbon::RibbonTabBar::paintEvent(QPaintEvent *event)
-{
+void Nedrysoft::Ribbon::RibbonTabBar::paintEvent(QPaintEvent *event) {
     Q_UNUSED(event)
     auto globalCursorPos = QCursor::pos();
     auto textRect = QRect();

@@ -19,14 +19,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+//! @note Python must be included first!
+
 #include "Python.h"
+
 #include "CLI/CLI.hpp"
-#include <QApplication>
-#include <QDebug>
-#include <QFontDatabase>
 #include "MainWindow.h"
 #include "SplashScreen.h"
+#include <QApplication>
+#include <QDebug>
 #include <QDirIterator>
+#include <QFontDatabase>
 #include <QMimeDatabase>
 #include <QRegularExpression>
 
@@ -87,8 +90,6 @@ int main(int argc, char *argv[]) {
     }
 
     Nedrysoft::SplashScreen splashScreen;
-
-    splashScreen.show();
 
     application.setApplicationDisplayName(applicationName);
     application.setApplicationName(applicationName);

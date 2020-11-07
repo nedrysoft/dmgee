@@ -17,25 +17,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef FIZZYADE_RIBBON_RIBBONWIDGETSCOLLECTION_H
-#define FIZZYADE_RIBBON_RIBBONWIDGETSCOLLECTION_H
+#ifndef NEDRYSOFT_RIBBONWIDGETSCOLLECTION_H
+#define NEDRYSOFT_RIBBONWIDGETSCOLLECTION_H
 
 #include <QObject>
 #include <QtUiPlugin/QDesignerCustomWidgetCollectionInterface>
 
-class RibbonWidgetsCollection: public QObject, public QDesignerCustomWidgetCollectionInterface
-{
-    Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QDesignerCustomWidgetCollectionInterface")
-    Q_INTERFACES(QDesignerCustomWidgetCollectionInterface)
+class RibbonWidgetsCollection :
+    public QObject,
+    public QDesignerCustomWidgetCollectionInterface {
+        private:
+            Q_OBJECT
+            Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QDesignerCustomWidgetCollectionInterface")
+            Q_INTERFACES(QDesignerCustomWidgetCollectionInterface)
 
-public:
-    RibbonWidgetsCollection(QObject *parent = 0);
+        public:
+            RibbonWidgetsCollection(QObject *parent = 0);
 
-    QList<QDesignerCustomWidgetInterface*> customWidgets() const override;
+            QList<QDesignerCustomWidgetInterface*> customWidgets() const override;
 
-private:
-    QList<QDesignerCustomWidgetInterface*> m_widgets;
+        private:
+            QList<QDesignerCustomWidgetInterface*> m_widgets;
 };
 
-#endif // FIZZYADE_RIBBON_RIBBONWIDGETSCOLLECTION_H
+#endif // NEDRYSOFT_RIBBONWIDGETSCOLLECTION_H

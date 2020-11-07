@@ -17,14 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef NEDRYSOFT_RIBBON_RIBBONFONTMANAGER_H
-#define NEDRYSOFT_RIBBON_RIBBONFONTMANAGER_H
+#ifndef NEDRYSOFT_RIBBONFONTMANAGER_H
+#define NEDRYSOFT_RIBBONFONTMANAGER_H
 
 #include "RibbonSpec.h"
 #include <QString>
 
-namespace Nedrysoft::Ribbon
-{
+namespace Nedrysoft::Ribbon {
     /**
      * @brief           Ribbon Font Manager
      *
@@ -34,43 +33,42 @@ namespace Nedrysoft::Ribbon
      *                  RibbonFontManager::getInstance function.
      *
      */
-    class NEDRYSOFT_RIBBON_WIDGET_EXPORT RibbonFontManager
-    {
-    private:
-        /**
-         * @brief Constructor
-         */
-        RibbonFontManager();
+    class NEDRYSOFT_RIBBON_WIDGET_EXPORT RibbonFontManager {
+        private:
+            /**
+             * @brief Constructor
+             */
+            RibbonFontManager();
 
-    public:
-        /**
-         * @brief       Returns the singleton instance
-         *
-         * @return      returns the instance of the class
-         *
-         */
-        static Nedrysoft::Ribbon::RibbonFontManager *getInstance();
+        public:
+            /**
+             * @brief       Returns the singleton instance
+             *
+             * @return      returns the instance of the class
+             *
+             */
+            static Nedrysoft::Ribbon::RibbonFontManager *getInstance();
 
-        /**
-         * @brief       Returns the normal font name
-         *
-         * @return      the font famaily name
-         *
-         */
-        QString normalFont();
+            /**
+             * @brief       Returns the normal font name
+             *
+             * @return      the font famaily name
+             *
+             */
+            QString normalFont();
 
-        /**
-         * @brief       Returns the bold font name
-         *
-         * @return      the font famaily name
-         *
-         */
-        QString boldFont();
+            /**
+             * @brief       Returns the bold font name
+             *
+             * @return      the font famaily name
+             *
+             */
+            QString boldFont();
 
-    private:
-        int m_regularFontId;                                                //! Regular font id after loading
-        int m_boldFontId;                                                   //! Bold font id after loading
+        private:
+            int m_regularFontId;                                                //! Regular font id after loading
+            int m_boldFontId;                                                   //! Bold font id after loading
     };
 }
 
-#endif // NEDRYSOFT_RIBBON_RIBBONFONTMANAGER_H
+#endif // NEDRYSOFT_RIBBONFONTMANAGER_H

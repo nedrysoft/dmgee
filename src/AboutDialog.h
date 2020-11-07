@@ -32,56 +32,55 @@ namespace Nedrysoft {
      * @details             A dialog box that shows details about the application.
      */
     class AboutDialog :
-            public QDialog
-    {
-        private:
-            Q_OBJECT
+        public QDialog {
+            private:
+                Q_OBJECT
 
-        public:
-            /**
-             * @brief           Constructs an about dialog.
-             *
-             * @param[in]       parent is the the owner of the dialog.
-             */
-            explicit AboutDialog(QWidget *parent = nullptr);
+            public:
+                /**
+                 * @brief           Constructs an about dialog.
+                 *
+                 * @param[in]       parent is the the owner of the dialog.
+                 */
+                explicit AboutDialog(QWidget *parent = nullptr);
 
-            /**
-             * @brief           Destroys the dialog.
-             */
-            ~AboutDialog();
+                /**
+                 * @brief           Destroys the dialog.
+                 */
+                ~AboutDialog();
 
-        protected:
-            /**
-             * @brief           Handles events for the dialog box.
-             *
-             * @details         To allow the dialog box to be dismissed easily, event processing at a more
-             *                  granular level needs to occur.
-             *
-             * @param[in]       event contains information about the event being processed.
-             * @returns         true if the event was handled; otherwise, false.
-             */
-            virtual bool event(QEvent *event) override;
+            protected:
+                /**
+                 * @brief           Handles events for the dialog box.
+                 *
+                 * @details         To allow the dialog box to be dismissed easily, event processing at a more
+                 *                  granular level needs to occur.
+                 *
+                 * @param[in]       event contains information about the event being processed.
+                 * @returns         true if the event was handled; otherwise, false.
+                 */
+                virtual bool event(QEvent *event) override;
 
-            /**
-             * @brief           Handles focus out events.
-             *
-             * @details         If the about dialog loses focus, this function is called to dismiss the dialog.
-             *
-             * @param[in]       event contains information about the focus event.
-             */
-            virtual void focusOutEvent(QFocusEvent *event) override;
+                /**
+                 * @brief           Handles focus out events.
+                 *
+                 * @details         If the about dialog loses focus, this function is called to dismiss the dialog.
+                 *
+                 * @param[in]       event contains information about the focus event.
+                 */
+                virtual void focusOutEvent(QFocusEvent *event) override;
 
-            /**
-             * @brief           Renders the dialog.
-             *
-             * @details         Calls QDialog::paintEvent and then draws version information over the top in the correct place.
-             *
-             * @param[in]       event contains information about the paint event.
-             */
-            virtual void paintEvent(QPaintEvent *paintEvent) override;
+                /**
+                 * @brief           Renders the dialog.
+                 *
+                 * @details         Calls QDialog::paintEvent and then draws version information over the top in the correct place.
+                 *
+                 * @param[in]       event contains information about the paint event.
+                 */
+                virtual void paintEvent(QPaintEvent *paintEvent) override;
 
-        private:
-            QPixmap m_backgroundPixmap;                      //! the background image used for the about dialog
+            private:
+                QPixmap m_backgroundPixmap;                      //! the background image used for the about dialog
     };
 }
 #endif // NEDRYSOFT_ABOUTDIALOG_H

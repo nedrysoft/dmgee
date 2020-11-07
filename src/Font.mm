@@ -19,8 +19,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Font.h"
 #import <AppKit/AppKit.h>
+#include "Font.h"
 
 QString Nedrysoft::Font::systemFontName() {
     NSFont *font = [NSFont systemFontOfSize:12];

@@ -17,18 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "RibbonWidgetsCollection.h"
 #include "RibbonGroupPlugin.h"
 #include "RibbonWidgetPlugin.h"
+#include "RibbonWidgetsCollection.h"
 
 RibbonWidgetsCollection::RibbonWidgetsCollection(QObject *parent)
-        : QObject(parent)
-{
+        : QObject(parent) {
+
     m_widgets.append(new RibbonGroupPlugin(this));
     m_widgets.append(new RibbonWidgetPlugin(this));
 }
 
-QList<QDesignerCustomWidgetInterface*> RibbonWidgetsCollection::customWidgets() const
-{
+QList<QDesignerCustomWidgetInterface*> RibbonWidgetsCollection::customWidgets() const {
     return m_widgets;
 }

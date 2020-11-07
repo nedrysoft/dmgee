@@ -20,7 +20,6 @@
  */
 
 #include "SplashScreen.h"
-#include <QLabel>
 #include <QPainter>
 
 constexpr auto splashScreenFilename = ":/assets/splash_620x375@2x.png";

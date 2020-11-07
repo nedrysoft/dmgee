@@ -22,13 +22,12 @@
 #include <QtPlugin>
 
 RibbonWidgetPlugin::RibbonWidgetPlugin(QObject *parent)
-    : QObject(parent)
-{
+    : QObject(parent) {
+
     qRegisterMetaType<RibbonWidgetPlugin *>("RibbonWidgetPlugin");
 }
 
-void RibbonWidgetPlugin::initialize(QDesignerFormEditorInterface *core)
-{
+void RibbonWidgetPlugin::initialize(QDesignerFormEditorInterface *core) {
     Q_UNUSED(core)
 
     if (initialized)
@@ -37,79 +36,45 @@ void RibbonWidgetPlugin::initialize(QDesignerFormEditorInterface *core)
     initialized = true;
 }
 
-bool RibbonWidgetPlugin::isInitialized() const
-{
+bool RibbonWidgetPlugin::isInitialized() const {
     return initialized;
 }
 
-QWidget *RibbonWidgetPlugin::createWidget(QWidget *parent)
-{
+QWidget *RibbonWidgetPlugin::createWidget(QWidget *parent) {
     return new Nedrysoft::Ribbon::RibbonWidget(parent);
 }
 
-QString RibbonWidgetPlugin::name() const
-{
+QString RibbonWidgetPlugin::name() const {
     return QStringLiteral("Nedrysoft::Ribbon::RibbonWidget");
 }
 
-QString RibbonWidgetPlugin::group() const
-{
+QString RibbonWidgetPlugin::group() const {
     return QStringLiteral("Ribbon Widgets");
 }
 
-QIcon RibbonWidgetPlugin::icon() const
-{
+QIcon RibbonWidgetPlugin::icon() const {
     return QIcon();
 }
 
-QString RibbonWidgetPlugin::toolTip() const
-{
+QString RibbonWidgetPlugin::toolTip() const {
     return QString();
 }
 
-QString RibbonWidgetPlugin::whatsThis() const
-{
+QString RibbonWidgetPlugin::whatsThis() const {
     return QString();
 }
 
-bool RibbonWidgetPlugin::isContainer() const
-{
+bool RibbonWidgetPlugin::isContainer() const {
     return false;
 }
-/*
 
-           "  <property name=\"geometry\">\n"
-           "   <rect>\n"
-           "    <x>0</x>\n"
-           "    <y>0</y>\n"
-           "    <width>100</width>\n"
-           "    <height>100</height>\n"
-           "   </rect>\n"
-           "  </property>\n"
-*/
-QString RibbonWidgetPlugin::domXml() const
-{
-    /*return QLatin1String("\
-     <ui language=\"c++\" displayname=\"Ribbon Widget\">\
-         <widget class=\"Nedrysoft::Ribbon::RibbonWidget\" name=\"ribbonWidget\">\
-             <widget class=\"QWidget\" name=\"tab\" />\
-         </widget>\
-         <customwidgets>\
-             <customwidget>\
-                 <class>FizzyAde::Ribbon::RibbonWidget</class>\
-                 <extends>QTabWidget</extends>\
-                 <addpagemethod>addPage</addpagemethod>\
-             </customwidget>\
-         </customwidgets>\
-     </ui>");*/
-
+QString RibbonWidgetPlugin::domXml() const {
     return "<ui language=\"c++\" displayname=\"Ribbon Widget\">\n"
            " <widget class=\"Nedrysoft::Ribbon::RibbonWidget\" name=\"ribbonWidget\">\n"
            " </widget>\n"
            "</ui>\n";
 }
 
-QString RibbonWidgetPlugin::includeFile() const
-{
+QString RibbonWidgetPlugin::includeFile() const {
     return QStringLiteral("Ribbon/RibbonWidget.h");
 }

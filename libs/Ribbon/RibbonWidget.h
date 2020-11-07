@@ -17,19 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef NEDRYSOFT_RIBBON_RIBBONWIDGET_H
-#define NEDRYSOFT_RIBBON_RIBBONWIDGET_H
+#ifndef NEDRYSOFT_RIBBONWIDGET_H
+#define NEDRYSOFT_RIBBONWIDGET_H
 
 #include "RibbonSpec.h"
 #include <QTabWidget>
 #include <QHBoxLayout>
 
-namespace Nedrysoft::Ribbon
-{
+namespace Nedrysoft::Ribbon {
     class RibbonTabBar;
 
-    enum ThemeMode
-    {
+    enum ThemeMode {
         Light = 0,
         Dark = 1
     };
@@ -78,35 +76,35 @@ namespace Nedrysoft::Ribbon
      *
      */
     class NEDRYSOFT_RIBBON_WIDGET_EXPORT RibbonWidget :
-        public QTabWidget
-    {
-        Q_OBJECT
+        public QTabWidget {
+            private:
+                Q_OBJECT
 
-    public:
-        /**
-         * @brief       Constructor
-         *
-         * @param[in]   parent          parent widget
-         *
-         */
-        RibbonWidget(QWidget *parent = nullptr);
+            public:
+                /**
+                 * @brief       Constructor
+                 *
+                 * @param[in]   parent          parent widget
+                 *
+                 */
+                RibbonWidget(QWidget *parent = nullptr);
 
-        friend class RibbonTabBar;
-        friend class RibbonGroup;
+                friend class RibbonTabBar;
+                friend class RibbonGroup;
 
-    protected:
-        /**
-         * @brief       paintEvent
-         *
-         * @details     Overridden paintEvent for drawing widget
-         *
-         * @param[in]   event           The event information
-         *
-         */
-        virtual void paintEvent(QPaintEvent *event);
+            protected:
+                /**
+                 * @brief       paintEvent
+                 *
+                 * @details     Overridden paintEvent for drawing widget
+                 *
+                 * @param[in]   event           The event information
+                 *
+                 */
+                virtual void paintEvent(QPaintEvent *event);
 
-        Nedrysoft::Ribbon::RibbonTabBar *m_tabBar;                                  //! The tab bar associated with this ribbon
+                Nedrysoft::Ribbon::RibbonTabBar *m_tabBar;                                  //! The tab bar associated with this ribbon
     };
 }
 
-#endif // NEDRYSOFT_RIBBON_RIBBONWIDGET_H
+#endif // NEDRYSOFT_RIBBONWIDGET_H

@@ -17,14 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "RibbonFontManager.h"
 #include "RibbonGroup.h"
 #include "RibbonWidget.h"
-#include "RibbonFontManager.h"
 #include "ThemeSupport.h"
-#include <QPainter>
-#include <QPaintEvent>
-#include <QDebug>
 #include <QApplication>
+#include <QDebug>
+#include <QPaintEvent>
+#include <QPainter>
 
 #if defined(Q_OS_MACOS)
 constexpr int DefaultFontSize = 10;
@@ -34,8 +34,8 @@ constexpr int DefaultFontSize = 8;
 
 Nedrysoft::Ribbon::RibbonGroup::RibbonGroup(QWidget *parent) :
     QWidget(parent),
-    m_fontMetrics(QFont())
-{
+    m_fontMetrics(QFont()) {
+
     auto fontManager = RibbonFontManager::getInstance();
 
     m_font = QFont(fontManager->normalFont(), DefaultFontSize);
@@ -76,8 +76,7 @@ Nedrysoft::Ribbon::RibbonGroup::RibbonGroup(QWidget *parent) :
     });
 }
 
-void Nedrysoft::Ribbon::RibbonGroup::paintEvent(QPaintEvent *event)
-{
+void Nedrysoft::Ribbon::RibbonGroup::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
     auto rect = this->rect();
     auto  currentTheme = Nedrysoft::Ribbon::Light;
@@ -110,13 +109,11 @@ void Nedrysoft::Ribbon::RibbonGroup::paintEvent(QPaintEvent *event)
     QWidget::paintEvent(event);
 }
 
-QString Nedrysoft::Ribbon::RibbonGroup::groupName() const
-{
+QString Nedrysoft::Ribbon::RibbonGroup::groupName() const {
     return m_groupName;
 }
 
-void Nedrysoft::Ribbon::RibbonGroup::setGroupName(const QString &groupName)
-{
+void Nedrysoft::Ribbon::RibbonGroup::setGroupName(const QString &groupName) {
     m_groupName = groupName;
 
     m_textRect = m_fontMetrics.boundingRect(m_groupName);

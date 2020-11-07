@@ -17,21 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef NEDRYSOFT_UTILS_THEMESUPPORT_H
-#define NEDRYSOFT_UTILS_THEMESUPPORT_H
+#ifndef NEDRYSOFT_THEMESUPPORT_H
+#define NEDRYSOFT_THEMESUPPORT_H
 
 #include <QtGlobal>
 
-namespace Nedrysoft::Utils
-{
+namespace Nedrysoft::Utils {
     /**
      * @brief       theme support class
      *
      * @details     used by the macOS platform to detect changes between light and dark mode
      *
      */
-    class ThemeSupport
-    {
+    class ThemeSupport {
         public:
             /**
              * @brief       Check if dark mode is being used
@@ -50,5 +48,5 @@ namespace Nedrysoft::Utils
     };
 }
 
-#endif // NEDRYSOFT_UTILS_THEMESUPPORT_H
+#endif // NEDRYSOFT_THEMESUPPORT_H
 

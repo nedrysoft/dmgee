@@ -29,18 +29,23 @@
 #include <QDesktopServices>
 #include <QPaintEvent>
 #include <QPainter>
-#include <QWindow>
 #include <QTimer>
+#include <QWindow>
 
 using namespace std::chrono_literals;
 
-constexpr auto splashScreenDuration = 3s;
+constexpr auto splashScreenDuration = 100ms;//3s;
 
 Nedrysoft::MainWindow *Nedrysoft::MainWindow::m_instance = nullptr;
 
 Nedrysoft::MainWindow::MainWindow(Nedrysoft::SplashScreen *splashScreen)
         : QMainWindow(nullptr),
-          ui(new Ui::MainWindow) {
+          ui(new Ui::MainWindow),
+          m_minimumPixelArea(10000),
+          m_backgroundImage(),
+          m_grid(20,20),
+          m_gridIsVisible(true),
+          m_gridShouldSnap(true) {
 
     ui->setupUi(this);
 
@@ -48,18 +53,6 @@ Nedrysoft::MainWindow::MainWindow(Nedrysoft::SplashScreen *splashScreen)
 
     m_instance = this;
 
-    std::vector<cv::Vec4i> hierarchy;
-    std::vector<cv::Point2f> centroids;
-    cv::Mat image;// = m_backgroundImage->mat();
-
-    // convert the image to grey scale for contour detection
-
-    //cv::cvtColor(image, image, cv::COLOR_BGR2GRAY);
-
-    /*showMaximized();
-
-    ui->webEngineView->setPage(m_page);
-*/
     QTimer::singleShot(splashScreenDuration, [splashScreen]() {
         splashScreen->close();
     });
@@ -74,20 +67,31 @@ Nedrysoft::MainWindow::MainWindow(Nedrysoft::SplashScreen *splashScreen)
         aboutDialog.exec();
     });
 
-    unsigned int loadedImageLength;
-    char *loadedImageData;
+    auto filename = QString("/Users/adriancarpenter/Documents/Development/dmgee/assets/dmg_background@2x.tiff");
 
-    auto filename = QString("/Users/adriancarpenter/Documents/Development/dmgee/assets/splash_620x375@2x.png");
+    m_backgroundImage = Nedrysoft::Image(filename, true);
 
-    //auto loadedImage = QImage();
-
-    auto loadedImage = new Nedrysoft::Image(filename, true);
-
-    m_backgroundPixmap = QPixmap::fromImage(loadedImage->image());
+    m_backgroundPixmap = QPixmap::fromImage(m_backgroundImage.image());
 
     ui->previewWidget->setPixmap(m_backgroundPixmap);
 
     QDesktopServices::setUrlHandler("dmgee", this, SLOT("handleOpenByUrl"));
+
+    processBackground();
+
+    connect(ui->minFeatureSlider, &QSlider::valueChanged, [this](int newValue) {
+        m_minimumPixelArea = newValue;
+        processBackground();
+    });
+
+    ui->gridVisibleCheckbox->setCheckState(m_gridIsVisible?Qt::Checked:Qt::Unchecked);
+    ui->snapGridCheckbox->setCheckState(m_gridShouldSnap?Qt::Checked:Qt::Unchecked);
+
+    connect(ui->gridVisibleCheckbox, &QCheckBox::stateChanged, [this](int state) {
+        ui->previewWidget->setGrid(QSize(20,20), (state==Qt::Checked) ? true:false, true);
+    });
+
+    ui->previewWidget->setGrid(QSize(20,20), true, true);
 }
 
 Nedrysoft::MainWindow::~MainWindow() {
@@ -122,63 +126,48 @@ void Nedrysoft::MainWindow::closeEvent(QCloseEvent *closeEvent) {
     closeEvent->accept();
 }
 
-/*
-void Nedrysoft::Application::processThread()
+void Nedrysoft::MainWindow::processBackground()
 {
-    std::unique_lock lock(m_processMutex);
     std::vector<std::vector<cv::Point> > contours;
     std::vector<cv::Vec4i> hierarchy;
-    std::vector<cv::Point2f> centroids;
-    cv::Mat image = m_backgroundImage->mat();
+    cv::Mat image = m_backgroundImage.mat();
 
     // convert the image to grey scale for contour detection
 
     cv::cvtColor(image, image, cv::COLOR_BGR2GRAY);
 
-    while(!m_stopProcessThread.load()) {
-        centroids.clear();
-        hierarchy.clear();
-        contours.clear();
+    m_centroids.clear();
 
-        // apply thresholding
+    // apply thresholding
 
-        cv::threshold(image, image, 150, 255, cv::THRESH_BINARY);
+    cv::threshold(image, image, 150, 255, cv::THRESH_BINARY);
 
-        // find contours in image
+    // find contours in image
 
-        cv::findContours(image, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
+    cv::findContours(image, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
 
-        // find centre of discovered objects in image
+    // find centre of discovered objects in image
 
-        for (auto & contour : contours) {
-            float sumX = 0, sumY = 0;
-            float size = contour.size();
-            cv::Point2f centroid;
+    for (auto & contour : contours) {
+        float sumX = 0, sumY = 0;
+        float size = contour.size();
+        QPointF centroid;
 
-            if(size > 0) {
-                for (auto & point : contour) {
-                    sumX += point.x;
-                    sumY += point.y;
-                }
-
-                centroid.x = sumX/size;
-                centroid.y = sumY/size;
+        if(size > 0) {
+            for (auto & point : contour) {
+                sumX += point.x;
+                sumY += point.y;
             }
 
-            auto area = cv::contourArea(contour);
-
-            if (area>m_minArea.load()) {
-                centroids.push_back(centroid);
-            }
+            centroid = QPointF(sumX/size, sumY/size);
         }
 
-        std::unique_lock centroidLock(m_centroidsMutex);
+        auto area = cv::contourArea(contour);
 
-        m_centroids = centroids;
-
-        centroidLock.unlock();
-
-        m_processCondition.wait(lock);
+        if (area>m_minimumPixelArea) {
+            m_centroids.append(centroid);
+        }
     }
+
+    ui->previewWidget->setCentroids(m_centroids);
 }
- */

@@ -36,6 +36,11 @@ namespace Nedrysoft {
         public:
             /**
              * @brief       constructs an Image object
+             */
+            explicit Image();
+
+            /**
+             * @brief       constructs an Image object
              *
              * @param[in]   filename is the file to be loaded
              * @param[in]   loadContent true if loading an actual image; otherwise false if getting the icon for the file
