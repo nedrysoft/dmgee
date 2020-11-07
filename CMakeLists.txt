@@ -43,6 +43,8 @@ set(APPLICATON_SOURCE_ROOT "${CMAKE_CURRENT_LIST_DIR}")
 
 set(APPLICATION_BIN_OUTPUT "${CMAKE_CURRENT_LIST_DIR}/bin/${APPLICATION_PLATFORM_ARCH}/${CMAKE_BUILD_TYPE}")
 
+set(FRAMEWORK_OUTPUT "${CMAKE_CURRENT_LIST_DIR}/bin/${APPLICATION_PLATFORM_ARCH}/${CMAKE_BUILD_TYPE}/${APPLICATION_SHORT_NAME}.app/Contents/Frameworks")
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_AUTOUIC ON)
@@ -124,7 +126,7 @@ endforeach()
 add_custom_command(TARGET ${APPLICATION_SHORT_NAME} PRE_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${Python3_Framework}
-    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Frameworks/Python.framework
+    ${FRAMEWORK_OUTPUT}//Python.framework
 )
 
 # create lists for includes
@@ -140,7 +142,7 @@ target_include_directories(${APPLICATION_SHORT_NAME} PRIVATE
     thirdparty/tomlplusplus/include
     thirdparty/fmt/include
     thirdparty/CLI11/include
- )
+)
 
 # find objective c sources and set options
 
@@ -259,7 +261,7 @@ set_target_properties(${APPLICATION_SHORT_NAME} PROPERTIES OUTPUT_NAME "${APPLIC
 
 set_target_properties(${APPLICATION_SHORT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${APPLICATION_BIN_OUTPUT})
 
-# If macOS build, then ensure the icon is copied to the bundle and set up the Info.plist file
+# Ensure the icon is copied to the bundle and set up the Info.plist file from the template
 
 set_source_files_properties("assets/${APPLICATION_SHORT_NAME}.icns" PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
 set_target_properties(${APPLICATION_SHORT_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${APPLICATON_SOURCE_ROOT}/Info.plist.in)
@@ -277,3 +279,4 @@ list(APPEND APPLICATION_MAC_LINK_LIBRARIES "-framework AppKit")
 
 target_link_libraries(${APPLICATION_SHORT_NAME} ${APPLICATION_QT_LINK_LIBRARIES} ${APPLICATION_MAC_LINK_LIBRARIES})
 
+add_subdirectory("libs/Ribbon")

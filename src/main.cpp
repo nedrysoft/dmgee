@@ -23,9 +23,12 @@
 #include "CLI/CLI.hpp"
 #include <QApplication>
 #include <QDebug>
+#include <QFontDatabase>
 #include "MainWindow.h"
 #include "SplashScreen.h"
-
+#include <QDirIterator>
+#include <QMimeDatabase>
+#include <QRegularExpression>
 
 constexpr auto applicationName = APPLICATION_LONG_NAME;                     //! Provided by CMake to the preprocessor
 constexpr auto applicationFontsPrefix = ":/fonts";                          //! Fonts are stored under :/fonts (recursive search is performed)
@@ -33,6 +36,7 @@ constexpr auto applicationFontsPrefix = ":/fonts";                          //! 
 int main(int argc, char *argv[])
 {
     QApplication application(argc, argv);
+    QMimeDatabase mimeDatabase;
 
     CLI::App appCli("dmgee is an application for designing and creating custom DMG images.\n", APPLICATION_SHORT_NAME);
 
@@ -64,16 +68,12 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    Nedrysoft::SplashScreen splashScreen;
-
-    splashScreen.show();
-
     Nedrysoft::Python *python = new Nedrysoft::Python();
 
     python->runScript("print(\"Hello World\")", nullptr);
 
     // search the /fonts folder in the resources and attempt to load any found fonts
-/*
+
     auto fontDirIterator = QDirIterator(applicationFontsPrefix, QDirIterator::Subdirectories);
 
     while(fontDirIterator.hasNext())
@@ -87,8 +87,10 @@ int main(int argc, char *argv[])
         }
     }
 
-    Nedrysoft::RegExSplashScreen splashScreen;
-*/
+    Nedrysoft::SplashScreen splashScreen;
+
+    splashScreen.show();
+
     application.setApplicationDisplayName(applicationName);
     application.setApplicationName(applicationName);
 

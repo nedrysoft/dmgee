@@ -22,13 +22,14 @@
 #include "MainWindow.h"
 #include <opencv2/opencv.hpp>
 #include "ui_MainWindow.h"
+#include "AboutDialog.h"
 
 #include <QDebug>
 #include <QTimer>
 
 using namespace std::chrono_literals;
 
-constexpr auto splashScreenDuration = 1s;
+constexpr auto splashScreenDuration = 3s;
 
 Nedrysoft::MainWindow *Nedrysoft::MainWindow::m_instance = nullptr;
 
@@ -56,8 +57,18 @@ Nedrysoft::MainWindow::MainWindow(Nedrysoft::SplashScreen *splashScreen)
 
     ui->webEngineView->setPage(m_page);
 */
-    QTimer::singleShot(3000, [splashScreen]() {
+    QTimer::singleShot(splashScreenDuration, [splashScreen]() {
         splashScreen->close();
+    });
+
+    connect(ui->actionQuit, &QAction::triggered, [this](bool isChecked){
+        close();
+    });
+
+    connect(ui->actionAbout, &QAction::triggered, [this](bool isChecked) {
+        Nedrysoft::AboutDialog aboutDialog;
+
+        aboutDialog.exec();
     });
 
 /*
