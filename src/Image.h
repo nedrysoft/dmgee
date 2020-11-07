@@ -23,8 +23,9 @@
 #define NEDRYSOFT_IMAGE_H
 
 #include <opencv2/opencv.hpp>
-#include <QString>
 #include "IL/il.h"
+#include <QImage>
+#include <QString>
 
 namespace Nedrysoft {
     /**
@@ -75,20 +76,40 @@ namespace Nedrysoft {
             float stride();
 
             /**
+             * @brief       returns the stride of the image (may differ from width*components for optimisation)
+             *
+             * @return      the height of the image
+             */
+            char * data();
+
+            /**
              * @brief       returns the image as a opencv image
              *
              * @return      the image mat
              */
             cv::Mat mat();
 
+            /**
+             * @brief       returns a QImage of the image data
+             *
+             * @return      the image
+             */
+             QImage image();
+
+            /**
+             * @brief       returns the raw image as a byte array
+             *
+             * @return      the bytearray containing the pixel data
+             */
+            QByteArray rawData();
+
         private:
             char *m_data;                           //! the raw image data
-            char *m_cairoData;                      //! the cairo backing image
+            unsigned int m_length;                  //! the langth in bytes of the decoded image data
 
             unsigned int m_width;                   //! the width of the image
             unsigned int m_height;                  //! the height of the image
             unsigned int m_stride;                  //! the stride of the backing image
-            unsigned int m_cairoStride;             //! the stride of the cairo image
 
             ILuint m_imageId;                       //! the DevIL image identifier
     };

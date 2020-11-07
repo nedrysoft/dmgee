@@ -29,18 +29,15 @@
 #include <iostream>
 #include <sstream>
 
-Nedrysoft::Python::Python()
-{
+Nedrysoft::Python::Python() {
     Py_Initialize();
 }
 
-Nedrysoft::Python::~Python()
-{
+Nedrysoft::Python::~Python() {
     Py_Finalize();
 }
 
-bool Nedrysoft::Python::run(QString filename)
-{
+bool Nedrysoft::Python::run(QString filename) {
     QFile pythonFile(filename);
 
     if (pythonFile.open(QFile::ReadOnly)) {
@@ -54,13 +51,11 @@ bool Nedrysoft::Python::run(QString filename)
     return false;
 }
 
-void Nedrysoft::Python::addModulePaths(QStringList modulePaths)
-{
+void Nedrysoft::Python::addModulePaths(QStringList modulePaths) {
     m_modulePaths = modulePaths;
 }
 
-bool Nedrysoft::Python::runScript(QString script, PyObject * locals)
-{
+bool Nedrysoft::Python::runScript(QString script, PyObject * locals) {
     PyObject *systemModule = PyImport_ImportModule("sys");
     PyObject *systemPath = PyObject_GetAttrString(systemModule, "path");
 

@@ -32,11 +32,10 @@ Nedrysoft::Image::Image(QString filename, bool loadContent, int width, int heigh
         m_width(0),
         m_height(0),
         m_stride(0),
-        m_imageId(0)
-{
+        m_imageId(0) {
+
     ILboolean success = IL_FALSE;
     char *tiffData;
-    unsigned int length;
     float scale=1;
     auto expression = QRegularExpression(R"(@(?P<scale>(\d*))x\..*$)");
     const char *errorString;
@@ -60,15 +59,16 @@ Nedrysoft::Image::Image(QString filename, bool loadContent, int width, int heigh
     // If NSImage fails to load the image then we fall back onto DevIL (and keep our fingers crossed)
 
     bool loadedData = false;
+    unsigned int imageLength;
 
     if (loadContent) {
-        loadedData = Nedrysoft::ImageLoader::load(filename, &tiffData, &length);
+        loadedData = Nedrysoft::ImageLoader::load(filename, &tiffData, &imageLength);
     } else {
-        loadedData = Nedrysoft::ImageLoader::imageForFile(filename, &tiffData, &length, width, height);
+        loadedData = Nedrysoft::ImageLoader::imageForFile(filename, &tiffData, &imageLength, width, height);
     }
 
     if (loadedData) {
-        success = ilLoadL(IL_TIF, tiffData, length);
+        success = ilLoadL(IL_TIF, tiffData, imageLength);
 
         free(tiffData);
     } else {
@@ -86,39 +86,51 @@ Nedrysoft::Image::Image(QString filename, bool loadContent, int width, int heigh
             m_width = static_cast<unsigned int>(ilGetInteger(IL_IMAGE_WIDTH));
             m_height = static_cast<unsigned int>(ilGetInteger(IL_IMAGE_HEIGHT));
             m_data = reinterpret_cast<char *>(ilGetData());
+            m_length = static_cast<unsigned int>(ilGetInteger(IL_IMAGE_SIZE_OF_DATA));
 
             m_stride = m_width * 4;
         }
     }
 }
 
-Nedrysoft::Image::~Image()
-{
+Nedrysoft::Image::~Image() {
     if (m_data) {
         ilDeleteImages(1, &m_imageId);
     }
 }
 
-float Nedrysoft::Image::width()
-{
+float Nedrysoft::Image::width() {
     return static_cast<float>(m_width);
 }
 
-float Nedrysoft::Image::height()
-{
+float Nedrysoft::Image::height() {
     return static_cast<float>(m_height);
 }
 
-float Nedrysoft::Image::stride()
-{
+float Nedrysoft::Image::stride() {
     return static_cast<float>(m_stride);
 }
 
-cv::Mat Nedrysoft::Image::mat()
-{
+char *Nedrysoft::Image::data() {
+    return m_data;
+}
+
+cv::Mat Nedrysoft::Image::mat() {
     auto mat = cv::Mat(cv::Size(m_width, m_height), CV_8UC4, m_data, cv::Mat::AUTO_STEP);
 
     cv::cvtColor(mat, mat, cv::COLOR_BGR2RGB);
 
     return mat;
+}
+
+QImage Nedrysoft::Image::image() {
+    return QImage(reinterpret_cast<const uchar *>(m_data),
+                  static_cast<int>(m_width),
+                  static_cast<int>(m_height),
+                  static_cast<int>(m_stride),
+                  QImage::Format_RGBA8888);
+}
+
+QByteArray Nedrysoft::Image::rawData() {
+    return QByteArray(QByteArray(static_cast<const char *>(m_data), m_length));
 }

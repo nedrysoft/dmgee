@@ -19,12 +19,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "MainWindow.h"
 #include <opencv2/opencv.hpp>
-#include "ui_MainWindow.h"
-#include "AboutDialog.h"
 
+#include "AboutDialog.h"
+#include "ImageLoader.h"
+#include "MainWindow.h"
+#include "ui_MainWindow.h"
 #include <QDebug>
+#include <QDesktopServices>
+#include <QPaintEvent>
+#include <QPainter>
 #include <QTimer>
 
 using namespace std::chrono_literals;
@@ -35,10 +39,8 @@ Nedrysoft::MainWindow *Nedrysoft::MainWindow::m_instance = nullptr;
 
 Nedrysoft::MainWindow::MainWindow(Nedrysoft::SplashScreen *splashScreen)
         : QMainWindow(nullptr),
-          ui(new Ui::MainWindow)
-          //m_page(new Nedrysoft::RegExWebEnginePage),
-          //m_settingsDialog(nullptr)
-{
+          ui(new Ui::MainWindow) {
+
     ui->setupUi(this);
 
     qApp->installEventFilter(this);
@@ -71,40 +73,33 @@ Nedrysoft::MainWindow::MainWindow(Nedrysoft::SplashScreen *splashScreen)
         aboutDialog.exec();
     });
 
-/*
-    QDesktopServices::setUrlHandler(RegExUrlSchemeHandler::name(), this, SLOT("handleOpenByUrl"));*/
-}
+    unsigned int loadedImageLength;
+    char *loadedImageData;
 
-Nedrysoft::MainWindow::~MainWindow()
-{
-   // delete m_page;
+    auto filename = QString("/Users/adriancarpenter/Documents/Development/dmgee/assets/splash_620x375@2x.png");
+
+    //auto loadedImage = QImage();
+
+    auto loadedImage = new Nedrysoft::Image(filename, true);
+
+    m_backgroundPixmap = QPixmap::fromImage(loadedImage->image());
+
+    QDesktopServices::setUrlHandler("dmgee", this, SLOT("handleOpenByUrl"));
+ }
+
+Nedrysoft::MainWindow::~MainWindow() {
     delete ui;
 }
 
-Nedrysoft::MainWindow *Nedrysoft::MainWindow::getInstance()
-{
-    return(m_instance);
-}
-/*
-void Nedrysoft::MainWindow::on_actionAbout_triggered()
-{
-    Nedrysoft::AboutDialog aboutDialog(this);
-
-    aboutDialog.exec();
+Nedrysoft::MainWindow *Nedrysoft::MainWindow::getInstance() {
+    return m_instance;
 }
 
-void Nedrysoft::MainWindow::on_actionExit_triggered()
-{
-    close();
-}
-
-void Nedrysoft::MainWindow::handleOpenByUrl(const QUrl &url)
-{
+void Nedrysoft::MainWindow::handleOpenByUrl(const QUrl &url) {
     Q_UNUSED(url);
 }
-*/
-bool Nedrysoft::MainWindow::eventFilter(QObject *obj, QEvent *event)
-{
+
+bool Nedrysoft::MainWindow::eventFilter(QObject *obj, QEvent *event) {
     if (event->type()==QEvent::FileOpen) {
         QFileOpenEvent *fileOpenEvent = static_cast<QFileOpenEvent*>(event);
 
@@ -119,36 +114,11 @@ bool Nedrysoft::MainWindow::eventFilter(QObject *obj, QEvent *event)
 
     return QObject::eventFilter(obj, event);
 }
-/*
-void Nedrysoft::MainWindow::on_actionPreferences_triggered()
-{
-    if (m_settingsDialog) {
-        m_settingsDialog->raise();
 
-        return;
-    }
-
-    m_settingsDialog = new SettingsDialog(this);
-
-    m_settingsDialog->show();
-
-    connect(m_settingsDialog, &SettingsDialog::closed, [=](){
-        m_settingsDialog->deleteLater();
-
-        m_settingsDialog = nullptr;
-    });
-}*/
-
-void Nedrysoft::MainWindow::closeEvent(QCloseEvent *closeEvent)
-{
-/*    if (m_settingsDialog) {
-        m_settingsDialog->close();
-        m_settingsDialog->deleteLater();
-        m_settingsDialog = nullptr;
-    }*/
-
+void Nedrysoft::MainWindow::closeEvent(QCloseEvent *closeEvent) {
     closeEvent->accept();
 }
+
 /*
 void Nedrysoft::Application::processThread()
 {
@@ -209,3 +179,10 @@ void Nedrysoft::Application::processThread()
     }
 }
  */
+
+void Nedrysoft::MainWindow::paintEvent(QPaintEvent *paintEvent)
+{
+    QPainter p(this);
+
+    p.drawPixmap(0, 0, m_backgroundPixmap);
+}

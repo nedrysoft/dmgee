@@ -35,8 +35,8 @@ constexpr auto fontFamily = "Open Sans";
 constexpr auto fontSize = 14;
 
 Nedrysoft::AboutDialog::AboutDialog(QWidget *parent) :
-    QDialog(parent, Qt::FramelessWindowHint)
-{
+    QDialog(parent, Qt::FramelessWindowHint) {
+
     m_backgroundPixmap = QPixmap(splashScreenFilename);
 
     auto dialogSize = (QSizeF(m_backgroundPixmap.size())/m_backgroundPixmap.devicePixelRatioF());
@@ -47,15 +47,13 @@ Nedrysoft::AboutDialog::AboutDialog(QWidget *parent) :
     setAttribute(Qt::WA_AlwaysStackOnTop);
 }
 
-void Nedrysoft::AboutDialog::focusOutEvent(QFocusEvent *event)
-{
+void Nedrysoft::AboutDialog::focusOutEvent(QFocusEvent *event {
     Q_UNUSED(event);
 
     close();
 }
 
-bool Nedrysoft::AboutDialog::event(QEvent *event)
-{
+bool Nedrysoft::AboutDialog::event(QEvent *event) {
     switch(event->type())
     {
         case QEvent::MouseButtonPress:
@@ -72,12 +70,10 @@ bool Nedrysoft::AboutDialog::event(QEvent *event)
     return QDialog::event(event);
 }
 
-Nedrysoft::AboutDialog::~AboutDialog()
-{
+Nedrysoft::AboutDialog::~AboutDialog() {
 }
 
-void Nedrysoft::AboutDialog::paintEvent(QPaintEvent *paintEvent)
-{
+void Nedrysoft::AboutDialog::paintEvent(QPaintEvent *paintEvent) {
     QDialog::paintEvent(paintEvent);
 
     auto font = QFont(fontFamily, fontSize, QFont::Weight::Normal);

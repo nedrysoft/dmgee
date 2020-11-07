@@ -22,15 +22,13 @@
 #include "Font.h"
 #import <AppKit/AppKit.h>
 
-QString Nedrysoft::Font::systemFontName()
-{
+QString Nedrysoft::Font::systemFontName() {
     NSFont *font = [NSFont systemFontOfSize:12];
 
     return QString([[font fontName] cStringUsingEncoding:[NSString defaultCStringEncoding]]);
 }
 
-QString Nedrysoft::Font::getFilename(QString fontName)
-{
+QString Nedrysoft::Font::getFilename(QString fontName) {
     NSFont *font = [NSFont fontWithName: [NSString stringWithCString:fontName.toLatin1().data() encoding:[NSString defaultCStringEncoding]] size:12];
 
     if (font) {

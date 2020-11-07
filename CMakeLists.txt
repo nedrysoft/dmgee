@@ -126,7 +126,7 @@ endforeach()
 add_custom_command(TARGET ${APPLICATION_SHORT_NAME} PRE_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${Python3_Framework}
-    ${FRAMEWORK_OUTPUT}//Python.framework
+    ${FRAMEWORK_OUTPUT}/Python.framework
 )
 
 # create lists for includes
@@ -142,6 +142,7 @@ target_include_directories(${APPLICATION_SHORT_NAME} PRIVATE
     thirdparty/tomlplusplus/include
     thirdparty/fmt/include
     thirdparty/CLI11/include
+    libs
 )
 
 # find objective c sources and set options
@@ -278,5 +279,7 @@ list(APPEND APPLICATION_MAC_LINK_LIBRARIES "-framework AppKit")
 # Set the libraries be linked in
 
 target_link_libraries(${APPLICATION_SHORT_NAME} ${APPLICATION_QT_LINK_LIBRARIES} ${APPLICATION_MAC_LINK_LIBRARIES})
+target_link_libraries(${APPLICATION_SHORT_NAME} Ribbon)
+
 
 add_subdirectory("libs/Ribbon")

@@ -28,19 +28,17 @@ constexpr auto fontFamily = "Open Sans";
 constexpr auto fontSize = 14;
 
 Nedrysoft::SplashScreen::SplashScreen() :
-    QSplashScreen(QPixmap(splashScreenFilename), Qt::WindowStaysOnTopHint)
-{
+    QSplashScreen(QPixmap(splashScreenFilename), Qt::WindowStaysOnTopHint) {
+
     setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
 
     show();
 }
 
-Nedrysoft::SplashScreen::~SplashScreen()
-{
+Nedrysoft::SplashScreen::~SplashScreen() {
 }
 
-void Nedrysoft::SplashScreen::drawContents(QPainter *painter)
-{
+void Nedrysoft::SplashScreen::drawContents(QPainter *painter) {
     auto font = QFont(fontFamily, fontSize, QFont::Weight::Normal);
     auto versionText = QString("%1.%2.%3 (%4 %5)").arg(APPLICATION_GIT_YEAR).arg(APPLICATION_GIT_MONTH).arg(APPLICATION_GIT_DAY).arg(APPLICATION_GIT_BRANCH).arg(APPLICATION_GIT_HASH);
 

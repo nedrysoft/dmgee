@@ -33,8 +33,7 @@
 constexpr auto applicationName = APPLICATION_LONG_NAME;                     //! Provided by CMake to the preprocessor
 constexpr auto applicationFontsPrefix = ":/fonts";                          //! Fonts are stored under :/fonts (recursive search is performed)
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     QApplication application(argc, argv);
     QMimeDatabase mimeDatabase;
 

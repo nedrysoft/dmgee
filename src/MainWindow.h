@@ -25,16 +25,13 @@
 #include <QMainWindow>
 #include <QFileOpenEvent>
 #include "SplashScreen.h"
+#include "Image.h"
 
 namespace Ui {
     class MainWindow;
 }
 
 namespace Nedrysoft {
-    //class RegExSplashScreen;
-    //class RegExWebEnginePage;
-    //class SettingsDialog;
-
     /**
      * @brief               The MainWindow class
      *
@@ -65,7 +62,7 @@ namespace Nedrysoft {
              *
              * @param[in]       url is the requested url.
              */
-            //void handleOpenByUrl(const QUrl &url);
+            void handleOpenByUrl(const QUrl &url);
 
             /**
              * @brief           Returns the last instance of the class
@@ -83,6 +80,13 @@ namespace Nedrysoft {
              */
             virtual void closeEvent(QCloseEvent *closeEvent) override;
 
+            /**
+             * @brief           Event handler for paint
+             *
+             * @param[in]       paintEvent contains the information about the event
+             */
+            virtual void paintEvent(QPaintEvent *paintEvent) override;
+
         private:
             /**
              * @brief           Event filter mathod
@@ -98,32 +102,11 @@ namespace Nedrysoft {
              */
             Q_SLOT bool eventFilter(QObject *obj, QEvent *event) override;
 
-            /**
-             * @brief           About slot function.
-             *
-             * @details         This slot is called when the About action is triggered, the about dialog is displayed.
-             */
-            //Q_SLOT void on_actionAbout_triggered();
-
-            /**
-             * @brief           Exit slot function.
-             *
-             * @details         This slot is called when the Exit action is triggered, the application is closed.
-             */
-            //Q_SLOT void on_actionExit_triggered();
-
-            /**
-             * @brief           Preferences action triggered function
-             *
-             * @details         This slot is called when the preferences action is triggered
-             */
-            //Q_SLOT void on_actionPreferences_triggered();
-
         private:
             Ui::MainWindow *ui;                                     //! ui class for the main window
-            //Nedrysoft::RegExWebEnginePage *m_page;                  //! web page object set up for our scheme
-            //SettingsDialog *m_settingsDialog;                       //! the settings dialog
             static MainWindow *m_instance;                          //! instance of the main window
+            Image *m_backgroundImage;
+            QPixmap m_backgroundPixmap;
     };
 }
 

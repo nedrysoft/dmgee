@@ -1,8 +1,7 @@
 #
 # Copyright (C) 2020 Adrian Carpenter
 #
-# This file is part of pingnoo (https://github.com/fizzyade/pingnoo)
-# An open source ping path analyser
+# https://github.com/fizzyade
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,9 +17,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+# main libraru
+
 set(LIBRARY_NAME Ribbon)
 
-add_library(${LIBRARY_NAME} SHARED
+set(NEDRYSOFT_LIBRARY_RIBBON_EXPORT)
+
+set(library_SOURCES
     ThemeSupport.mm
     ThemeSupport.h
     RibbonFontManager.cpp
@@ -35,6 +38,10 @@ add_library(${LIBRARY_NAME} SHARED
     RibbonSpec.h
 )
 
+add_library(${LIBRARY_NAME} SHARED
+    ${library_SOURCES}
+)
+
 target_link_libraries(${LIBRARY_NAME} "-framework AppKit" "-framework  Cocoa")
 
 target_link_libraries(${LIBRARY_NAME} -lstdc++ -lobjc)
@@ -44,3 +51,46 @@ target_link_libraries(${LIBRARY_NAME} "Qt5::Widgets")
 #set_target_properties(${LIBRARY_NAME} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${FRAMEWORK_OUTPUT}")
 set_target_properties(${LIBRARY_NAME} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${FRAMEWORK_OUTPUT}")
 set_target_properties(${LIBRARY_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${FRAMEWORK_OUTPUT}")
+
+# designer widgets
+
+
+option(Build_RibbonDesignerPlugin "Build Ribbon QtDesigner Plugin" OFF)
+
+if(Build_RibbonDesignerPlugin)
+    project(Nedrysoft.Ribbon)
+
+    add_definitions(-DNEDRYSOFT_RIBBON_DESIGNER_EXPORT)
+
+    find_package(Qt5 COMPONENTS Widgets UiPlugin REQUIRED)
+
+    add_library(${PROJECT_NAME} SHARED
+        ${library_SOURCES}
+        RibbonWidgetPlugin.cpp
+        RibbonWidgetPlugin.h
+        RibbonGroupPlugin.cpp
+        RibbonGroupPlugin.h
+        RibbonWidgetsCollection.cpp
+        RibbonWidgetsCollection.h
+    )
+
+    if(APPLE)
+        target_sources(${PROJECT_NAME} "PRIVATE"
+            ThemeSupport.mm
+            ThemeSupport.h
+            )
+    endif()
+
+    target_link_libraries(${PROJECT_NAME} Qt5::Widgets Qt5::UiPlugin)
+
+    if(APPLE)
+        target_link_libraries(${PROJECT_NAME} "-framework AppKit" "-framework Cocoa")
+    endif()
+
+    set(PLUGIN_OUTPUT_DIR ${APPLICATION_BIN_OUTPUT}/Designer/${CMAKE_LIBRARY_ARCHITECTURE}/${Qt5_VERSION})
+
+    file(MAKE_DIRECTORY ${PLUGIN_OUTPUT_DIR})
+
+    set_target_properties(${PROJECT_NAME} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${PLUGIN_OUTPUT_DIR}")
+    set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PLUGIN_OUTPUT_DIR}")
+endif()

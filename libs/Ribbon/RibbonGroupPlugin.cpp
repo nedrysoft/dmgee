@@ -41,12 +41,12 @@ bool RibbonGroupPlugin::isInitialized() const
 
 QWidget *RibbonGroupPlugin::createWidget(QWidget *parent)
 {
-    return new FizzyAde::Ribbon::RibbonGroup(parent);
+    return new Nedrysoft::Ribbon::RibbonGroup(parent);
 }
 
 QString RibbonGroupPlugin::name() const
 {
-    return QStringLiteral("FizzyAde::Ribbon::RibbonGroup");
+    return QStringLiteral("Nedrysoft::Ribbon::RibbonGroup");
 }
 
 QString RibbonGroupPlugin::group() const
@@ -77,7 +77,7 @@ bool RibbonGroupPlugin::isContainer() const
 QString RibbonGroupPlugin::domXml() const
 {
     return "<ui language=\"c++\" displayname=\"Ribbon Group\">\n"
-           " <widget class=\"FizzyAde::Ribbon::RibbonGroup\" name=\"ribbonGroup\">\n"
+           " <widget class=\"Nedrysoft::Ribbon::RibbonGroup\" name=\"ribbonGroup\">\n"
 
            "  <property name=\"groupName\">\n"
            "   <string>Group</string>\n"

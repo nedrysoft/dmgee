@@ -85,3 +85,5 @@ python/build.spec
 python/build/
 
 python/dist/
+
+bin/

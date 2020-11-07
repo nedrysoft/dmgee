@@ -44,12 +44,12 @@ bool RibbonWidgetPlugin::isInitialized() const
 
 QWidget *RibbonWidgetPlugin::createWidget(QWidget *parent)
 {
-    return new FizzyAde::Ribbon::RibbonWidget(parent);
+    return new Nedrysoft::Ribbon::RibbonWidget(parent);
 }
 
 QString RibbonWidgetPlugin::name() const
 {
-    return QStringLiteral("FizzyAde::Ribbon::RibbonWidget");
+    return QStringLiteral("Nedrysoft::Ribbon::RibbonWidget");
 }
 
 QString RibbonWidgetPlugin::group() const
@@ -91,7 +91,7 @@ QString RibbonWidgetPlugin::domXml() const
 {
     /*return QLatin1String("\
      <ui language=\"c++\" displayname=\"Ribbon Widget\">\
-         <widget class=\"FizzyAde::Ribbon::RibbonWidget\" name=\"ribbonWidget\">\
+         <widget class=\"Nedrysoft::Ribbon::RibbonWidget\" name=\"ribbonWidget\">\
              <widget class=\"QWidget\" name=\"tab\" />\
          </widget>\
          <customwidgets>\
@@ -104,7 +104,7 @@ QString RibbonWidgetPlugin::domXml() const
      </ui>");*/
 
     return "<ui language=\"c++\" displayname=\"Ribbon Widget\">\n"
-           " <widget class=\"FizzyAde::Ribbon::RibbonWidget\" name=\"ribbonWidget\">\n"
+           " <widget class=\"Nedrysoft::Ribbon::RibbonWidget\" name=\"ribbonWidget\">\n"
            " </widget>\n"
            "</ui>\n";
 }
