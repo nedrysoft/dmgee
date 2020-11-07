@@ -47,17 +47,7 @@
      </widget>
     </item>
     <item>
-     <spacer name="verticalSpacer">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
+     <widget class="Nedrysoft::PreviewWidget" name="previewWidget" native="true"/>
     </item>
    </layout>
   </widget>
@@ -96,6 +86,12 @@
    <class>Nedrysoft::Ribbon::RibbonWidget</class>
    <extends>QTabWidget</extends>
    <header>Ribbon/RibbonWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Nedrysoft::PreviewWidget</class>
+   <extends>QWidget</extends>
+   <header>PreviewWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

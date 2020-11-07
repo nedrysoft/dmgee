@@ -47,7 +47,7 @@ Nedrysoft::AboutDialog::AboutDialog(QWidget *parent) :
     setAttribute(Qt::WA_AlwaysStackOnTop);
 }
 
-void Nedrysoft::AboutDialog::focusOutEvent(QFocusEvent *event {
+void Nedrysoft::AboutDialog::focusOutEvent(QFocusEvent *event) {
     Q_UNUSED(event);
 
     close();

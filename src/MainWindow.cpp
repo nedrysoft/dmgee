@@ -29,6 +29,7 @@
 #include <QDesktopServices>
 #include <QPaintEvent>
 #include <QPainter>
+#include <QWindow>
 #include <QTimer>
 
 using namespace std::chrono_literals;
@@ -84,8 +85,10 @@ Nedrysoft::MainWindow::MainWindow(Nedrysoft::SplashScreen *splashScreen)
 
     m_backgroundPixmap = QPixmap::fromImage(loadedImage->image());
 
+    ui->previewWidget->setPixmap(m_backgroundPixmap);
+
     QDesktopServices::setUrlHandler("dmgee", this, SLOT("handleOpenByUrl"));
- }
+}
 
 Nedrysoft::MainWindow::~MainWindow() {
     delete ui;
@@ -179,10 +182,3 @@ void Nedrysoft::Application::processThread()
     }
 }
  */
-
-void Nedrysoft::MainWindow::paintEvent(QPaintEvent *paintEvent)
-{
-    QPainter p(this);
-
-    p.drawPixmap(0, 0, m_backgroundPixmap);
-}

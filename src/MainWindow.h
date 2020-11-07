@@ -80,13 +80,6 @@ namespace Nedrysoft {
              */
             virtual void closeEvent(QCloseEvent *closeEvent) override;
 
-            /**
-             * @brief           Event handler for paint
-             *
-             * @param[in]       paintEvent contains the information about the event
-             */
-            virtual void paintEvent(QPaintEvent *paintEvent) override;
-
         private:
             /**
              * @brief           Event filter mathod

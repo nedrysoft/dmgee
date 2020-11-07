@@ -78,6 +78,8 @@ list(APPEND app_SOURCES
     src/AboutDialog.ui
     src/SplashScreen.cpp
     src/SplashScreen.h
+    src/PreviewWidget.cpp
+    src/PreviewWidget.h
 
     src/app.qrc
     assets/dmgee.icns
@@ -142,7 +144,8 @@ target_include_directories(${APPLICATION_SHORT_NAME} PRIVATE
     thirdparty/tomlplusplus/include
     thirdparty/fmt/include
     thirdparty/CLI11/include
-    libs
+    libs/
+    src
 )
 
 # find objective c sources and set options
