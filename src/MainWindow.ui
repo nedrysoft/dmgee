@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>dmgee</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -30,7 +30,7 @@
     <item>
      <widget class="Nedrysoft::Ribbon::RibbonWidget" name="ribbonWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="homeRibboonPage">
        <attribute name="title">
@@ -216,7 +216,7 @@
         <item>
          <widget class="Nedrysoft::Ribbon::RibbonGroup" name="featuresRibbonGroup">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -248,6 +248,9 @@
            </property>
            <property name="bottomMargin">
             <number>6</number>
+           </property>
+           <property name="verticalSpacing">
+            <number>-1</number>
            </property>
            <item row="2" column="1">
             <widget class="QSlider" name="minFeatureSlider">
@@ -305,9 +308,9 @@
          </widget>
         </item>
         <item>
-         <widget class="Nedrysoft::Ribbon::RibbonGroup" name="ribbonGroup">
+         <widget class="Nedrysoft::Ribbon::RibbonGroup" name="iconsRibbonGroup">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -321,29 +324,20 @@
           <property name="groupName">
            <string>Icons</string>
           </property>
-          <layout class="QGridLayout" name="gridLayout_2">
+          <layout class="QVBoxLayout" name="verticalLayout_3">
            <property name="leftMargin">
             <number>0</number>
            </property>
            <property name="topMargin">
             <number>0</number>
            </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
            <property name="bottomMargin">
             <number>0</number>
            </property>
-           <item row="0" column="0">
-            <layout class="QFormLayout" name="formLayout_3">
-             <property name="labelAlignment">
-              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-             </property>
-             <property name="formAlignment">
-              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-             </property>
-             <property name="rightMargin">
-              <number>12</number>
+           <item>
+            <layout class="QFormLayout" name="iconsFormLayout">
+             <property name="topMargin">
+              <number>4</number>
              </property>
              <item row="0" column="0">
               <widget class="QLabel" name="iconSizeLabel">
@@ -354,12 +348,28 @@
                 </font>
                </property>
                <property name="text">
-                <string>Size</string>
+                <string>Size:</string>
                </property>
               </widget>
              </item>
              <item row="0" column="1">
-              <widget class="QLineEdit" name="iconSizeLineEdit"/>
+              <widget class="QLineEdit" name="iconSizeLineEdit">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Open Sans</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>
@@ -369,7 +379,7 @@
         <item>
          <widget class="Nedrysoft::Ribbon::RibbonGroup" name="gridGroup">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -384,6 +394,9 @@
            <string>Grid</string>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_2">
+           <property name="spacing">
+            <number>0</number>
+           </property>
            <property name="leftMargin">
             <number>0</number>
            </property>
@@ -397,7 +410,7 @@
             <number>0</number>
            </property>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <layout class="QHBoxLayout" name="snapAndVisibleLayout">
              <item>
               <widget class="QCheckBox" name="snapGridCheckbox">
                <property name="font">
@@ -453,18 +466,27 @@
             </layout>
            </item>
            <item>
-            <layout class="QFormLayout" name="formLayout_2">
+            <layout class="QFormLayout" name="gridSizeLayout">
              <property name="fieldGrowthPolicy">
               <enum>QFormLayout::ExpandingFieldsGrow</enum>
              </property>
              <property name="labelAlignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
              </property>
              <property name="formAlignment">
               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
              </property>
+             <property name="verticalSpacing">
+              <number>4</number>
+             </property>
              <item row="0" column="0">
               <widget class="QLabel" name="xLabel">
+               <property name="font">
+                <font>
+                 <family>Open Sans</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
                <property name="text">
                 <string>X</string>
                </property>
@@ -478,6 +500,12 @@
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>20</height>
+                </size>
+               </property>
                <property name="font">
                 <font>
                  <family>Open Sans</family>
@@ -488,6 +516,12 @@
              </item>
              <item row="1" column="0">
               <widget class="QLabel" name="yLabel">
+               <property name="font">
+                <font>
+                 <family>Open Sans</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
                <property name="text">
                 <string>Y</string>
                </property>
@@ -501,6 +535,12 @@
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>20</height>
+                </size>
+               </property>
                <property name="font">
                 <font>
                  <family>Open Sans</family>
@@ -512,23 +552,20 @@
             </layout>
            </item>
            <item>
-            <layout class="QVBoxLayout" name="verticalLayout_3"/>
+            <spacer name="verticalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
            </item>
           </layout>
          </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer_4">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
         </item>
         <item>
          <spacer name="horizontalSpacer_2">

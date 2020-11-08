@@ -80,6 +80,8 @@ list(APPEND app_SOURCES
     src/SplashScreen.h
     src/PreviewWidget.cpp
     src/PreviewWidget.h
+    src/Builder.cpp
+    src/Builder.h
 
     src/app.qrc
     assets/dmgee.icns
