@@ -22,8 +22,13 @@
 #ifndef NEDRYSOFT_PREVIEWWIDGET_H
 #define NEDRYSOFT_PREVIEWWIDGET_H
 
+#include <QGraphicsItemGroup>
+#include <QGraphicsScene>
+#include <QGraphicsView>
+#include <QGridLayout>
 #include <QPixmap>
 #include <QWidget>
+#include "Image.h"
 
 namespace Nedrysoft {
     /**
@@ -33,6 +38,14 @@ namespace Nedrysoft {
         public QWidget {
             private:
                 Q_OBJECT
+
+            public:
+                enum IconType {
+                    Background,
+                    Centroid,
+                    Icon,
+                    Shortcut
+                };
 
             public:
                 /**
@@ -47,7 +60,7 @@ namespace Nedrysoft {
                  *
                  * @param[in]       pixmap is the pixmap to be used as the background image
                  */
-                void setPixmap(QPixmap pixmap);
+                void setPixmap(QPixmap &pixmap);
 
                 /**
                  * @brief           Sets the snapping centroid locations
@@ -65,21 +78,32 @@ namespace Nedrysoft {
                  */
                 void setGrid(QSize size, bool visible, bool snap);
 
-            protected:
                 /**
-                 * @brief           Handles the repainting of the image
-                 * @param[in]       event contains the details about the paint event request
+                 * @brief           Adds an icon to the DMG
+                 *
+                 * @param[in]       image the image to be displayed
+                 * @param[in]       point the initial location of the icon
+                 * @param[in]       iconType the type of icon being inserted
                  */
-                void paintEvent(QPaintEvent *event) override;
+                void addIcon(Nedrysoft::Image *image, const QPoint &point, IconType iconType);
 
-            private:
+        private:
                 QPixmap m_pixmap;                           //! the background image pixmap
                 QPixmap m_targetPixmap;                     //! target snap location image
                 QList<QPointF> m_centroids;                 //! centroid points
 
+                QPointF m_iconPosition;                     //! holds position of icon for drag & drop
+                QSize m_iconSize;                           //! size of the icons on the DMG
                 QSize m_gridSize;                           //! grid size
                 bool m_gridIsVisible;                       //! whether the grid is drawn
                 bool m_gridShouldSNap;                      //! whether the cursor should snap to the grid
+                bool m_snapToFeatures;                      //! whether the custor should nap to the detected features
+
+                QGraphicsScene m_graphicsScene;             //! the graphics scene
+                QGraphicsView m_graphicsView;               //! the rendered graphics scene
+                QGraphicsItemGroup m_grid;                  //! the grid group
+
+                QGridLayout m_layout;                       //! the layout to hold the widgets
     };
 }
 

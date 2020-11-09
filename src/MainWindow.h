@@ -22,6 +22,7 @@
 #ifndef NEDRYSOFT_MAINWINDOW_H
 #define NEDRYSOFT_MAINWINDOW_H
 
+#include "Builder.h"
 #include "Image.h"
 #include "SplashScreen.h"
 #include <QFileOpenEvent>
@@ -70,6 +71,15 @@ namespace Nedrysoft {
                  */
                 static MainWindow *getInstance();
 
+                /**
+                 * @brief           Loads the given configuration
+                 *
+                 * @param[in]       filename is the name of the TOML format configuration to load
+                 *
+                 * @returns         true if loaded ok; otherwise false.
+                 */
+                bool loadConfiguration(QString filename);
+
             protected:
                 /**
                  * @brief           Event handler for window close event
@@ -78,7 +88,6 @@ namespace Nedrysoft {
                  */
                 virtual void closeEvent(QCloseEvent *closeEvent) override;
 
-            private:
                 /**
                  * @brief           Event filter mathod
                  *
@@ -101,7 +110,15 @@ namespace Nedrysoft {
                  */
                 void processBackground();
 
-            private:
+                /**
+                 * @brief           Loads the pixmap from the configuration and sets the preview image & feature detection image
+                 */
+                void updatePixmap();
+
+                QVariant configValue(QString valueName, QVariant defaultValue);
+
+
+        private:
                 Ui::MainWindow *ui;                                     //! ui class for the main window
                 static MainWindow *m_instance;                          //! instance of the main window
                 int m_minimumPixelArea;                                 //! minimum pixel area for a feature
@@ -112,6 +129,10 @@ namespace Nedrysoft {
                 QSize m_grid;                                           //! grid size
                 bool m_gridIsVisible;                                   //! grid visiblity
                 bool m_gridShouldSnap;                                  //! whether the grid should be used to snap to
+                bool m_snapToFeatures;                                  //! whether features should be snapped to
+                Builder *m_builder;                                     //! builder instance for generating DMG
+
+                QVariantMap m_config;                                   //! config
     };
 }
 

@@ -39,6 +39,7 @@ constexpr auto applicationFontsPrefix = ":/fonts";                          //! 
 int main(int argc, char *argv[]) {
     QApplication application(argc, argv);
     QMimeDatabase mimeDatabase;
+    int returnValue = 0;
 
     CLI::App appCli("dmgee is an application for designing and creating custom DMG images.\n", APPLICATION_SHORT_NAME);
 
@@ -53,14 +54,19 @@ int main(int argc, char *argv[]) {
     std::string configFilename;
     std::string dmgFilename;
 
-    appCli.add_option("-c, --config", configFilename, "the filename of the configuration file to be used to generate the DMG");
-    appCli.add_option("-o, --output", dmgFilename, "the filename of the created DMG. (overrides value in config file)");
+    auto configOption = appCli.add_option("-c, --config", configFilename, "the filename of the configuration file to be used to generate the DMG");
+    auto outputOption = appCli.add_option("-o, --output", dmgFilename, "the filename of the created DMG. (overrides value in config file)");
+    auto editOption = appCli.add_option("-e, --edit", nullptr, "Whether to open the editor (default false)");
+    auto buildOption = appCli.add_option("-b, --build", nullptr, "Uses the given configuration to build the DMG");
 
-    auto versionMessage = QString("display the version of %1 and then exit").arg(APPLICATION_SHORT_NAME);
+    buildOption->needs(configOption);
+    buildOption->needs(outputOption);
 
-    std::string versionDescription = versionMessage.toStdString();
+    editOption->required(false);
 
-    auto versionFlag = appCli.add_flag("-V, --version", versionDescription);
+    auto versionMessage = QString("display the version of %1 and then exit").arg(APPLICATION_SHORT_NAME).toStdString();
+
+    auto versionFlag = appCli.add_flag("-V, --version", versionMessage);
 
     CLI11_PARSE(appCli, argc, argv);
 
@@ -70,37 +76,42 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    Nedrysoft::Python *python = new Nedrysoft::Python();
+    if ((editOption->count()) || (!buildOption->count())) {
+        // search the /fonts folder in the resources and attempt to load any found fonts
 
-    python->runScript("print(\"Hello World\")", nullptr);
+        auto fontDirIterator = QDirIterator(applicationFontsPrefix, QDirIterator::Subdirectories);
 
-    // search the /fonts folder in the resources and attempt to load any found fonts
+        while (fontDirIterator.hasNext()) {
+            fontDirIterator.next();
 
-    auto fontDirIterator = QDirIterator(applicationFontsPrefix, QDirIterator::Subdirectories);
+            auto mimeType = mimeDatabase.mimeTypeForFile(fontDirIterator.filePath()).name();
 
-    while(fontDirIterator.hasNext())
-    {
-        fontDirIterator.next();
-
-        auto mimeType = mimeDatabase.mimeTypeForFile(fontDirIterator.filePath()).name();
-
-        if (QRegularExpression(R"(font\/.*)").match(mimeType).hasMatch()) {
-            QFontDatabase::addApplicationFont(fontDirIterator.filePath());
+            if (QRegularExpression(R"(font\/.*)").match(mimeType).hasMatch()) {
+                QFontDatabase::addApplicationFont(fontDirIterator.filePath());
+            }
         }
+
+        ilInit();
+
+        ilEnable(IL_ORIGIN_SET);
+
+        ilSetInteger(IL_ORIGIN_MODE, IL_ORIGIN_UPPER_LEFT);
+
+        Nedrysoft::SplashScreen splashScreen;
+
+        application.setApplicationDisplayName(applicationName);
+        application.setApplicationName(applicationName);
+
+        auto mainWindow = new Nedrysoft::MainWindow(&splashScreen);
+
+        mainWindow->show();
+
+        mainWindow->loadConfiguration(QString::fromStdString(configFilename));
+
+        returnValue = application.exec();
+
+        delete mainWindow;
     }
-
-    Nedrysoft::SplashScreen splashScreen;
-
-    application.setApplicationDisplayName(applicationName);
-    application.setApplicationName(applicationName);
-
-    auto mainWindow = new Nedrysoft::MainWindow(&splashScreen);
-
-    mainWindow->show();
-
-    auto returnValue = application.exec();
-
-    delete mainWindow;
 
     return returnValue;
 }

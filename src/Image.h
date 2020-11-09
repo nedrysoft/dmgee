@@ -108,6 +108,13 @@ namespace Nedrysoft {
              */
             QByteArray rawData();
 
+            /**
+             * @brief       returns whether the image is valid
+             *
+             * @return      true if valid; otherwise false
+             */
+            bool isValid();
+
         private:
             char *m_data;                           //! the raw image data
             unsigned int m_length;                  //! the langth in bytes of the decoded image data
@@ -115,6 +122,8 @@ namespace Nedrysoft {
             unsigned int m_width;                   //! the width of the image
             unsigned int m_height;                  //! the height of the image
             unsigned int m_stride;                  //! the stride of the backing image
+
+            bool m_isValid;                         //! whether an valid image has been loaded
 
             ILuint m_imageId;                       //! the DevIL image identifier
     };

@@ -82,6 +82,8 @@ list(APPEND app_SOURCES
     src/PreviewWidget.h
     src/Builder.cpp
     src/Builder.h
+    src/SnappedGraphicsPixmapItem.cpp
+    src/SnappedGraphicsPixmapItem.h
 
     src/app.qrc
     assets/dmgee.icns
@@ -148,6 +150,7 @@ target_include_directories(${APPLICATION_SHORT_NAME} PRIVATE
     thirdparty/CLI11/include
     libs/
     src
+    dmgee_BINARY_DIR/${PROJECT_NAME}_autogen
 )
 
 # find objective c sources and set options
@@ -285,6 +288,5 @@ list(APPEND APPLICATION_MAC_LINK_LIBRARIES "-framework AppKit")
 
 target_link_libraries(${APPLICATION_SHORT_NAME} ${APPLICATION_QT_LINK_LIBRARIES} ${APPLICATION_MAC_LINK_LIBRARIES})
 target_link_libraries(${APPLICATION_SHORT_NAME} Ribbon)
-
 
 add_subdirectory("libs/Ribbon")

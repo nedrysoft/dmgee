@@ -24,6 +24,8 @@ icon = "./assets/dmgee.icns"
 filename = "dmgee"
 volumename = "dmgee"
 iconsize = 160
+gridsize = [20,20]
+featuresize = 10000
 
 [[file]]
 x = 100

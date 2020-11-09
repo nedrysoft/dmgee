@@ -20,5 +20,7 @@
         <file>../assets/noun_Arrow_3439356.png</file>
         <file>../assets/noun_Arrow_3439025-inverted.png</file>
         <file>../assets/noun_Arrow_3439356-inverted.png</file>
+
+        <file>../assets/app_icon.png</file>
     </qresource>
 </RCC>

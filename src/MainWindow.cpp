@@ -31,6 +31,9 @@
 #include <QPainter>
 #include <QTimer>
 #include <QWindow>
+#include <QFileInfo>
+#include <QMimeData>
+#include <QTemporaryDir>
 
 using namespace std::chrono_literals;
 
@@ -45,13 +48,16 @@ Nedrysoft::MainWindow::MainWindow(Nedrysoft::SplashScreen *splashScreen)
           m_backgroundImage(),
           m_grid(20,20),
           m_gridIsVisible(true),
-          m_gridShouldSnap(true) {
+          m_gridShouldSnap(true),
+          m_snapToFeatures(true) {
 
     ui->setupUi(this);
 
     qApp->installEventFilter(this);
 
     m_instance = this;
+
+    m_builder = new Builder;
 
     QTimer::singleShot(splashScreenDuration, [splashScreen]() {
         splashScreen->close();
@@ -67,31 +73,55 @@ Nedrysoft::MainWindow::MainWindow(Nedrysoft::SplashScreen *splashScreen)
         aboutDialog.exec();
     });
 
-    auto filename = QString("/Users/adriancarpenter/Documents/Development/dmgee/assets/dmg_background@2x.tiff");
-
-    m_backgroundImage = Nedrysoft::Image(filename, true);
-
-    m_backgroundPixmap = QPixmap::fromImage(m_backgroundImage.image());
-
-    ui->previewWidget->setPixmap(m_backgroundPixmap);
+    updatePixmap();
 
     QDesktopServices::setUrlHandler("dmgee", this, SLOT("handleOpenByUrl"));
 
-    processBackground();
-
     connect(ui->minFeatureSlider, &QSlider::valueChanged, [this](int newValue) {
         m_minimumPixelArea = newValue;
-        processBackground();
+
+        if (ui->featureAutpDetectCheckbox->isChecked()) {
+            processBackground();
+        }
     });
 
-    ui->gridVisibleCheckbox->setCheckState(m_gridIsVisible?Qt::Checked:Qt::Unchecked);
-    ui->snapGridCheckbox->setCheckState(m_gridShouldSnap?Qt::Checked:Qt::Unchecked);
+    ui->gridVisibleCheckbox->setCheckState(m_gridIsVisible ? Qt::Checked : Qt::Unchecked);
+    ui->gridSnapCheckbox->setCheckState(m_gridShouldSnap ? Qt::Checked : Qt::Unchecked);
+    ui->featureAutpDetectCheckbox->setCheckState(m_snapToFeatures ? Qt::Checked : Qt::Unchecked);
 
     connect(ui->gridVisibleCheckbox, &QCheckBox::stateChanged, [this](int state) {
         ui->previewWidget->setGrid(QSize(20,20), (state==Qt::Checked) ? true:false, true);
     });
 
+    connect(ui->featureAutpDetectCheckbox, &QCheckBox::stateChanged, [this](int state) {
+        if (!state) {
+            ui->previewWidget->setCentroids(QList<QPointF>());
+        } else {
+            processBackground();
+        }
+    });
+
+    loadConfiguration("./dmgee.dmgee");
+
+    processBackground();
+
     ui->previewWidget->setGrid(QSize(20,20), true, true);
+
+    ui->featureAutpDetectCheckbox->setCheckState(Qt::Checked);
+
+    QTemporaryDir temporaryDir;
+
+    if (temporaryDir.isValid()) {
+        auto temporaryName = temporaryDir.path()+"/Applications";
+
+        if (QFile::link("/Applications", temporaryName)) {
+            auto applicationsShortcutImage = new Nedrysoft::Image(temporaryName, false, 160, 160);
+            auto applicationIcon = new Nedrysoft::Image("/Users/adriancarpenter/Documents/Development/dmgee/bin/x86_64/Debug/dmgee.app", false, 160, 160);
+
+            ui->previewWidget->addIcon(applicationsShortcutImage, QPoint(100,100), PreviewWidget::Shortcut);
+            ui->previewWidget->addIcon(applicationIcon, QPoint(100,100), PreviewWidget::Icon);
+        }
+    }
 }
 
 Nedrysoft::MainWindow::~MainWindow() {
@@ -128,46 +158,96 @@ void Nedrysoft::MainWindow::closeEvent(QCloseEvent *closeEvent) {
 
 void Nedrysoft::MainWindow::processBackground()
 {
-    std::vector<std::vector<cv::Point> > contours;
-    std::vector<cv::Vec4i> hierarchy;
-    cv::Mat image = m_backgroundImage.mat();
+    if (m_backgroundImage.isValid()) {
+        std::vector<std::vector<cv::Point> > contours;
+        std::vector<cv::Vec4i> hierarchy;
+        cv::Mat image = m_backgroundImage.mat();
 
-    // convert the image to grey scale for contour detection
+        // convert the image to grey scale for contour detection
 
-    cv::cvtColor(image, image, cv::COLOR_BGR2GRAY);
+        cv::cvtColor(image, image, cv::COLOR_BGR2GRAY);
 
-    m_centroids.clear();
+        m_centroids.clear();
 
-    // apply thresholding
+        // apply thresholding
 
-    cv::threshold(image, image, 150, 255, cv::THRESH_BINARY);
+        cv::threshold(image, image, 150, 255, cv::THRESH_BINARY);
 
-    // find contours in image
+        // find contours in image
 
-    cv::findContours(image, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
+        cv::findContours(image, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
 
-    // find centre of discovered objects in image
+        // find centre of discovered objects in image
 
-    for (auto & contour : contours) {
-        float sumX = 0, sumY = 0;
-        float size = contour.size();
-        QPointF centroid;
+        for (auto &contour : contours) {
+            float sumX = 0, sumY = 0;
+            float size = contour.size();
+            QPointF centroid;
 
-        if(size > 0) {
-            for (auto & point : contour) {
-                sumX += point.x;
-                sumY += point.y;
+            if (size > 0) {
+                for (auto &point : contour) {
+                    sumX += point.x;
+                    sumY += point.y;
+                }
+
+                centroid = QPointF(sumX / size, sumY / size);
             }
 
-            centroid = QPointF(sumX/size, sumY/size);
+            auto area = cv::contourArea(contour);
+
+            if (area > m_minimumPixelArea) {
+                m_centroids.append(centroid);
+            }
         }
 
-        auto area = cv::contourArea(contour);
+        ui->previewWidget->setCentroids(m_centroids);
+    }
+}
 
-        if (area>m_minimumPixelArea) {
-            m_centroids.append(centroid);
-        }
+QVariant Nedrysoft::MainWindow::configValue(QString valueName, QVariant defaultValue) {
+    if (m_config.contains(valueName)) {
+        return m_builder->property(valueName.toLatin1().constData());
     }
 
-    ui->previewWidget->setCentroids(m_centroids);
+    return defaultValue;
+}
+
+bool Nedrysoft::MainWindow::loadConfiguration(QString filename) {
+
+    if (m_builder->loadConfiguration(filename)) {
+        ui->gridSnapCheckbox->setCheckState(configValue("snapToGrid", false).toBool() ? Qt::Checked : Qt::Unchecked);
+        ui->gridVisibleCheckbox->setCheckState(configValue("gridVisible", false).toBool() ? Qt::Checked : Qt::Unchecked);
+
+        ui->gridXLineEdit->setText(QString("%1").arg(configValue("gridSize", 20).toPoint().x()));
+        ui->gridYLineEdit->setText(QString("%1").arg(configValue("gridSize", 20).toPoint().y()));
+
+        ui->iconsSizeLineEdit->setText(QString("%1").arg(configValue("iconSize", 128).toInt()));
+        ui->minFeatureSlider->setValue(configValue("featureSize", 10000).toInt());
+
+        ui->featureAutpDetectCheckbox->setCheckState(configValue("detectFeatures", true).toBool() ? Qt::Checked : Qt::Unchecked);
+
+        updatePixmap();
+    }
+
+    return true;
+}
+
+void Nedrysoft::MainWindow::updatePixmap() {
+    QFileInfo fileInfo(m_builder->property("background").toString());
+
+    if (!fileInfo.absoluteFilePath().isEmpty()) {
+        m_backgroundImage = Nedrysoft::Image(fileInfo.absoluteFilePath(), true);
+
+        m_backgroundPixmap = QPixmap::fromImage(m_backgroundImage.image());
+
+        ui->previewWidget->setPixmap(m_backgroundPixmap);
+
+        if (ui->featureAutpDetectCheckbox->isChecked()) {
+            processBackground();
+        }
+    } else {
+        m_backgroundPixmap = QPixmap();
+        ui->previewWidget->setPixmap(m_backgroundPixmap);
+        ui->previewWidget->setCentroids(QList<QPointF>());
+    }
 }

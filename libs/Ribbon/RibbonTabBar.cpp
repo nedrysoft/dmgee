@@ -42,7 +42,7 @@ Nedrysoft::Ribbon::RibbonTabBar::RibbonTabBar(QWidget *parent) :
     m_selectedFont = QFont(fontManager->boldFont(), DefaultFontSize, QFont::Bold);
     m_mouseInWidget = false;
 
-    this->setStyleSheet("QTabBar::tab{padding: 18px;}");
+    this->setStyleSheet("QTabBar::tab{padding: 18px}");
 
 #if defined(Q_OS_UNIX)
     this->setMouseTracking(true);
@@ -124,7 +124,6 @@ void Nedrysoft::Ribbon::RibbonTabBar::paintEvent(QPaintEvent *event) {
 #if defined(Q_OS_MACOS)
     if (!m_mouseInWidget)
         hoveredTab = -1;
-
 #endif
 
     painter.save();
@@ -132,6 +131,9 @@ void Nedrysoft::Ribbon::RibbonTabBar::paintEvent(QPaintEvent *event) {
     for(auto tabIndex=0;tabIndex<this->count();tabIndex++) {
         auto rect = tabRect(tabIndex);
 
+#if defined(Q_OS_MACOS)
+        rect.adjust(0,0,0,-4);
+#endif
         if (hoveredTab==tabIndex) {
             backgroundColor = Ribbon::TabHoverColor[currentTheme];
         } else {

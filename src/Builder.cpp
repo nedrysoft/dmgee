@@ -23,6 +23,7 @@
 #include "Builder.h"
 #include "Python/Python.h"
 #include <optional>
+#include <QPoint>
 
 bool Nedrysoft::Builder::createDMG(toml::table table) {
     Python *python;
@@ -64,7 +65,7 @@ bool Nedrysoft::Builder::loadConfiguration(QString filename) {
         symlink.mame = QString::fromStdString(*entry["name"].value<std::string>());
         symlink.shortcut = QString::fromStdString(*entry["shortcut"].value<std::string>());
 
-        m_configuration.symlinks.push_back(symlink);
+        m_configuration.m_symlinks.push_back(symlink);
     }
 
     for (toml::node &elem : *configuration["file"].as_array()) {
@@ -75,15 +76,22 @@ bool Nedrysoft::Builder::loadConfiguration(QString filename) {
         file.y = *entry["y"].value<int>();
         file.file = QString::fromStdString(*entry["file"].value<std::string>());
 
-        m_configuration.files.push_back(file);
+        m_configuration.m_files.push_back(file);
     }
 
-    m_configuration.background = QString::fromStdString(*configuration["background"].value<std::string>());
-    m_configuration.icon = QString::fromStdString(*configuration["icon"].value<std::string>());
-    m_configuration.filename = QString::fromStdString(*configuration["filename"].value<std::string>());
-    m_configuration.volumename = QString::fromStdString(*configuration["volumename"].value<std::string>());
-    m_configuration.iconsize = *configuration["iconsize"].value<int>();
+    m_configuration.m_background = QString::fromStdString(*configuration["background"].value<std::string>());
+    m_configuration.m_icon = QString::fromStdString(*configuration["icon"].value<std::string>());
+    m_configuration.m_filename = QString::fromStdString(*configuration["filename"].value<std::string>());
+    m_configuration.m_volumename = QString::fromStdString(*configuration["volumename"].value<std::string>());
+    m_configuration.m_iconsize = *configuration["iconsize"].value<int>();
+
+    auto gridSize = *configuration["gridsize"].as_array();
+
+    if (gridSize.size()==2) {
+        m_configuration.m_gridSize = QPoint(*gridSize[0].value<int>(), *gridSize[1].value<int>());
+    }
+
+    m_configuration.m_featureSize = *configuration["featuresize"].value<int>();
 
     return true;
 }
-

@@ -63,7 +63,11 @@ namespace Nedrysoft::Ribbon {
         qRgb(0x57, 0x57, 0x57)
     };
 
+#if defined(Q_OS_MACOS)
+    static constexpr int TabBarHeight = 34;                                     //! Height of the tab bar portion of the control
+#else
     static constexpr int TabBarHeight = 28;                                     //! Height of the tab bar portion of the control
+#endif
     static constexpr int RibbonBarHeight = 100;                                 //! Height of the entire control
     static constexpr int TabHighlightHeight = 3;                                //! Height of the highlight mark on the selected page
     static constexpr int GroupDividerMargin = 2;                                //! Width of the group divider

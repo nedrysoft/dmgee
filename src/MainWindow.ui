@@ -15,6 +15,9 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>0</number>
+    </property>
     <property name="leftMargin">
      <number>0</number>
     </property>
@@ -67,6 +70,15 @@
            <string>File</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_3">
+           <property name="topMargin">
+            <number>6</number>
+           </property>
+           <property name="rightMargin">
+            <number>12</number>
+           </property>
+           <property name="bottomMargin">
+            <number>6</number>
+           </property>
            <item row="0" column="0">
             <layout class="QVBoxLayout" name="verticalLayout_5">
              <item>
@@ -114,7 +126,7 @@
             </layout>
            </item>
            <item row="0" column="1">
-            <layout class="QVBoxLayout" name="verticalLayout_4">
+            <layout class="QVBoxLayout" name="LoadSaveLayout">
              <item>
               <widget class="QPushButton" name="loadButton">
                <property name="sizePolicy">
@@ -165,24 +177,11 @@
              </item>
             </layout>
            </item>
-           <item row="0" column="2">
-            <spacer name="horizontalSpacer_6">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
           </layout>
          </widget>
         </item>
         <item>
-         <spacer name="horizontalSpacer">
+         <spacer name="homeGroupSpacer">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -292,7 +291,7 @@
             </spacer>
            </item>
            <item row="1" column="1">
-            <widget class="QCheckBox" name="checkBox">
+            <widget class="QCheckBox" name="featureAutpDetectCheckbox">
              <property name="font">
               <font>
                <family>Open Sans</family>
@@ -303,6 +302,109 @@
               <string>Auto Detection</string>
              </property>
             </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="Nedrysoft::Ribbon::RibbonGroup" name="filesRibbonGroup">
+          <property name="minimumSize">
+           <size>
+            <width>70</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>70</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="groupName">
+           <string>Files</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_4">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>6</number>
+           </property>
+           <property name="horizontalSpacing">
+            <number>0</number>
+           </property>
+           <property name="verticalSpacing">
+            <number>-1</number>
+           </property>
+           <item row="0" column="0">
+            <layout class="QVBoxLayout" name="FileAddLayout" stretch="0">
+             <property name="spacing">
+              <number>6</number>
+             </property>
+             <property name="sizeConstraint">
+              <enum>QLayout::SetDefaultConstraint</enum>
+             </property>
+             <item>
+              <widget class="QPushButton" name="pushButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>64</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>64</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="icon">
+                <iconset resource="app.qrc">
+                 <normaloff>:/assets/app_icon.png</normaloff>:/assets/app_icon.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>48</width>
+                 <height>48</height>
+                </size>
+               </property>
+               <property name="flat">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="0" column="1">
+            <spacer name="filesSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Expanding</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
            </item>
           </layout>
          </widget>
@@ -325,21 +427,21 @@
            <string>Icons</string>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">
+           <property name="spacing">
+            <number>3</number>
+           </property>
            <property name="leftMargin">
             <number>0</number>
            </property>
            <property name="topMargin">
-            <number>0</number>
+            <number>3</number>
            </property>
            <property name="bottomMargin">
             <number>0</number>
            </property>
            <item>
-            <layout class="QFormLayout" name="iconsFormLayout">
-             <property name="topMargin">
-              <number>4</number>
-             </property>
-             <item row="0" column="0">
+            <layout class="QHBoxLayout" name="horizontalLayout_5">
+             <item>
               <widget class="QLabel" name="iconSizeLabel">
                <property name="font">
                 <font>
@@ -348,12 +450,12 @@
                 </font>
                </property>
                <property name="text">
-                <string>Size:</string>
+                <string>Size: </string>
                </property>
               </widget>
              </item>
-             <item row="0" column="1">
-              <widget class="QLineEdit" name="iconSizeLineEdit">
+             <item>
+              <widget class="QLineEdit" name="iconsSizeLineEdit">
                <property name="maximumSize">
                 <size>
                  <width>16777215</width>
@@ -372,6 +474,49 @@
               </widget>
              </item>
             </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_4">
+             <item>
+              <widget class="QCheckBox" name="checkBox">
+               <property name="font">
+                <font>
+                 <family>Open Sans</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>Show Icons</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_4">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <spacer name="verticalSpacer_3">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
            </item>
           </layout>
          </widget>
@@ -395,7 +540,7 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_2">
            <property name="spacing">
-            <number>0</number>
+            <number>3</number>
            </property>
            <property name="leftMargin">
             <number>0</number>
@@ -406,13 +551,10 @@
            <property name="rightMargin">
             <number>12</number>
            </property>
-           <property name="bottomMargin">
-            <number>0</number>
-           </property>
            <item>
             <layout class="QHBoxLayout" name="snapAndVisibleLayout">
              <item>
-              <widget class="QCheckBox" name="snapGridCheckbox">
+              <widget class="QCheckBox" name="gridSnapCheckbox">
                <property name="font">
                 <font>
                  <family>Open Sans</family>
@@ -466,20 +608,8 @@
             </layout>
            </item>
            <item>
-            <layout class="QFormLayout" name="gridSizeLayout">
-             <property name="fieldGrowthPolicy">
-              <enum>QFormLayout::ExpandingFieldsGrow</enum>
-             </property>
-             <property name="labelAlignment">
-              <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
-             </property>
-             <property name="formAlignment">
-              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-             </property>
-             <property name="verticalSpacing">
-              <number>4</number>
-             </property>
-             <item row="0" column="0">
+            <layout class="QHBoxLayout" name="horizontalLayout_3">
+             <item>
               <widget class="QLabel" name="xLabel">
                <property name="font">
                 <font>
@@ -488,12 +618,12 @@
                 </font>
                </property>
                <property name="text">
-                <string>X</string>
+                <string>X: </string>
                </property>
               </widget>
              </item>
-             <item row="0" column="1">
-              <widget class="QLineEdit" name="xLineEdit">
+             <item>
+              <widget class="QLineEdit" name="gridXLineEdit">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -514,7 +644,7 @@
                </property>
               </widget>
              </item>
-             <item row="1" column="0">
+             <item>
               <widget class="QLabel" name="yLabel">
                <property name="font">
                 <font>
@@ -523,12 +653,12 @@
                 </font>
                </property>
                <property name="text">
-                <string>Y</string>
+                <string>Y: </string>
                </property>
               </widget>
              </item>
-             <item row="1" column="1">
-              <widget class="QLineEdit" name="yLineEdit">
+             <item>
+              <widget class="QLineEdit" name="gridYLineEdit">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -590,7 +720,14 @@
      </widget>
     </item>
     <item>
-     <widget class="Nedrysoft::PreviewWidget" name="previewWidget" native="true"/>
+     <widget class="Nedrysoft::PreviewWidget" name="previewWidget" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>

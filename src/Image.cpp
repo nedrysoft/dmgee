@@ -31,7 +31,8 @@ Nedrysoft::Image::Image() :
         m_width(0),
         m_height(0),
         m_stride(0),
-        m_imageId(0) {
+        m_imageId(0),
+        m_isValid(false){
 }
 
 Nedrysoft::Image::Image(QString filename, bool loadContent, int width, int height) :
@@ -96,6 +97,7 @@ Nedrysoft::Image::Image(QString filename, bool loadContent, int width, int heigh
             m_length = static_cast<unsigned int>(ilGetInteger(IL_IMAGE_SIZE_OF_DATA));
 
             m_stride = m_width * 4;
+            m_isValid = true;
         }
     }
 }
@@ -140,4 +142,8 @@ QImage Nedrysoft::Image::image() {
 
 QByteArray Nedrysoft::Image::rawData() {
     return QByteArray(QByteArray(static_cast<const char *>(m_data), m_length));
+}
+
+bool Nedrysoft::Image::isValid() {
+    return m_isValid;
 }
