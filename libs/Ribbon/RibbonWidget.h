@@ -23,13 +23,14 @@
 #include "RibbonSpec.h"
 #include <QTabWidget>
 #include <QHBoxLayout>
+#include <QMetaProperty>
 
 namespace Nedrysoft::Ribbon {
     class RibbonTabBar;
 
     enum ThemeMode {
-        Light = 0,
-        Dark = 1
+        Light = 0,                                                              //! Draw ribbon in light mode
+        Dark = 1                                                                //! Draw ribbon in dark mode
     };
 
     static constexpr QRgb TextColor[] = {                                       //! Colour of text on the control
@@ -77,7 +78,6 @@ namespace Nedrysoft::Ribbon {
      *
      * @details     Subclass of QTabWidget to create a lookalike of the Ribbon
      *              bar control.
-     *
      */
     class NEDRYSOFT_RIBBON_WIDGET_EXPORT RibbonWidget :
         public QTabWidget {
@@ -89,7 +89,6 @@ namespace Nedrysoft::Ribbon {
                  * @brief       Constructor
                  *
                  * @param[in]   parent          parent widget
-                 *
                  */
                 RibbonWidget(QWidget *parent = nullptr);
 
@@ -103,10 +102,10 @@ namespace Nedrysoft::Ribbon {
                  * @details     Overridden paintEvent for drawing widget
                  *
                  * @param[in]   event           The event information
-                 *
                  */
                 virtual void paintEvent(QPaintEvent *event);
 
+            private:
                 Nedrysoft::Ribbon::RibbonTabBar *m_tabBar;                                  //! The tab bar associated with this ribbon
     };
 }

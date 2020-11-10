@@ -30,7 +30,6 @@ namespace Nedrysoft::Ribbon {
      *
      * @details     Subclass of QTabBar to create a lookalike of the Ribbon
      *              bar tab control.
-     *
      */
     class NEDRYSOFT_RIBBON_WIDGET_EXPORT RibbonTabBar :
         public QTabBar {
@@ -41,8 +40,7 @@ namespace Nedrysoft::Ribbon {
                 /**
                  * @brief       Constructor
                  *
-                 * @param[in]   parent              parent widget
-                 *
+                 * @param[in]   parent is the parent widget to take ownership
                  */
                 RibbonTabBar(QWidget *parent = nullptr);
 
@@ -52,8 +50,7 @@ namespace Nedrysoft::Ribbon {
                  *
                  * @details     Overridden paintEvent for drawing widget
                  *
-                 * @param[in]   event           The event information
-                 *
+                 * @param[in]   event is the event information
                  */
                 virtual void paintEvent(QPaintEvent *event);
 
@@ -62,10 +59,9 @@ namespace Nedrysoft::Ribbon {
                  *
                  * @details     Overridden paintEvent for size widget
                  *
-                 * @param[in]   index           The index of the tab
+                 * @param[in]   index is the index of the tab
                  *
                  * @return      the calculated size hint for the tab
-                 *
                  */
                 virtual QSize tabSizeHint(int index) const;
 
@@ -74,17 +70,17 @@ namespace Nedrysoft::Ribbon {
                  *
                  * @details     handles widget events passed from Qt
                  *
-                 * @param[in]   obj             object that caused the event
-                 * @param[in]   event           the event information
+                 * @param[in]   obj is the object that caused the event
+                 * @param[in]   event contains the event information
                  *
                  * @return      true if event has handled, otherwise false
                  */
                 bool eventFilter(QObject * obj, QEvent * event);
 
             private:
-                QFont m_selectedFont;
-                QFont m_normalFont;
-                bool m_mouseInWidget;
+                QFont m_selectedFont;                                   //! font to use on selected tab
+                QFont m_normalFont;                                     //! font to use on deselected tabs
+                bool m_mouseInWidget;                                   //! tracks whether the mouse is tracked inside the widget
     };
 }
 #endif // NEDRYSOFT_RIBBONTABBAR_H

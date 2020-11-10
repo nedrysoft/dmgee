@@ -25,8 +25,10 @@
 #include "ImageLoader.h"
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
+#include <QAction>
 #include <QDebug>
 #include <QDesktopServices>
+#include <QMenu>
 #include <QPaintEvent>
 #include <QPainter>
 #include <QTimer>
@@ -49,7 +51,8 @@ Nedrysoft::MainWindow::MainWindow(Nedrysoft::SplashScreen *splashScreen)
           m_grid(20,20),
           m_gridIsVisible(true),
           m_gridShouldSnap(true),
-          m_snapToFeatures(true) {
+          m_snapToFeatures(true),
+          m_showIcons(true) {
 
     ui->setupUi(this);
 
@@ -88,9 +91,14 @@ Nedrysoft::MainWindow::MainWindow(Nedrysoft::SplashScreen *splashScreen)
     ui->gridVisibleCheckbox->setCheckState(m_gridIsVisible ? Qt::Checked : Qt::Unchecked);
     ui->gridSnapCheckbox->setCheckState(m_gridShouldSnap ? Qt::Checked : Qt::Unchecked);
     ui->featureAutpDetectCheckbox->setCheckState(m_snapToFeatures ? Qt::Checked : Qt::Unchecked);
+    ui->showIconsCheckBox->setCheckState(m_showIcons ? Qt::Checked : Qt::Unchecked);
 
     connect(ui->gridVisibleCheckbox, &QCheckBox::stateChanged, [this](int state) {
         ui->previewWidget->setGrid(QSize(20,20), (state==Qt::Checked) ? true:false, true);
+    });
+
+    connect(ui->showIconsCheckBox, &QCheckBox::stateChanged, [this](int state) {
+        ui->previewWidget->setIconsVisible((state==Qt::Checked) ? true:false);
     });
 
     connect(ui->featureAutpDetectCheckbox, &QCheckBox::stateChanged, [this](int state) {
@@ -99,6 +107,21 @@ Nedrysoft::MainWindow::MainWindow(Nedrysoft::SplashScreen *splashScreen)
         } else {
             processBackground();
         }
+    });
+
+    connect(ui->insertAppPushButton, &QPushButton::clicked, [this](bool isChecked) {
+
+    });
+
+    connect(ui->dropAppPushButton, &QPushButton::clicked, [this](bool isChecked) {
+        QMenu popupMenu;
+        auto menuPos = ui->dropAppPushButton->mapToGlobal(ui->dropAppPushButton->rect().bottomLeft());
+
+        popupMenu.addAction("Shortcut To Applications");
+        popupMenu.addAction("Shortcut...");
+        popupMenu.addAction("Icon...");
+
+        popupMenu.exec(menuPos);
     });
 
     loadConfiguration("./dmgee.dmgee");

@@ -29,7 +29,6 @@ namespace Nedrysoft::Ribbon {
      * @brief       Ribbon Group Widget
      *
      * @details     Widget to enclose a group of controls
-     *
      */
     class NEDRYSOFT_RIBBON_WIDGET_EXPORT RibbonGroup :
         public QWidget {
@@ -42,8 +41,7 @@ namespace Nedrysoft::Ribbon {
                 /**
                  * @brief       Constructor
                  *
-                 * @param[in]   parent          parent object
-                 *
+                 * @param[in]   parent is the owner parent object
                  */
                 explicit RibbonGroup(QWidget *parent = nullptr);
 
@@ -51,26 +49,23 @@ namespace Nedrysoft::Ribbon {
                  * @brief       Gets the name of the group
                  *
                  * @return      name of the group
-                 *
                  */
                 QString groupName() const;
 
                 /**
                  * @brief       Sets the name of the group
                  *
-                 * @param[in]   name            The group name
-                 *
+                 * @param[in]   name is the name of the group which is displayed at the bottom of the group
                  */
                 void setGroupName(const QString &name);
 
             protected:
                 /**
-                 * @brief       paintEvent
+                 * @brief       Draws the RibbonGroup
                  *
                  * @details     Overridden paintEvent for drawing widget
                  *
-                 * @param[in]   event           The event information
-                 *
+                 * @param[in]   event is the paint event information
                  */
                 virtual void paintEvent(QPaintEvent *event);
 

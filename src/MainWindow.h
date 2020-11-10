@@ -130,9 +130,10 @@ namespace Nedrysoft {
                 bool m_gridIsVisible;                                   //! grid visiblity
                 bool m_gridShouldSnap;                                  //! whether the grid should be used to snap to
                 bool m_snapToFeatures;                                  //! whether features should be snapped to
+                bool m_showIcons;                                       //! whether the icons for applications & shortcuts are visible
                 Builder *m_builder;                                     //! builder instance for generating DMG
 
-                QVariantMap m_config;                                   //! config
+                QVariantMap m_config;                                   //! the configuration as a variant map
     };
 }
 

@@ -21,6 +21,8 @@
 
 #include "SnappedGraphicsPixmapItem.h"
 #include <QDebug>
+#include <QMenu>
+#include <QGraphicsScene>
 
 Nedrysoft::SnappedGraphicsPixmapItem::SnappedGraphicsPixmapItem(std::function<QPoint(const QPoint &point)> snapFunction) {
     m_snapFunction = snapFunction;
@@ -29,7 +31,7 @@ Nedrysoft::SnappedGraphicsPixmapItem::SnappedGraphicsPixmapItem(std::function<QP
     setFlag(ItemSendsGeometryChanges, true);
 }
 
-Nedrysoft::SnappedGraphicsPixmapItem::SnappedGraphicsPixmapItem(std::nullptr_t snapFunction) {
+Nedrysoft::SnappedGraphicsPixmapItem::SnappedGraphicsPixmapItem() {
     m_snapFunction = [](const QPoint &point) {
         return point;
     };
@@ -41,4 +43,19 @@ QVariant Nedrysoft::SnappedGraphicsPixmapItem::itemChange(QGraphicsItem::Graphic
     }
 
     return QGraphicsPixmapItem::itemChange(change, value);
+}
+
+void Nedrysoft::SnappedGraphicsPixmapItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
+    QMenu popupMenu;
+
+    auto deleteAction = popupMenu.addAction("Delete");
+    auto replaceAction = popupMenu.addAction("Replace...");
+
+    auto selectedAction = popupMenu.exec(event->screenPos());
+
+    if (selectedAction==deleteAction) {
+        this->scene()->removeItem(this);
+    } else if (selectedAction==replaceAction) {
+        // TODO: replace image!
+    }
 }

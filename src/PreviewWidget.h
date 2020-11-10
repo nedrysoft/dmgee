@@ -40,12 +40,17 @@ namespace Nedrysoft {
                 Q_OBJECT
 
             public:
+                /**
+                 * @brief           The types of objets that can appear in the graphics scene
+                 */
                 enum IconType {
                     Background,
                     Centroid,
                     Icon,
                     Shortcut
                 };
+
+                Q_ENUM(IconType)
 
             public:
                 /**
@@ -86,6 +91,13 @@ namespace Nedrysoft {
                  * @param[in]       iconType the type of icon being inserted
                  */
                 void addIcon(Nedrysoft::Image *image, const QPoint &point, IconType iconType);
+
+                /**
+                 * @brief           Sets whether the icons for the application/applications shortcut are shown
+                 *
+                 * @param[in]       isVisible true if visible; otherwise false
+                 */
+                void setIconsVisible(bool isVisible);
 
         private:
                 QPixmap m_pixmap;                           //! the background image pixmap

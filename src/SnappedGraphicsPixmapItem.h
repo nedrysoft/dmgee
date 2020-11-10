@@ -23,23 +23,53 @@
 #define NEDRYSOFT_SNAPPEDGRAPHICSPIXMAPITEM_H
 
 #include <QGraphicsPixmapItem>
+#include <QGraphicsSceneContextMenuEvent>
 #include <QPoint>
 #include <functional>
 
 namespace Nedrysoft {
+    /**
+     * @brief       A pixmap graphics item that provides a function to allow a custom snapping function to be used
+     *              to snap the centre point to a point of interest (centroid of feature or grid point)
+     */
     class SnappedGraphicsPixmapItem :
             public QGraphicsPixmapItem {
         public:
+            /**
+             * @brief       Constructs a graphics item with the given snapping function
+             *
+             * @param[in]   snapFunction is the function to be used to snap the centre point to.
+             */
             SnappedGraphicsPixmapItem(std::function<QPoint (const QPoint &point)> snapFunction);
-            SnappedGraphicsPixmapItem(std::nullptr_t snapFunction = nullptr);
+
+            /**
+             * @brief       Constructs a graphics item without a snapping function
+             */
+            SnappedGraphicsPixmapItem();
 
         protected:
+            /**
+             * @brief      Overloaded function called when the item is changed, currently used to track positional
+             *             changes of the object to allow the supplied snapping function to be used.
+             *
+             * @param[in]  change is the type of item change
+             * @param[in]  value is the value relating to the item change event
+             *
+             * @returns    The modified value if changed; otherwise a copy of the original value
+             */
             virtual QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value) override;
 
+            /**
+             * @brief       Called when the context menu is requested, displays a popup menu to allow the user to
+             *              perform an action
+             *
+             * @param[in]   event contains information about the context event.
+             */
+            virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override;
+
         private:
-            std::function<QPoint(const QPoint &)> m_snapFunction;
+            std::function<QPoint(const QPoint &)> m_snapFunction;               //! the callback function for snapping
     };
 }
-
 
 #endif //NEDRYSOFT_SNAPPEDGRAPHICSPIXMAPITEM_H

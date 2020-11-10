@@ -167,3 +167,17 @@ void Nedrysoft::PreviewWidget::addIcon(Nedrysoft::Image *image, const QPoint &po
 
     m_graphicsScene.addItem(snappedIcon);
 }
+
+void Nedrysoft::PreviewWidget::setIconsVisible(bool isVisible) {
+    for (auto item : m_graphicsScene.items()) {
+        if (item->data(Qt::UserRole).isValid()) {
+            switch(item->data(Qt::UserRole).toInt()) {
+                case Icon:
+                case Shortcut: {
+                    item->setVisible(isVisible);
+                    break;
+                }
+            }
+        }
+    }
+}
