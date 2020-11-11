@@ -44,7 +44,7 @@ namespace Nedrysoft {
              *
              * @return      the path to the font if found; otherwise an empty string
              */
-            static QString getFilename(QString fontName);
+            static QString getFilename(const QString &fontName);
     };
 };
 

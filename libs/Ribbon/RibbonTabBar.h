@@ -42,7 +42,7 @@ namespace Nedrysoft::Ribbon {
                  *
                  * @param[in]   parent is the parent widget to take ownership
                  */
-                RibbonTabBar(QWidget *parent = nullptr);
+                explicit RibbonTabBar(QWidget *parent = nullptr);
 
             protected:
                 /**
@@ -52,7 +52,7 @@ namespace Nedrysoft::Ribbon {
                  *
                  * @param[in]   event is the event information
                  */
-                virtual void paintEvent(QPaintEvent *event);
+                void paintEvent(QPaintEvent *event) override;
 
                 /**
                  * @brief       tabSizeHint
@@ -63,7 +63,7 @@ namespace Nedrysoft::Ribbon {
                  *
                  * @return      the calculated size hint for the tab
                  */
-                virtual QSize tabSizeHint(int index) const;
+                [[nodiscard]] QSize tabSizeHint(int index) const override;
 
                 /**
                  * @brief       eventFilter
@@ -75,7 +75,7 @@ namespace Nedrysoft::Ribbon {
                  *
                  * @return      true if event has handled, otherwise false
                  */
-                bool eventFilter(QObject * obj, QEvent * event);
+                bool eventFilter(QObject * obj, QEvent * event) override;
 
             private:
                 QFont m_selectedFont;                                   //! font to use on selected tab

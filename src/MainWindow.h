@@ -50,12 +50,12 @@ namespace Nedrysoft {
                  * @param[in]       splashScreen is a pointer to the splashscreen that was created
                  *                  by the main thread at startup.
                  */
-                MainWindow(Nedrysoft::SplashScreen *splashScreen);
+                explicit MainWindow(Nedrysoft::SplashScreen *splashScreen);
 
                 /**
                  * @brief           Destroys the main window.
                  */
-                ~MainWindow();
+                ~MainWindow() override;
 
                 /**
                  * @brief           Handles opening links via URL.
@@ -84,12 +84,12 @@ namespace Nedrysoft {
                 /**
                  * @brief           Event handler for window close event
                  *
-                 * @param[in]       closeEvent contains the information about the event including accpt/regect functions
+                 * @param[in]       closeEvent contains the information about the event including accept/reject functions
                  */
-                virtual void closeEvent(QCloseEvent *closeEvent) override;
+                void closeEvent(QCloseEvent *closeEvent) override;
 
                 /**
-                 * @brief           Event filter mathod
+                 * @brief           Event filter method
                  *
                  * @details         This event filter is using qApp as a target, this allows us to receive events from the
                  *                  operating system such as opening registered file types or handling the regex101:// URL
@@ -115,8 +115,16 @@ namespace Nedrysoft {
                  */
                 void updatePixmap();
 
-                QVariant configValue(QString valueName, QVariant defaultValue);
-
+                /**
+                 * @brief           Returns the named value from the configuration, if the key does not exist then the function
+                 *                  will return the supplied default value.
+                 *
+                 * @param[in]       valueName is the configuration key to retrieve the value for
+                 * @param[in]       defaultValue is the value to be returned if the key was not found
+                 *
+                 * @returns         A QVariant containing the value or default value of the key
+                 */
+                QVariant configValue(const QString& valueName, QVariant defaultValue);
 
         private:
                 Ui::MainWindow *ui;                                     //! ui class for the main window
@@ -127,7 +135,7 @@ namespace Nedrysoft {
                 QList<QPointF> m_centroids;                             //! list of centroids discovered from image
 
                 QSize m_grid;                                           //! grid size
-                bool m_gridIsVisible;                                   //! grid visiblity
+                bool m_gridIsVisible;                                   //! grid visibility
                 bool m_gridShouldSnap;                                  //! whether the grid should be used to snap to
                 bool m_snapToFeatures;                                  //! whether features should be snapped to
                 bool m_showIcons;                                       //! whether the icons for applications & shortcuts are visible

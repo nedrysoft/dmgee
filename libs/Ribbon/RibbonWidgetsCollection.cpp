@@ -20,12 +20,14 @@
 #include "RibbonGroupPlugin.h"
 #include "RibbonWidgetPlugin.h"
 #include "RibbonWidgetsCollection.h"
+#include "RibbonDropButtonPlugin.h"
 
 RibbonWidgetsCollection::RibbonWidgetsCollection(QObject *parent)
         : QObject(parent) {
 
     m_widgets.append(new RibbonGroupPlugin(this));
     m_widgets.append(new RibbonWidgetPlugin(this));
+    m_widgets.append(new RibbonDropButtonPlugin(this));
 }
 
 QList<QDesignerCustomWidgetInterface*> RibbonWidgetsCollection::customWidgets() const {

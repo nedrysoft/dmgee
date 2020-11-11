@@ -42,11 +42,11 @@ Nedrysoft::Ribbon::RibbonTabBar::RibbonTabBar(QWidget *parent) :
     m_selectedFont = QFont(fontManager->boldFont(), DefaultFontSize, QFont::Bold);
     m_mouseInWidget = false;
 
-    this->setStyleSheet("QTabBar::tab{padding: 18px}");
+    setStyleSheet("QTabBar::tab{padding: 18px}");
 
 #if defined(Q_OS_UNIX)
-    this->setMouseTracking(true);
-    this->installEventFilter(this);
+    setMouseTracking(true);
+    installEventFilter(this);
 #endif
 }
 
@@ -60,7 +60,7 @@ bool Nedrysoft::Ribbon::RibbonTabBar::eventFilter(QObject *obj, QEvent *event) {
         case QEvent::Enter: {
             auto enterEvent = reinterpret_cast<QEnterEvent *>(event);
 
-            lastTabIndex = this->tabAt(enterEvent->pos());
+            lastTabIndex = tabAt(enterEvent->pos());
 
             m_mouseInWidget = true;
 
@@ -82,10 +82,10 @@ bool Nedrysoft::Ribbon::RibbonTabBar::eventFilter(QObject *obj, QEvent *event) {
         case QEvent::MouseMove: {
             auto mouseEvent = reinterpret_cast<QMouseEvent *>(event);
 
-            if (lastTabIndex != this->tabAt(mouseEvent->pos())) {
+            if (lastTabIndex != tabAt(mouseEvent->pos())) {
                 update();
 
-                lastTabIndex = this->tabAt(mouseEvent->pos());
+                lastTabIndex = tabAt(mouseEvent->pos());
             }
 
             break;

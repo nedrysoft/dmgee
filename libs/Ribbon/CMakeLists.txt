@@ -17,8 +17,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-# main libraru
-
 set(LIBRARY_NAME Ribbon)
 
 set(NEDRYSOFT_LIBRARY_RIBBON_EXPORT)
@@ -28,13 +26,15 @@ set(library_SOURCES
     ThemeSupport.h
     RibbonFontManager.cpp
     RibbonFontManager.h
-    RibbonFontsResources.qrc
+    RibbonResources.qrc
     RibbonGroup.cpp
     RibbonGroup.h
     RibbonTabBar.cpp
     RibbonTabBar.h
     RibbonWidget.cpp
     RibbonWidget.h
+    RibbonDropButton.cpp
+    RibbonDropButton.h
     RibbonSpec.h
 )
 
@@ -48,12 +48,10 @@ target_link_libraries(${LIBRARY_NAME} -lstdc++ -lobjc)
 
 target_link_libraries(${LIBRARY_NAME} "Qt5::Widgets")
 
-#set_target_properties(${LIBRARY_NAME} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${FRAMEWORK_OUTPUT}")
 set_target_properties(${LIBRARY_NAME} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${FRAMEWORK_OUTPUT}")
 set_target_properties(${LIBRARY_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${FRAMEWORK_OUTPUT}")
 
 # designer widgets
-
 
 option(Build_RibbonDesignerPlugin "Build Ribbon QtDesigner Plugin" OFF)
 
@@ -72,6 +70,10 @@ if(Build_RibbonDesignerPlugin)
         RibbonGroupPlugin.h
         RibbonWidgetsCollection.cpp
         RibbonWidgetsCollection.h
+        RibbonDropButton.cpp
+        RibbonDropButton.h
+        RibbonDropButtonPlugin.cpp
+        RibbonDropButtonPlugin.h
     )
 
     if(APPLE)

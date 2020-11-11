@@ -26,7 +26,7 @@ namespace Nedrysoft::Utils {
     /**
      * @brief       theme support class
      *
-     * @details     used by the macOS platform to detect changes between light and dark mode
+     * @details     used by the macOS to detect if the OS is in dark or light mode, all other platforms default off.
      */
     class ThemeSupport {
         public:

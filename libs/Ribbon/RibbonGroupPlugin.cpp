@@ -21,21 +21,22 @@
 #include "RibbonGroupPlugin.h"
 #include <QtPlugin>
 
-RibbonGroupPlugin::RibbonGroupPlugin(QObject *parent)
-    : QObject(parent) {
+RibbonGroupPlugin::RibbonGroupPlugin(QObject *parent) :
+    QObject(parent),
+    m_initialized(false) {
 }
 
 void RibbonGroupPlugin::initialize(QDesignerFormEditorInterface *core) {
     Q_UNUSED(core);
 
-    if (initialized)
+    if (m_initialized)
         return;
 
-    initialized = true;
+    m_initialized = true;
 }
 
 bool RibbonGroupPlugin::isInitialized() const {
-    return initialized;
+    return m_initialized;
 }
 
 QWidget *RibbonGroupPlugin::createWidget(QWidget *parent) {

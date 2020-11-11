@@ -44,7 +44,7 @@ namespace Nedrysoft {
                 /**
                  * @brief           Destructor for the splash screen dialog.
                  */
-                ~SplashScreen();
+                ~SplashScreen() override;
 
             protected:
                 /**
@@ -55,7 +55,7 @@ namespace Nedrysoft {
                  *
                  * @param[in]       painter is the painter to draw to.
                  */
-                virtual void drawContents(QPainter *painter) override;
+                void drawContents(QPainter *painter) override;
     };
 }
 

@@ -69,9 +69,6 @@ bool Nedrysoft::AboutDialog::event(QEvent *event) {
     return QDialog::event(event);
 }
 
-Nedrysoft::AboutDialog::~AboutDialog() {
-}
-
 void Nedrysoft::AboutDialog::paintEvent(QPaintEvent *paintEvent) {
     QDialog::paintEvent(paintEvent);
 

@@ -24,7 +24,7 @@
 #include <QtUiPlugin/QDesignerCustomWidgetCollectionInterface>
 
 /**
- * @brief       Designer Collection plugin, provides a list of widgets that this plugin exposes to designed
+ * @brief       Designer Collection plugin, provides a list of widgets that this plugin exposes to designer
  */
 class RibbonWidgetsCollection :
     public QObject,
@@ -42,14 +42,14 @@ class RibbonWidgetsCollection :
              *
              * @param[in]   parent is the owner object of the instance
              */
-            RibbonWidgetsCollection(QObject *parent = 0);
+            explicit RibbonWidgetsCollection(QObject *parent = 0);
 
             /**
              * @brief       Provides a list of widgets that this designer plugin
              *
              * @returns     A list of widget factories
              */
-            QList<QDesignerCustomWidgetInterface*> customWidgets() const override;
+            [[nodiscard]] QList<QDesignerCustomWidgetInterface*> customWidgets() const override;
 
         private:
             QList<QDesignerCustomWidgetInterface*> m_widgets;           //! the list of provided widgets

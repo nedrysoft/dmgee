@@ -26,7 +26,7 @@
 
  namespace Nedrysoft {
      /**
-      * @brief      Provides functions for loading imagee nativelt on macOS, it uses NSImage to load the image
+      * @brief      Provides functions for loading images natively on macOS, it uses NSImage to load the image
       *             or to obtain the image from a given filename or type (i.e the Applications folder image)
       */
      class ImageLoader {
@@ -34,7 +34,7 @@
              /**
              * @brief       loads an image via NSImage and returns a TIFF
              *
-             * @details     NSImage is able to load various image types, due to a bug in the DevIL libraru that causes it to
+             * @details     NSImage is able to load various image types, due to a bug in the DevIL library that causes it to
              *              crash when loading a .icns file, we use this class as a first stage image loader.
              *
              *              If the image is loaded, then a tiff representation of the image is returned in the data parameter,

@@ -88,9 +88,9 @@ namespace Nedrysoft::Ribbon {
                 /**
                  * @brief       Constructor
                  *
-                 * @param[in]   parent          parent widget
+                 * @param[in]   parent is the owner parent widget
                  */
-                RibbonWidget(QWidget *parent = nullptr);
+                explicit RibbonWidget(QWidget *parent = nullptr);
 
                 friend class RibbonTabBar;
                 friend class RibbonGroup;
@@ -101,9 +101,9 @@ namespace Nedrysoft::Ribbon {
                  *
                  * @details     Overridden paintEvent for drawing widget
                  *
-                 * @param[in]   event           The event information
+                 * @param[in]   event contains information for painting this widget
                  */
-                virtual void paintEvent(QPaintEvent *event);
+                void paintEvent(QPaintEvent *event) override;
 
             private:
                 Nedrysoft::Ribbon::RibbonTabBar *m_tabBar;                                  //! The tab bar associated with this ribbon

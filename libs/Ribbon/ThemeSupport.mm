@@ -20,7 +20,6 @@
 #include "ThemeSupport.h"
 #import <Foundation/Foundation.h>
 #import <AppKit/NSAppearance.h>
-#include <QDebug>
 
 bool Nedrysoft::Utils::ThemeSupport::isDarkMode()
 {

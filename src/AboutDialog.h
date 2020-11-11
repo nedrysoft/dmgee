@@ -47,7 +47,7 @@ namespace Nedrysoft {
                 /**
                  * @brief           Destroys the dialog.
                  */
-                ~AboutDialog();
+                ~AboutDialog() override = default;
 
             protected:
                 /**
@@ -59,7 +59,7 @@ namespace Nedrysoft {
                  * @param[in]       event contains information about the event being processed.
                  * @returns         true if the event was handled; otherwise, false.
                  */
-                virtual bool event(QEvent *event) override;
+                bool event(QEvent *event) override;
 
                 /**
                  * @brief           Handles focus out events.
@@ -68,7 +68,7 @@ namespace Nedrysoft {
                  *
                  * @param[in]       event contains information about the focus event.
                  */
-                virtual void focusOutEvent(QFocusEvent *event) override;
+                void focusOutEvent(QFocusEvent *event) override;
 
                 /**
                  * @brief           Renders the dialog.
@@ -77,7 +77,7 @@ namespace Nedrysoft {
                  *
                  * @param[in]       event contains information about the paint event.
                  */
-                virtual void paintEvent(QPaintEvent *paintEvent) override;
+                void paintEvent(QPaintEvent *paintEvent) override;
 
             private:
                 QPixmap m_backgroundPixmap;                      //! the background image used for the about dialog

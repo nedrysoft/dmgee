@@ -37,6 +37,7 @@ constexpr auto applicationName = APPLICATION_LONG_NAME;                     //! 
 constexpr auto applicationFontsPrefix = ":/fonts";                          //! Fonts are stored under :/fonts (recursive search is performed)
 
 int main(int argc, char *argv[]) {
+    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication application(argc, argv);
     QMimeDatabase mimeDatabase;
     int returnValue = 0;

@@ -41,8 +41,8 @@ namespace Nedrysoft {
             /**
              * @brief       Constructs a python instance
              *
-             * @note        The python instance is bound to the thread that costructed it, do not call any other functions
-             *              from a differnt thread as this will result in crash.
+             * @note        The python instance is bound to the thread that constructed it, do not call any other functions
+             *              from a different thread as this will result in crash.
              */
             Python();
 
@@ -61,21 +61,22 @@ namespace Nedrysoft {
              *
              * @return      true if executed without error; otherwise false.
              */
-            bool run(QString filename);
+            bool run(QString &filename);
 
             /**
              * @brief       Runs the given script source
              *
              * @param[in]   script is the python script to execute.
+             * @param[in]   locals is an object that contain local variables exposed to python
              *
              * @return      true if executed without error; otherwise false.
              */
-            bool runScript(QString, PyObject *locals);
+            bool runScript(const QString& script, PyObject *locals);
 
             /**
              * @brief       Inserts paths to local python modules to override system libraries
              *
-             * @param[in]   mdulePaths is a list of paths to insert
+             * @param[in]   modulePaths is a list of paths to insert
              */
             void addModulePaths(QStringList modulePaths);
 

@@ -31,10 +31,22 @@ Nedrysoft::Ribbon::RibbonFontManager *Nedrysoft::Ribbon::RibbonFontManager::getI
     return instance;
 }
 
-QString Nedrysoft::Ribbon::RibbonFontManager::normalFont() {
-    return QFontDatabase::applicationFontFamilies(m_regularFontId).at(0);
+QString Nedrysoft::Ribbon::RibbonFontManager::normalFont() const {
+    auto families = QFontDatabase::applicationFontFamilies(m_regularFontId);
+
+    if (families.count()) {
+        return families.at(0);
+    }
+
+    return QString();
 }
 
-QString Nedrysoft::Ribbon::RibbonFontManager::boldFont() {
-    return QFontDatabase::applicationFontFamilies(m_boldFontId).at(0);
+QString Nedrysoft::Ribbon::RibbonFontManager::boldFont() const {
+    auto families = QFontDatabase::applicationFontFamilies(m_boldFontId);
+
+    if (families.count()) {
+        return families.at(0);
+    }
+
+    return QString();
 }

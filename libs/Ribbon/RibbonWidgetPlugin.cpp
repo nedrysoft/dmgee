@@ -30,14 +30,14 @@ RibbonWidgetPlugin::RibbonWidgetPlugin(QObject *parent)
 void RibbonWidgetPlugin::initialize(QDesignerFormEditorInterface *core) {
     Q_UNUSED(core)
 
-    if (initialized)
+    if (m_initialized)
         return;
 
-    initialized = true;
+    m_initialized = true;
 }
 
 bool RibbonWidgetPlugin::isInitialized() const {
-    return initialized;
+    return m_initialized;
 }
 
 QWidget *RibbonWidgetPlugin::createWidget(QWidget *parent) {

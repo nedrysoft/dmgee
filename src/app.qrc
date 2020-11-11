@@ -16,12 +16,14 @@
 
         <file>../assets/target.png</file>
 
-        <file>../assets/noun_Arrow_3439025.png</file>
-        <file>../assets/noun_Arrow_3439356.png</file>
-        <file>../assets/noun_Arrow_3439025-inverted.png</file>
-        <file>../assets/noun_Arrow_3439356-inverted.png</file>
+        <file>../assets/app_icon-dark.png</file>
+        <file>../assets/app_icon-light.png</file>
+        <file>../assets/arrow_drop-dark.png</file>
+        <file>../assets/arrow_drop-light.png</file>
 
-        <file>../assets/app_icon.png</file>
-        <file>../assets/arrow_drop.png</file>
+        <file>../assets/save.png</file>
+        <file>../assets/load.png</file>
+        <file>../assets/add.png</file>
+        <file>../assets/build.png</file>
     </qresource>
 </RCC>

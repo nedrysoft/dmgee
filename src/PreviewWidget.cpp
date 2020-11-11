@@ -34,7 +34,7 @@
 Nedrysoft::PreviewWidget::PreviewWidget(QWidget *parent) :
     QWidget(parent),
     m_gridSize(20,20),
-    m_iconSize(160, 160),
+    m_iconSize(160),
     m_gridIsVisible(true),
     m_gridShouldSNap(false),
     m_snapToFeatures(true),
@@ -44,6 +44,8 @@ Nedrysoft::PreviewWidget::PreviewWidget(QWidget *parent) :
     m_targetPixmap = QPixmap(":/assets/target.png");
 
     m_graphicsView.setScene(&m_graphicsScene);
+
+    m_graphicsView.setInteractive(true);
 
     m_layout.setMargin(0);
 
@@ -99,7 +101,7 @@ void Nedrysoft::PreviewWidget::setPixmap(QPixmap &pixmap) {
     setCentroids(m_centroids);
 }
 
-void Nedrysoft::PreviewWidget::setCentroids(QList<QPointF> centroids) {
+void Nedrysoft::PreviewWidget::setCentroids(QList<QPointF> &centroids) {
     m_centroids = centroids;
 
     for (auto item : m_graphicsScene.items()) {
@@ -111,45 +113,40 @@ void Nedrysoft::PreviewWidget::setCentroids(QList<QPointF> centroids) {
     for (auto const centroid : m_centroids) {
         auto targetItem = new QGraphicsPixmapItem(m_targetPixmap);
 
-        targetItem->setPos(centroid.x()-(m_targetPixmap.width() / 2), centroid.y()-(m_targetPixmap.height() / 2));
+        targetItem->setPos(centroid.x()-(static_cast<float>(m_targetPixmap.width()) / 2.0), centroid.y()-(static_cast<float>(m_targetPixmap.height()) / 2.0));
         targetItem->setData(Qt::UserRole, Centroid);
         targetItem->setZValue(0.5);
 
         m_graphicsScene.addItem(targetItem);
     }
-
-    update();
 }
 
 void Nedrysoft::PreviewWidget::setGrid(QSize size, bool visible, bool snap) {
     m_gridSize = size;
     m_gridIsVisible = visible;
     m_gridShouldSNap = snap;
-
-    update();
 }
 
 void Nedrysoft::PreviewWidget::addIcon(Nedrysoft::Image *image, const QPoint &point, IconType iconType) {
     auto pixmap = QPixmap::fromImage(image->image());
 
-    float scale = static_cast<float>(m_iconSize.width())/static_cast<float>(pixmap.width());
-    float width = pixmap.width()*scale;
-    float height = pixmap.height()*scale;
-
-    auto snappedIcon = new SnappedGraphicsPixmapItem([width, height, pixmap, this](const QPoint &point) {
+    auto snappedIcon = new SnappedGraphicsPixmapItem([pixmap, this](const QPoint &point) {
         QPoint snapPoint = point;
+        float scale = static_cast<float>(m_iconSize)/static_cast<float>(pixmap.width());
+        float width = static_cast<float>(pixmap.width())*scale;
+        float height = static_cast<float>(pixmap.height())*scale;
 
         if (m_snapToFeatures) {
             float closestDistance = MAXFLOAT;
 
             for (auto const centroid : m_centroids) {
-                auto dx = centroid.x()-point.x()-(width / 2);
-                auto dy = centroid.y()-point.y()-(height / 2);
+                auto dx = centroid.x()-point.x();
+                auto dy = centroid.y()-point.y();
 
-                float distance = sqrt(pow(dx, 2) + pow(dy, 2));
+                float distance = sqrtf(powf(dx, 2) + powf(dy, 2));
 
                 if ((distance<50) && (distance < closestDistance)) {
-                    snapPoint = centroid.toPoint() - QPoint(width / 2, height / 2);
+                    snapPoint = centroid.toPoint();
 
                     closestDistance = distance;
                 }
@@ -161,9 +158,11 @@ void Nedrysoft::PreviewWidget::addIcon(Nedrysoft::Image *image, const QPoint &po
 
     snappedIcon->setPixmap(pixmap);
     snappedIcon->setPos(point);
-    snappedIcon->setScale(scale);
+    snappedIcon->setOffset(-(static_cast<float>(pixmap.width())/2.0), -(static_cast<float>(pixmap.height())/2.0));
+    snappedIcon->setScale(static_cast<float>(m_iconSize)/static_cast<float>(pixmap.width()));
     snappedIcon->setData(Qt::UserRole, iconType);
     snappedIcon->setZValue(1);
+    snappedIcon->setTransformationMode(Qt::SmoothTransformation);
 
     m_graphicsScene.addItem(snappedIcon);
 }
@@ -178,6 +177,34 @@ void Nedrysoft::PreviewWidget::setIconsVisible(bool isVisible) {
                     break;
                 }
             }
+        }
+    }
+}
+
+void Nedrysoft::PreviewWidget::setIconSize(int size) {
+    m_iconSize = size;
+
+    for (auto item : m_graphicsScene.items()) {
+        if (item->data(Qt::UserRole).isValid()) {
+            switch ( item->data(Qt::UserRole).toInt()) {
+                case Icon:
+                case Shortcut: {
+                    auto pixmapItem = dynamic_cast<SnappedGraphicsPixmapItem *>(item);
+
+                    pixmapItem->setScale(static_cast<float>(m_iconSize)/static_cast<float>(pixmapItem->pixmap().width()));
+                    break;
+                }
+            }
+        }
+    }
+}
+
+void Nedrysoft::PreviewWidget::clearCentroids() {
+    m_centroids.clear();
+
+    for (auto item : m_graphicsScene.items()) {
+        if ((item->data(Qt::UserRole).isValid()) && (item->data(Qt::UserRole)==Centroid)) {
+            m_graphicsScene.removeItem(item);
         }
     }
 }

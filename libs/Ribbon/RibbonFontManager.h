@@ -28,7 +28,7 @@ namespace Nedrysoft::Ribbon {
      * @brief           Ribbon Font Manager
      *
      * @details         Singleton responsible for loading and returning the fonts used
-     *                  by the ribbon control.  This class cannot be instaniated directly
+     *                  by the ribbon control.  This class cannot be instantiated directly
      *                  and the singleton instance can be retrieved using the static
      *                  RibbonFontManager::getInstance function.
      */
@@ -50,16 +50,16 @@ namespace Nedrysoft::Ribbon {
             /**
              * @brief       Returns the normal font name
              *
-             * @return      the font famaily name
+             * @return      the font family name
              */
-            QString normalFont();
+            [[nodiscard]] QString normalFont() const;
 
             /**
              * @brief       Returns the bold font name
              *
-             * @return      the font famaily name
+             * @return      the font family name
              */
-            QString boldFont();
+            [[nodiscard]] QString boldFont() const;
 
         private:
             int m_regularFontId;                                                //! Regular font id after loading

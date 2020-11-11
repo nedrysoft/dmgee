@@ -25,12 +25,8 @@
 #include <QDebug>
 #include <QPaintEvent>
 #include <QPainter>
-
-#if defined(Q_OS_MACOS)
-constexpr int DefaultFontSize = 10;
-#else
-constexpr int DefaultFontSize = 8;
-#endif
+#include <QPushButton>
+#include <QRegularExpression>
 
 Nedrysoft::Ribbon::RibbonGroup::RibbonGroup(QWidget *parent) :
     QWidget(parent),
@@ -38,7 +34,7 @@ Nedrysoft::Ribbon::RibbonGroup::RibbonGroup(QWidget *parent) :
 
     auto fontManager = RibbonFontManager::getInstance();
 
-    m_font = QFont(fontManager->normalFont(), DefaultFontSize);
+    m_font = QFont(fontManager->normalFont(), RibbonGroupDefaultFontSize);
     m_fontMetrics = QFontMetrics(m_font);
 
     setGroupName(QString("Group"));
@@ -67,25 +63,29 @@ Nedrysoft::Ribbon::RibbonGroup::RibbonGroup(QWidget *parent) :
         this->setStyleSheet(m_lightStyleSheet);
     }
 
-    connect(qApp, &QApplication::paletteChanged, [=] (const QPalette &) {
+    connect(qobject_cast<QApplication *>(QCoreApplication::instance()), &QApplication::paletteChanged, [=] (const QPalette &) {
         if (Nedrysoft::Utils::ThemeSupport::isDarkMode()) {
-            this->setStyleSheet(m_darkStyleSheet);
+            setStyleSheet(m_darkStyleSheet);
         } else {
-            this->setStyleSheet(m_lightStyleSheet);
+            setStyleSheet(m_lightStyleSheet);
         }
     });
+
+    updateMargins();
+
+    setMinimumWidth(m_fontMetrics.maxWidth());
 }
 
 void Nedrysoft::Ribbon::RibbonGroup::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
-    auto rect = this->rect();
+    auto widgetRect = rect();
     auto  currentTheme = Nedrysoft::Ribbon::Light;
 
     if (Nedrysoft::Utils::ThemeSupport::isDarkMode()) {
         currentTheme = Nedrysoft::Ribbon::Dark;
     }
 
-    rect.setTop(rect.bottom()-m_textRect.height());
+    widgetRect.setTop(widgetRect.bottom()-m_textRect.height());
 
     painter.save();
 
@@ -95,12 +95,14 @@ void Nedrysoft::Ribbon::RibbonGroup::paintEvent(QPaintEvent *event) {
 
     painter.setPen(Ribbon::TextColor[currentTheme]);
 
-    painter.drawText(rect, m_groupName, Qt::AlignBottom | Qt::AlignHCenter);
+    widgetRect.adjust(0, 0, -RibbonGroupHorizontalMargins, 0);
+
+    painter.drawText(widgetRect, m_groupName, Qt::AlignBottom | Qt::AlignHCenter);
 
     painter.setPen(Ribbon::GroupDividerColor[currentTheme]);
 
-    auto startPoint = QPoint(this->rect().right()-1, this->rect().top()+Ribbon::GroupDividerMargin);
-    auto endPoint = QPoint(this->rect().right()-1, this->rect().bottom()-Ribbon::GroupDividerMargin);
+    auto startPoint = QPoint(rect().right()-1, rect().top()+Ribbon::GroupDividerMargin);
+    auto endPoint = QPoint(rect().right()-1, rect().bottom()-Ribbon::GroupDividerMargin);
 
     painter.drawLine(startPoint, endPoint);
 
@@ -116,10 +118,13 @@ QString Nedrysoft::Ribbon::RibbonGroup::groupName() const {
 void Nedrysoft::Ribbon::RibbonGroup::setGroupName(const QString &groupName) {
     m_groupName = groupName;
 
+    updateMargins();
+}
+
+void Nedrysoft::Ribbon::RibbonGroup::updateMargins() {
     m_textRect = m_fontMetrics.boundingRect(m_groupName);
 
-    this->setContentsMargins(0, 0, 2, m_textRect.height());
+    setContentsMargins(0, 0, RibbonGroupHorizontalMargins, m_textRect.height());
 
     update();
 }
-

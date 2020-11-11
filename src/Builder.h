@@ -82,7 +82,7 @@ namespace Nedrysoft {
 
             public:
                 /**
-                 * @brief       Uses the dmgbuild pyython module + configuration file to being a DMG
+                 * @brief       Uses the dmgbuild python module + configuration file to being a DMG
                  *
                  * @param[in]   table is the configuration in toml format
                  *
@@ -91,13 +91,13 @@ namespace Nedrysoft {
                 bool createDMG(toml::table table);
 
                 /**
-                 * @brief       Loads a configuration from disk into the m_configurtation member
+                 * @brief       Loads a configuration from disk into the m_configuration member
                  *
                  * @param[in]   filename is the name of the configuration to load
                  *
                  * @returns     true if the configuration loaded without error; otherwise false
                  */
-                bool loadConfiguration(QString filename);
+                bool loadConfiguration(const QString& filename);
 
             public:
                 Q_PROPERTY(QString background MEMBER (m_configuration.m_background));

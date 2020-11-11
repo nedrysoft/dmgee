@@ -28,6 +28,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <utility>
 
 Nedrysoft::Python::Python() {
     Py_Initialize();
@@ -37,7 +38,7 @@ Nedrysoft::Python::~Python() {
     Py_Finalize();
 }
 
-bool Nedrysoft::Python::run(QString filename) {
+bool Nedrysoft::Python::run(QString &filename) {
     QFile pythonFile(filename);
 
     if (pythonFile.open(QFile::ReadOnly)) {
@@ -52,16 +53,16 @@ bool Nedrysoft::Python::run(QString filename) {
 }
 
 void Nedrysoft::Python::addModulePaths(QStringList modulePaths) {
-    m_modulePaths = modulePaths;
+    m_modulePaths = std::move(modulePaths);
 }
 
-bool Nedrysoft::Python::runScript(QString script, PyObject * locals) {
+bool Nedrysoft::Python::runScript(const QString& script, PyObject * locals) {
     PyObject *systemModule = PyImport_ImportModule("sys");
     PyObject *systemPath = PyObject_GetAttrString(systemModule, "path");
 
     // add our local packages & dependencies to load first
 
-    for (auto modulePath : m_modulePaths) {
+    for (const auto& modulePath : m_modulePaths) {
         QDirIterator dirIterator(modulePath);
 
         while (dirIterator.hasNext()) {
@@ -86,10 +87,10 @@ bool Nedrysoft::Python::runScript(QString script, PyObject * locals) {
     Py_DECREF(systemPath);
 
     if (Py_FinalizeEx() < 0) {
-        return 120;
+        return false;
     }
 
     //PyMem_RawFree(program);
 
-    return 0;
+    return true;
 }

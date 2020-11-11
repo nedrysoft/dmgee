@@ -53,7 +53,7 @@ bool Nedrysoft::Builder::createDMG(toml::table table) {
     return true;
 }
 
-bool Nedrysoft::Builder::loadConfiguration(QString filename) {
+bool Nedrysoft::Builder::loadConfiguration(const QString& filename) {
     auto configuration = toml::parse_file(filename.toStdString());
 
     for (toml::node &elem : *configuration["symlink"].as_array()) {

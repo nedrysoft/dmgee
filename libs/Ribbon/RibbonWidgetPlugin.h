@@ -46,35 +46,35 @@ class RibbonWidgetPlugin :
              *
              * @returns     true if it is a container; otherwise false
              */
-            bool isContainer() const override;
+            [[nodiscard]] bool isContainer() const override;
 
             /**
              * @brief       Returns whether the plugin has been initialised
              *
              * @returns     true if initialised; otherwise false
              */
-            bool isInitialized() const override;
+            [[nodiscard]] bool isInitialized() const override;
 
             /**
              * @brief       Returns the icon to be used in designer for this widget
              *
              * @returns     a QIcon that depicts the widget
              */
-            QIcon icon() const override;
+            [[nodiscard]] QIcon icon() const override;
 
             /**
              * @brief       Returns the XML that is inserted into the form
              *
              * @returns     a QString that contains the XML that will appear in the form description
              */
-            QString domXml() const override;
+            [[nodiscard]] QString domXml() const override;
 
             /**
              * @brief       Returns the logical group name that this widget should appear under.
              *
              * @returns     the name of the group
              */
-            QString group() const override;
+            [[nodiscard]] QString group() const override;
 
             /**
              * @brief       Returns the name of the include file that should be inserted into code to
@@ -82,28 +82,28 @@ class RibbonWidgetPlugin :
              *
              * @returns     the name of the include file (just the filename)
              */
-            QString includeFile() const override;
+            [[nodiscard]] QString includeFile() const override;
 
             /**
-             * @brief       Returns the name of this wifget
+             * @brief       Returns the name of this widget
              *
              * @returns     the name of the widget
              */
-            QString name() const override;
+            [[nodiscard]] QString name() const override;
 
              /**
              * @brief       Returns a QString to be used as the tool tip description of the widget
              *
              * @returns     the description
              */
-            QString toolTip() const override;
+             [[nodiscard]] QString toolTip() const override;
 
             /**
              * @brief       Returns a QString containing help information when the user selects "whats this" from inside designer
              *
              * @returns     the description
              */
-            QString whatsThis() const override;
+            [[nodiscard]] QString whatsThis() const override;
 
             /**
              * @brief       Creates a new instance of the widget

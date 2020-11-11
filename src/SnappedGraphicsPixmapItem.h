@@ -67,6 +67,14 @@ namespace Nedrysoft {
              */
             virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override;
 
+        public:
+            /**
+             * @brief       Returns the user type of this graphics item
+             *
+             * @return      the type of the item
+             */
+            virtual int type() const override;
+
         private:
             std::function<QPoint(const QPoint &)> m_snapFunction;               //! the callback function for snapping
     };

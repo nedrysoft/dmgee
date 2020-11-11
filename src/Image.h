@@ -64,28 +64,28 @@ namespace Nedrysoft {
              *
              * @return      the width of the image
              */
-            float width();
+            float width() const;
 
             /**
              * @brief       returns the height of the Image
              *
              * @return      the height of the image
              */
-            float height();
+            float height() const;
 
             /**
              * @brief       returns the stride of the image (may differ from width*components for optimisation)
              *
              * @return      the height of the image
              */
-            float stride();
+            float stride() const;
 
             /**
              * @brief       returns the stride of the image (may differ from width*components for optimisation)
              *
              * @return      the height of the image
              */
-            char * data();
+            char *data();
 
             /**
              * @brief       returns the image as a opencv image
@@ -113,11 +113,11 @@ namespace Nedrysoft {
              *
              * @return      true if valid; otherwise false
              */
-            bool isValid();
+            bool isValid() const;
 
         private:
             char *m_data;                           //! the raw image data
-            unsigned int m_length;                  //! the langth in bytes of the decoded image data
+            int m_length;                           //! the length in bytes of the decoded image data
 
             unsigned int m_width;                   //! the width of the image
             unsigned int m_height;                  //! the height of the image

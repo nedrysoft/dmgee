@@ -36,6 +36,7 @@
 #include <QFileInfo>
 #include <QMimeData>
 #include <QTemporaryDir>
+#include <utility>
 
 using namespace std::chrono_literals;
 
@@ -56,7 +57,7 @@ Nedrysoft::MainWindow::MainWindow(Nedrysoft::SplashScreen *splashScreen)
 
     ui->setupUi(this);
 
-    qApp->installEventFilter(this);
+    qobject_cast<QApplication *>(QCoreApplication::instance())->installEventFilter(this);
 
     m_instance = this;
 
@@ -70,7 +71,7 @@ Nedrysoft::MainWindow::MainWindow(Nedrysoft::SplashScreen *splashScreen)
         close();
     });
 
-    connect(ui->actionAbout, &QAction::triggered, [this](bool isChecked) {
+    connect(ui->actionAbout, &QAction::triggered, [](bool isChecked) {
         Nedrysoft::AboutDialog aboutDialog;
 
         aboutDialog.exec();
@@ -103,13 +104,13 @@ Nedrysoft::MainWindow::MainWindow(Nedrysoft::SplashScreen *splashScreen)
 
     connect(ui->featureAutpDetectCheckbox, &QCheckBox::stateChanged, [this](int state) {
         if (!state) {
-            ui->previewWidget->setCentroids(QList<QPointF>());
+            ui->previewWidget->clearCentroids();
         } else {
             processBackground();
         }
     });
 
-    connect(ui->insertAppPushButton, &QPushButton::clicked, [this](bool isChecked) {
+    connect(ui->insertAppPushButton, &QPushButton::clicked, [](bool isChecked) {
 
     });
 
@@ -122,6 +123,15 @@ Nedrysoft::MainWindow::MainWindow(Nedrysoft::SplashScreen *splashScreen)
         popupMenu.addAction("Icon...");
 
         popupMenu.exec(menuPos);
+    });
+
+    connect(ui->iconsSizeLineEdit, &QLineEdit::textChanged, [this](const QString &text) {
+        bool ok = false;
+        int size = text.toInt(&ok);
+
+        if ((ok) && (size!=0)) {
+            ui->previewWidget->setIconSize(text.toInt());
+        }
     });
 
     loadConfiguration("./dmgee.dmgee");
@@ -145,6 +155,10 @@ Nedrysoft::MainWindow::MainWindow(Nedrysoft::SplashScreen *splashScreen)
             ui->previewWidget->addIcon(applicationIcon, QPoint(100,100), PreviewWidget::Icon);
         }
     }
+
+    connect(ui->ribbonDropButton, &Nedrysoft::Ribbon::RibbonDropButton::clicked, [=](bool clicked) {
+        // TODO: handle click
+    });
 }
 
 Nedrysoft::MainWindow::~MainWindow() {
@@ -161,13 +175,13 @@ void Nedrysoft::MainWindow::handleOpenByUrl(const QUrl &url) {
 
 bool Nedrysoft::MainWindow::eventFilter(QObject *obj, QEvent *event) {
     if (event->type()==QEvent::FileOpen) {
-        QFileOpenEvent *fileOpenEvent = static_cast<QFileOpenEvent*>(event);
+        auto fileOpenEvent = dynamic_cast<QFileOpenEvent *>(event);
 
-        if (!fileOpenEvent->url().isEmpty()) {
-            // fileOpenEvent->url() contains the url if launched via url scheme
+        /*if (!fileOpenEvent->url().isEmpty()) {
+            // TODO: launched via url scheme
         } else if (!fileOpenEvent->file().isEmpty()) {
-            // fileOpenEvent->file() contains the filename if launched via file association
-        }
+            // TODO: launched via file association
+        }*/
 
         return false;
     }
@@ -194,7 +208,7 @@ void Nedrysoft::MainWindow::processBackground()
 
         // apply thresholding
 
-        cv::threshold(image, image, 150, 255, cv::THRESH_BINARY);
+        cv::threshold(image, image, 225, 255, cv::THRESH_BINARY);
 
         // find contours in image
 
@@ -227,7 +241,7 @@ void Nedrysoft::MainWindow::processBackground()
     }
 }
 
-QVariant Nedrysoft::MainWindow::configValue(QString valueName, QVariant defaultValue) {
+QVariant Nedrysoft::MainWindow::configValue(const QString& valueName, QVariant defaultValue) {
     if (m_config.contains(valueName)) {
         return m_builder->property(valueName.toLatin1().constData());
     }
@@ -237,7 +251,7 @@ QVariant Nedrysoft::MainWindow::configValue(QString valueName, QVariant defaultV
 
 bool Nedrysoft::MainWindow::loadConfiguration(QString filename) {
 
-    if (m_builder->loadConfiguration(filename)) {
+    if (m_builder->loadConfiguration(std::move(filename))) {
         ui->gridSnapCheckbox->setCheckState(configValue("snapToGrid", false).toBool() ? Qt::Checked : Qt::Unchecked);
         ui->gridVisibleCheckbox->setCheckState(configValue("gridVisible", false).toBool() ? Qt::Checked : Qt::Unchecked);
 
@@ -270,7 +284,8 @@ void Nedrysoft::MainWindow::updatePixmap() {
         }
     } else {
         m_backgroundPixmap = QPixmap();
+
         ui->previewWidget->setPixmap(m_backgroundPixmap);
-        ui->previewWidget->setCentroids(QList<QPointF>());
+        ui->previewWidget->clearCentroids();
     }
 }

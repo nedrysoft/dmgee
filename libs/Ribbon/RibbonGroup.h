@@ -22,9 +22,18 @@
 
 #include "RibbonSpec.h"
 #include <QFontMetrics>
+#include <QMap>
 #include <QWidget>
 
 namespace Nedrysoft::Ribbon {
+    constexpr auto RibbonGroupHorizontalMargins = 12;
+
+#if defined(Q_OS_MACOS)
+    constexpr int RibbonGroupDefaultFontSize = 10;
+#else
+    constexpr int RibbonGroupDefaultFontSize = 8;
+#endif
+
     /**
      * @brief       Ribbon Group Widget
      *
@@ -59,6 +68,11 @@ namespace Nedrysoft::Ribbon {
                  */
                 void setGroupName(const QString &name);
 
+                /**
+                 * @brief       Updates the margins to account for the group bordere
+                 */
+                void updateMargins();
+
             protected:
                 /**
                  * @brief       Draws the RibbonGroup
@@ -67,11 +81,9 @@ namespace Nedrysoft::Ribbon {
                  *
                  * @param[in]   event is the paint event information
                  */
-                virtual void paintEvent(QPaintEvent *event);
+                virtual void paintEvent(QPaintEvent *event) override;
 
-            signals:
-
-            private:
+        private:
                 QString m_groupName;                                    //! Group name that is displayed
                 QFont m_font;                                           //! Font used to draw the group name
                 QFontMetrics m_fontMetrics;                             //! The font metrics of the selected font

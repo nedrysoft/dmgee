@@ -58,7 +58,7 @@ namespace Nedrysoft {
                  *
                  * @param[in]       parent is the the owner of the dialog.
                  */
-                PreviewWidget(QWidget *parent = nullptr);
+                explicit PreviewWidget(QWidget *parent = nullptr);
 
                 /**
                  * @brief           Sets the background pixmap to be used
@@ -72,7 +72,12 @@ namespace Nedrysoft {
                  *
                  * @param[in]       centroids list of snap points
                  */
-                void setCentroids(QList<QPointF> centroids);
+                void setCentroids(QList<QPointF> &centroids);
+
+                /**
+                 * @brief           Clears the list of centroids
+                 */
+                void clearCentroids();
 
                 /**
                  * @brief           Sets the grid for the widget
@@ -99,17 +104,24 @@ namespace Nedrysoft {
                  */
                 void setIconsVisible(bool isVisible);
 
+                /**
+                 * @brief           Sets the size of the icons as they should appear in the DMG
+                 *
+                 * @param[in]       size in pixels of the icon (square)
+                 */
+                void setIconSize(int size);
+
         private:
                 QPixmap m_pixmap;                           //! the background image pixmap
                 QPixmap m_targetPixmap;                     //! target snap location image
                 QList<QPointF> m_centroids;                 //! centroid points
 
                 QPointF m_iconPosition;                     //! holds position of icon for drag & drop
-                QSize m_iconSize;                           //! size of the icons on the DMG
+                int m_iconSize;                             //! size of the icons on the DMG
                 QSize m_gridSize;                           //! grid size
                 bool m_gridIsVisible;                       //! whether the grid is drawn
                 bool m_gridShouldSNap;                      //! whether the cursor should snap to the grid
-                bool m_snapToFeatures;                      //! whether the custor should nap to the detected features
+                bool m_snapToFeatures;                      //! whether the cursor should snap to the detected features
 
                 QGraphicsScene m_graphicsScene;             //! the graphics scene
                 QGraphicsView m_graphicsView;               //! the rendered graphics scene

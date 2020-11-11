@@ -24,7 +24,7 @@
 #include <IL/ilu.h>
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
-#include <math.h>
+#include <cmath>
 
 Nedrysoft::Image::Image() :
         m_data(nullptr),
@@ -32,7 +32,8 @@ Nedrysoft::Image::Image() :
         m_height(0),
         m_stride(0),
         m_imageId(0),
-        m_isValid(false){
+        m_isValid(false),
+        m_length(0) {
 }
 
 Nedrysoft::Image::Image(QString filename, bool loadContent, int width, int height) :
@@ -88,7 +89,12 @@ Nedrysoft::Image::Image(QString filename, bool loadContent, int width, int heigh
 
         if (success == IL_TRUE) {
             if (scale>1) {
-                iluScale(ilGetInteger(IL_IMAGE_WIDTH) / scale, ilGetInteger(IL_IMAGE_HEIGHT) / scale, ilGetInteger(IL_IMAGE_DEPTH));
+                auto imageWidth = ilGetInteger(IL_IMAGE_WIDTH) / scale;
+                auto imageHeight = ilGetInteger(IL_IMAGE_HEIGHT) / scale;
+
+                iluScale(static_cast<unsigned int>(imageWidth),
+                         static_cast<unsigned int>(imageHeight),
+                         static_cast<unsigned int>(ilGetInteger(IL_IMAGE_DEPTH)));
             }
 
             m_width = static_cast<unsigned int>(ilGetInteger(IL_IMAGE_WIDTH));
@@ -108,15 +114,15 @@ Nedrysoft::Image::~Image() {
     }
 }
 
-float Nedrysoft::Image::width() {
+float Nedrysoft::Image::width() const {
     return static_cast<float>(m_width);
 }
 
-float Nedrysoft::Image::height() {
+float Nedrysoft::Image::height() const {
     return static_cast<float>(m_height);
 }
 
-float Nedrysoft::Image::stride() {
+float Nedrysoft::Image::stride() const {
     return static_cast<float>(m_stride);
 }
 
@@ -144,6 +150,6 @@ QByteArray Nedrysoft::Image::rawData() {
     return QByteArray(QByteArray(static_cast<const char *>(m_data), m_length));
 }
 
-bool Nedrysoft::Image::isValid() {
+bool Nedrysoft::Image::isValid() const {
     return m_isValid;
 }

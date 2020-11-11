@@ -28,14 +28,14 @@ QString Nedrysoft::Font::systemFontName() {
     return QString([[font fontName] cStringUsingEncoding:[NSString defaultCStringEncoding]]);
 }
 
-QString Nedrysoft::Font::getFilename(QString fontName) {
+QString Nedrysoft::Font::getFilename(const QString& fontName) {
     NSFont *font = [NSFont fontWithName: [NSString stringWithCString:fontName.toLatin1().data() encoding:[NSString defaultCStringEncoding]] size:12];
 
     if (font) {
         CTFontDescriptorRef fontRef = CTFontDescriptorCreateWithNameAndSize((CFStringRef) [font fontName],
                                                                             [font pointSize]);
 
-        CFURLRef url = (CFURLRef) CTFontDescriptorCopyAttribute(fontRef, kCTFontURLAttribute);
+        auto url = static_cast<CFURLRef>(CTFontDescriptorCopyAttribute(fontRef, kCTFontURLAttribute));
 
         NSString *fontPath = [NSString stringWithString:[(NSURL *) CFBridgingRelease(url) path]];
 

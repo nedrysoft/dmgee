@@ -59,3 +59,7 @@ void Nedrysoft::SnappedGraphicsPixmapItem::contextMenuEvent(QGraphicsSceneContex
         // TODO: replace image!
     }
 }
+
+int Nedrysoft::SnappedGraphicsPixmapItem::type() const {
+    return UserType+1;
+}
