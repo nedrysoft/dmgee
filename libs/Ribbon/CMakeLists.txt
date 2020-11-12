@@ -37,6 +37,10 @@ set(library_SOURCES
     RibbonDropButton.h
     RibbonButton.cpp
     RibbonButton.h
+    RibbonLineEdit.cpp
+    RibbonLineEdit.h
+    RibbonLineEditPlugin.cpp
+    RibbonLineEditPlugin.h
     RibbonSpec.h
 )
 

@@ -37,6 +37,7 @@
 #include <QMimeData>
 #include <QTemporaryDir>
 #include <utility>
+#include <QList>
 
 using namespace std::chrono_literals;
 
@@ -67,7 +68,7 @@ Nedrysoft::MainWindow::MainWindow(Nedrysoft::SplashScreen *splashScreen) :
         splashScreen->close();
     });
 
-    connect(ui->actionQuit, &QAction::triggered, [this](bool isChecked){
+    connect(ui->actionQuit, &QAction::triggered, [this](bool isChecked) {
         close();
     });
 
@@ -95,11 +96,11 @@ Nedrysoft::MainWindow::MainWindow(Nedrysoft::SplashScreen *splashScreen) :
     ui->showIconsCheckBox->setCheckState(m_showIcons ? Qt::Checked : Qt::Unchecked);
 
     connect(ui->gridVisibleCheckbox, &QCheckBox::stateChanged, [this](int state) {
-        ui->previewWidget->setGrid(m_grid, (state==Qt::Checked) ? true:false, true);
+        ui->previewWidget->setGrid(m_grid, ( state == Qt::Checked ) ? true : false, true);
     });
 
     connect(ui->showIconsCheckBox, &QCheckBox::stateChanged, [this](int state) {
-        ui->previewWidget->setIconsVisible((state==Qt::Checked) ? true:false);
+        ui->previewWidget->setIconsVisible(( state == Qt::Checked ) ? true : false);
     });
 
     connect(ui->featureAutpDetectCheckbox, &QCheckBox::stateChanged, [this](int state) {
@@ -118,6 +119,7 @@ Nedrysoft::MainWindow::MainWindow(Nedrysoft::SplashScreen *splashScreen) :
         QMenu popupMenu;
         auto menuPos = ui->dropAppPushButton->mapToGlobal(ui->dropAppPushButton->rect().bottomLeft());
 
+        popupMenu.addAction("Background Image...");
         popupMenu.addAction("Shortcut To Applications");
         popupMenu.addAction("Shortcut...");
         popupMenu.addAction("Icon...");
@@ -129,12 +131,10 @@ Nedrysoft::MainWindow::MainWindow(Nedrysoft::SplashScreen *splashScreen) :
         bool ok = false;
         int size = text.toInt(&ok);
 
-        if ((ok) && (size!=0)) {
+        if (( ok ) && ( size != 0 )) {
             ui->previewWidget->setIconSize(text.toInt());
         }
     });
-
-    loadConfiguration("./dmgee.dmgee");
 
     processBackground();
 
@@ -145,20 +145,53 @@ Nedrysoft::MainWindow::MainWindow(Nedrysoft::SplashScreen *splashScreen) :
     QTemporaryDir temporaryDir;
 
     if (temporaryDir.isValid()) {
-        auto temporaryName = temporaryDir.path()+"/Applications";
+        auto temporaryName = temporaryDir.path() + "/Applications";
 
         if (QFile::link("/Applications", temporaryName)) {
             auto applicationsShortcutImage = new Nedrysoft::Image(temporaryName, false, 160, 160);
-            auto applicationIcon = new Nedrysoft::Image("/Users/adriancarpenter/Documents/Development/dmgee/bin/x86_64/Debug/dmgee.app", false, 160, 160);
+            auto applicationIcon = new Nedrysoft::Image(
+                    "/Users/adriancarpenter/Documents/Development/dmgee/bin/x86_64/Debug/dmgee.app", false, 160, 160);
 
-            ui->previewWidget->addIcon(applicationsShortcutImage, QPoint(100,100), PreviewWidget::Shortcut);
-            ui->previewWidget->addIcon(applicationIcon, QPoint(100,100), PreviewWidget::Icon);
+            ui->previewWidget->addIcon(applicationsShortcutImage, QPoint(100, 100), PreviewWidget::Shortcut);
+            ui->previewWidget->addIcon(applicationIcon, QPoint(100, 100), PreviewWidget::Icon);
         }
     }
 
-    connect(ui->ribbonDropButton, &Nedrysoft::Ribbon::RibbonDropButton::clicked, [=](bool clicked) {
+    connect(ui->ribbonDropButton, &Nedrysoft::Ribbon::RibbonDropButton::clicked, [=](bool dropdown) {
         // TODO: handle click
     });
+
+    QList<QPair<QString, QString> > diskFormats;
+
+    diskFormats << QPair<QString, QString>("UDRW", "UDIF read/write image");
+    diskFormats << QPair<QString, QString>("UDRO", "UDIF read-only image");
+    diskFormats << QPair<QString, QString>("UDCO", "UDIF ADC-compressed image");
+    diskFormats << QPair<QString, QString>("UDZO", "UDIF zlib-compressed image");
+    diskFormats << QPair<QString, QString>("UDBZ", "UDIF bzip2-compressed image (macOS 10.4+ only)");
+    diskFormats << QPair<QString, QString>("UFBI", "UDIF entire image with MD5 checksum");
+    diskFormats << QPair<QString, QString>("UDRo", "UDIF read-only (obsolete format)");
+    diskFormats << QPair<QString, QString>("UDCo", "UDIF compressed (obsolete format)");
+    diskFormats << QPair<QString, QString>("UDTO", "DVD/CD-R master for export");
+    diskFormats << QPair<QString, QString>("UDxx", "UDIF stub image");
+    diskFormats << QPair<QString, QString>("UDSP", "SPARSE (grows with content)");
+    diskFormats << QPair<QString, QString>("UDSB", "SPARSEBUNDLE (grows with content; bundle-backed)");
+    diskFormats << QPair<QString, QString>("RdWr", "NDIF read/write image (deprecated)");
+    diskFormats << QPair<QString, QString>("Rdxx", "NDIF read-only image (Disk Copy 6.3.3 format)");
+    diskFormats << QPair<QString, QString>("ROCo", "NDIF compressed image (deprecated)");
+    diskFormats << QPair<QString, QString>("Rken", "NDIF compressed (obsolete format)");
+    diskFormats << QPair<QString, QString>("DC42", "Disk Copy 4.2 image");
+
+    for (auto format : diskFormats) {
+        ui->formatComboBox->addItem(format.first);
+    }
+
+    ui->formatComboBox->setCurrentText("UDBZ");
+
+    connect(ui->buildButton, &QPushButton::clicked, [this](bool checked) {
+        m_builder->createDMG("/Users/adriancarpenter/Desktop/test.dmg");
+    });
+
+    ui->volumeNameLineEdit->setAttribute(Qt::WA_MacShowFocusRect,false);
 }
 
 Nedrysoft::MainWindow::~MainWindow() {

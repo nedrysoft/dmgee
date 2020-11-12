@@ -95,9 +95,11 @@ void Nedrysoft::Ribbon::RibbonGroup::paintEvent(QPaintEvent *event) {
 
     painter.setPen(Ribbon::TextColor[currentTheme]);
 
-    widgetRect.adjust(0, 0, -RibbonGroupHorizontalMargins, 0);
+    auto textRect = contentsRect();
 
-    painter.drawText(widgetRect, m_groupName, Qt::AlignBottom | Qt::AlignHCenter);
+    textRect.setBottom(rect().bottom());
+
+    painter.drawText(textRect, m_groupName, Qt::AlignBottom | Qt::AlignHCenter);
 
     painter.setPen(Ribbon::GroupDividerColor[currentTheme]);
 
@@ -124,7 +126,7 @@ void Nedrysoft::Ribbon::RibbonGroup::setGroupName(const QString &groupName) {
 void Nedrysoft::Ribbon::RibbonGroup::updateMargins() {
     m_textRect = m_fontMetrics.boundingRect(m_groupName);
 
-    setContentsMargins(0, 0, RibbonGroupHorizontalMargins, m_textRect.height());
+    setContentsMargins(RibbonGroupHorizontalMargins, 0, RibbonGroupHorizontalMargins, m_textRect.height());
 
     update();
 }

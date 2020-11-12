@@ -56,7 +56,7 @@ namespace Nedrysoft {
                 struct Symlink {
                     int x;                                          //! x coordinate of the symlink
                     int y;                                          //! y coordinate of the symlink
-                    QString mame;                                   //! the name to display below the icon
+                    QString name;                                   //! the name to display below the icon
                     QString shortcut;                               //! the target of tme symlink
                 };
 
@@ -75,6 +75,7 @@ namespace Nedrysoft {
                     bool m_gridVisible;                             //! whether the grid is visible
                     int m_featureSize;                              //! minimum size in px^2 for feature detection
                     bool m_detectFeatures;                          //! whether we auto-detect features
+                    QString m_format;                               //! format of the disk image
 
                     QList<Symlink> m_symlinks;                      //! list of symlinks in the DMG
                     QList<File> m_files;                            //! list of files in the DMG
@@ -84,11 +85,11 @@ namespace Nedrysoft {
                 /**
                  * @brief       Uses the dmgbuild python module + configuration file to being a DMG
                  *
-                 * @param[in]   table is the configuration in toml format
+                 * @param[in]   outputFilename is optionally the name of the file to create
                  *
                  * @returns     true on success; otherwise false
                  */
-                bool createDMG(toml::table table);
+                bool createDMG(QString outputFilename=QString());
 
                 /**
                  * @brief       Loads a configuration from disk into the m_configuration member
@@ -104,6 +105,7 @@ namespace Nedrysoft {
                 Q_PROPERTY(QString icon MEMBER (m_configuration.m_icon));
                 Q_PROPERTY(QString filename MEMBER (m_configuration.m_filename));
                 Q_PROPERTY(QString volumeName MEMBER (m_configuration.m_volumename));
+                Q_PROPERTY(QString format MEMBER (m_configuration.m_format));
                 Q_PROPERTY(int iconSize MEMBER (m_configuration.m_iconsize));
                 Q_PROPERTY(QPoint gridSize MEMBER (m_configuration.m_gridSize));
                 Q_PROPERTY(bool snapToGrid MEMBER (m_configuration.m_snapToGrid));

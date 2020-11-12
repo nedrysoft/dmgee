@@ -45,6 +45,8 @@ set(APPLICATION_BIN_OUTPUT "${CMAKE_CURRENT_LIST_DIR}/bin/${APPLICATION_PLATFORM
 
 set(FRAMEWORK_OUTPUT "${CMAKE_CURRENT_LIST_DIR}/bin/${APPLICATION_PLATFORM_ARCH}/${CMAKE_BUILD_TYPE}/${APPLICATION_SHORT_NAME}.app/Contents/Frameworks")
 
+set(BUNDLE_DIR "${CMAKE_CURRENT_LIST_DIR}/bin/${APPLICATION_PLATFORM_ARCH}/${CMAKE_BUILD_TYPE}/${APPLICATION_SHORT_NAME}.app/Contents")
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_AUTOUIC ON)
@@ -53,7 +55,7 @@ set(CMAKE_AUTORCC ON)
 
 # list of packages we need for the application
 
-find_package (Python3 COMPONENTS Development REQUIRED)
+find_package(Python3 COMPONENTS Development REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(DevIL REQUIRED)
 find_package(Git QUIET)
@@ -99,41 +101,45 @@ set_source_files_properties(${dmgee_ICON} PROPERTIES MACOSX_PACKAGE_LOCATION "Re
 
 add_executable(${APPLICATION_SHORT_NAME} MACOSX_BUNDLE ${all_SOURCES})
 
-# copy our python script and it's dependant modules
+option(BUILD_OPTION_COPY_PYTHON "Copy Python frameworks to bundle." OFF)
 
-add_custom_command(TARGET ${APPLICATION_SHORT_NAME} PRE_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${PROJECT_SOURCE_DIR}/python
-    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Resources/python
-    DEPENDS
-    "${PROJECT_SOURCE_DIR}/python"
-)
+if(BUILD_OPTION_COPY_PYTHON)
+    # copy our python script and it's dependant modules
 
-# create the path to the python framework so we can copy it to the bundle
+    add_custom_command(TARGET ${APPLICATION_SHORT_NAME} PRE_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${PROJECT_SOURCE_DIR}/python
+        ${BUNDLE_DIR}/Resources/python
+        DEPENDS
+        "${PROJECT_SOURCE_DIR}/python"
+    )
 
-string(REPLACE "/" ";" Python3_Path ${Python3_LIBRARY})
+    # create the path to the python framework so we can copy it to the bundle
 
-set(Python3_Framework "")
+    string(REPLACE "/" ";" Python3_Path ${Python3_LIBRARY})
 
-foreach(currentPart IN LISTS Python3_Path)
-    if (currentPart STREQUAL "")
-        continue()
-    endif()
+    set(Python3_Framework "")
 
-    string(APPEND Python3_Framework "/" ${currentPart})
+    foreach(currentPart IN LISTS Python3_Path)
+        if (currentPart STREQUAL "")
+            continue()
+        endif()
 
-    if (currentPart STREQUAL "Python.framework")
-        break()
-    endif()
-endforeach()
+        string(APPEND Python3_Framework "/" ${currentPart})
 
-# copy the python framework to our bundle
+        if (currentPart STREQUAL "Python.framework")
+            break()
+        endif()
+    endforeach()
 
-add_custom_command(TARGET ${APPLICATION_SHORT_NAME} PRE_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${Python3_Framework}
-    ${FRAMEWORK_OUTPUT}/Python.framework
-)
+    # copy the python framework to our bundle
+
+    add_custom_command(TARGET ${APPLICATION_SHORT_NAME} PRE_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${Python3_Framework}
+        ${FRAMEWORK_OUTPUT}/Python.framework
+    )
+endif()
 
 # create lists for includes
 

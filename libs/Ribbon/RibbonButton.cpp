@@ -43,6 +43,8 @@ Nedrysoft::Ribbon::RibbonButton::RibbonButton(QWidget *parent) :
     m_layout->addWidget(m_mainButton);
     m_layout->addWidget(m_buttonLabel);
 
+    m_layout->setAlignment(Qt::AlignHCenter);
+
     m_layout->setContentsMargins(0,0,0,0);
 
     m_mainButton->setFlat(true);
@@ -95,5 +97,6 @@ void Nedrysoft::Ribbon::RibbonButton::setText(QString text) {
 void Nedrysoft::Ribbon::RibbonButton::updateSizes() {
     m_mainButton->setMinimumSize(m_iconSize);
     m_mainButton->setMaximumSize(QSize(16777215, m_iconSize.height()));
+    //m_mainButton->setMaximumSize(QSize(m_iconSize.height(), m_iconSize.height()));
     m_mainButton->setIconSize(m_iconSize);
 }

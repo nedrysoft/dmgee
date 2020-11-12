@@ -19,3 +19,30 @@ QToolButton::hover {
 QPushButton::hover {
     background: rgb(65, 65, 65)
 }
+
+QComboBox {
+    padding: 2px;
+    height:13px;
+    border: 2px solid #323232;
+    background: #434343;
+}
+
+QComboBox::drop-down:button{
+    background-color: #434343;
+}
+
+QComboBox::down-arrow {
+    background-color: #434343;
+    image: url(:/assets/arrow_drop-light.png);
+}
+
+QLineEdit {
+    background-color: #434343;
+    height:13px;
+    border: none;
+    padding: 2px;
+}
+
+QLineEdit:focus {
+    border-color: none;
+}

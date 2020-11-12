@@ -22,6 +22,7 @@
 #include "RibbonWidgetsCollection.h"
 #include "RibbonDropButtonPlugin.h"
 #include "RibbonButtonPlugin.h"
+#include "RibbonLineEditPlugin.h"
 
 RibbonWidgetsCollection::RibbonWidgetsCollection(QObject *parent) :
         QObject(parent) {
@@ -30,6 +31,7 @@ RibbonWidgetsCollection::RibbonWidgetsCollection(QObject *parent) :
     m_widgets.append(new RibbonWidgetPlugin(this));
     m_widgets.append(new RibbonDropButtonPlugin(this));
     m_widgets.append(new RibbonButtonPlugin(this));
+    m_widgets.append(new RibbonLineEditPlugin(this));
 }
 
 QList<QDesignerCustomWidgetInterface*> RibbonWidgetsCollection::customWidgets() const {

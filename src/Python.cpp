@@ -21,6 +21,7 @@
 
 #include "Python.h"
 #include <QByteArray>
+#include <QDebug>
 #include <QDirIterator>
 #include <QFile>
 #include <QTextStream>
@@ -66,12 +67,13 @@ bool Nedrysoft::Python::runScript(const QString& script, PyObject * locals) {
         QDirIterator dirIterator(modulePath);
 
         while (dirIterator.hasNext()) {
+            QFileInfo fileInfo(dirIterator.next());
 
-            if (dirIterator.fileName().startsWith(".")) {
+            if (fileInfo.fileName().startsWith(".")) {
                 continue;
             }
 
-            PyObject *localModulePath = PyUnicode_FromString(dirIterator.path().toLatin1().data());
+            auto localModulePath = PyUnicode_FromString(fileInfo.absoluteFilePath().toLatin1().data());
 
             PyList_Insert(systemPath, 0, localModulePath);
 
@@ -85,12 +87,6 @@ bool Nedrysoft::Python::runScript(const QString& script, PyObject * locals) {
 
     Py_DECREF(systemModule);
     Py_DECREF(systemPath);
-
-    if (Py_FinalizeEx() < 0) {
-        return false;
-    }
-
-    //PyMem_RawFree(program);
 
     return true;
 }
