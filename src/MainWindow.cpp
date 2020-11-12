@@ -44,16 +44,16 @@ constexpr auto splashScreenDuration = 100ms;//3s;
 
 Nedrysoft::MainWindow *Nedrysoft::MainWindow::m_instance = nullptr;
 
-Nedrysoft::MainWindow::MainWindow(Nedrysoft::SplashScreen *splashScreen)
-        : QMainWindow(nullptr),
-          ui(new Ui::MainWindow),
-          m_minimumPixelArea(10000),
-          m_backgroundImage(),
-          m_grid(20,20),
-          m_gridIsVisible(true),
-          m_gridShouldSnap(true),
-          m_snapToFeatures(true),
-          m_showIcons(true) {
+Nedrysoft::MainWindow::MainWindow(Nedrysoft::SplashScreen *splashScreen) :
+        QMainWindow(nullptr),
+        ui(new Ui::MainWindow),
+        m_minimumPixelArea(10000),
+        m_backgroundImage(),
+        m_grid(20,20),
+        m_gridIsVisible(true),
+        m_gridShouldSnap(true),
+        m_snapToFeatures(true),
+        m_showIcons(true) {
 
     ui->setupUi(this);
 
@@ -95,7 +95,7 @@ Nedrysoft::MainWindow::MainWindow(Nedrysoft::SplashScreen *splashScreen)
     ui->showIconsCheckBox->setCheckState(m_showIcons ? Qt::Checked : Qt::Unchecked);
 
     connect(ui->gridVisibleCheckbox, &QCheckBox::stateChanged, [this](int state) {
-        ui->previewWidget->setGrid(QSize(20,20), (state==Qt::Checked) ? true:false, true);
+        ui->previewWidget->setGrid(m_grid, (state==Qt::Checked) ? true:false, true);
     });
 
     connect(ui->showIconsCheckBox, &QCheckBox::stateChanged, [this](int state) {
@@ -138,7 +138,7 @@ Nedrysoft::MainWindow::MainWindow(Nedrysoft::SplashScreen *splashScreen)
 
     processBackground();
 
-    ui->previewWidget->setGrid(QSize(20,20), true, true);
+    ui->previewWidget->setGrid(m_grid, true, true);
 
     ui->featureAutpDetectCheckbox->setCheckState(Qt::Checked);
 

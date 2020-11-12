@@ -17,16 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "RibbonDropButton.h"
-#include "RibbonDropButtonPlugin.h"
+#include "RibbonButton.h"
+#include "RibbonButtonPlugin.h"
 #include <QtPlugin>
 
-RibbonDropButtonPlugin::RibbonDropButtonPlugin(QObject *parent) :
+RibbonButtonPlugin::RibbonButtonPlugin(QObject *parent) :
         QObject(parent),
         m_initialized(false) {
 }
 
-void RibbonDropButtonPlugin::initialize(QDesignerFormEditorInterface *core) {
+void RibbonButtonPlugin::initialize(QDesignerFormEditorInterface *core) {
     Q_UNUSED(core);
 
     if (m_initialized)
@@ -35,41 +35,41 @@ void RibbonDropButtonPlugin::initialize(QDesignerFormEditorInterface *core) {
     m_initialized = true;
 }
 
-bool RibbonDropButtonPlugin::isInitialized() const {
+bool RibbonButtonPlugin::isInitialized() const {
     return m_initialized;
 }
 
-QWidget *RibbonDropButtonPlugin::createWidget(QWidget *parent) {
-    return new Nedrysoft::Ribbon::RibbonDropButton(parent);
+QWidget *RibbonButtonPlugin::createWidget(QWidget *parent) {
+    return new Nedrysoft::Ribbon::RibbonButton(parent);
 }
 
-QString RibbonDropButtonPlugin::name() const {
-    return QStringLiteral("Nedrysoft::Ribbon::RibbonDropButton");
+QString RibbonButtonPlugin::name() const {
+    return QStringLiteral("Nedrysoft::Ribbon::RibbonButton");
 }
 
-QString RibbonDropButtonPlugin::group() const {
+QString RibbonButtonPlugin::group() const {
     return QStringLiteral("Ribbon Widgets");
 }
 
-QIcon RibbonDropButtonPlugin::icon() const {
+QIcon RibbonButtonPlugin::icon() const {
     return QIcon();
 }
 
-QString RibbonDropButtonPlugin::toolTip() const {
+QString RibbonButtonPlugin::toolTip() const {
     return QString();
 }
 
-QString RibbonDropButtonPlugin::whatsThis() const {
+QString RibbonButtonPlugin::whatsThis() const {
     return QString();
 }
 
-bool RibbonDropButtonPlugin::isContainer() const {
+bool RibbonButtonPlugin::isContainer() const {
     return true;
 }
 
-QString RibbonDropButtonPlugin::domXml() const {
-    return "<ui language=\"c++\" displayname=\"Ribbon Drop Button\">\n"
-           " <widget class=\"Nedrysoft::Ribbon::RibbonDropButton\" name=\"ribbonDropButton\">\n"
+QString RibbonButtonPlugin::domXml() const {
+    return "<ui language=\"c++\" displayname=\"Ribbon Button\">\n"
+           " <widget class=\"Nedrysoft::Ribbon::RibbonButton\" name=\"ribbonButton\">\n"
 
            "  <property name=\"geometry\">\n"
            "   <rect>\n"
@@ -84,6 +84,6 @@ QString RibbonDropButtonPlugin::domXml() const {
            "</ui>\n";
 }
 
-QString RibbonDropButtonPlugin::includeFile() const {
-    return QStringLiteral("Ribbon/RibbonDropButton.h");
+QString RibbonButtonPlugin::includeFile() const {
+    return QStringLiteral("Ribbon/RibbonButton.h");
 }

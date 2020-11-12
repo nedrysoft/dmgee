@@ -34,7 +34,7 @@ constexpr auto fontFamily = "Open Sans";
 constexpr auto fontSize = 14;
 
 Nedrysoft::AboutDialog::AboutDialog(QWidget *parent) :
-    QDialog(parent, Qt::FramelessWindowHint) {
+        QDialog(parent, Qt::FramelessWindowHint) {
 
     m_backgroundPixmap = QPixmap(splashScreenFilename);
 

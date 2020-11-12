@@ -22,8 +22,8 @@
 #include <QtPlugin>
 
 RibbonGroupPlugin::RibbonGroupPlugin(QObject *parent) :
-    QObject(parent),
-    m_initialized(false) {
+        QObject(parent),
+        m_initialized(false) {
 }
 
 void RibbonGroupPlugin::initialize(QDesignerFormEditorInterface *core) {

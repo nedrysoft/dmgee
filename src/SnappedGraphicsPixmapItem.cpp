@@ -24,17 +24,17 @@
 #include <QMenu>
 #include <QGraphicsScene>
 
-Nedrysoft::SnappedGraphicsPixmapItem::SnappedGraphicsPixmapItem(std::function<QPoint(const QPoint &point)> snapFunction) {
-    m_snapFunction = snapFunction;
+Nedrysoft::SnappedGraphicsPixmapItem::SnappedGraphicsPixmapItem(std::function<QPoint(const QPoint &point)> snapFunction) :
+        m_snapFunction(snapFunction) {
 
     setFlag(ItemIsMovable, true);
     setFlag(ItemSendsGeometryChanges, true);
 }
 
-Nedrysoft::SnappedGraphicsPixmapItem::SnappedGraphicsPixmapItem() {
-    m_snapFunction = [](const QPoint &point) {
-        return point;
-    };
+Nedrysoft::SnappedGraphicsPixmapItem::SnappedGraphicsPixmapItem() :
+        m_snapFunction([](const QPoint &point) {
+            return point;
+        }) {
 }
 
 QVariant Nedrysoft::SnappedGraphicsPixmapItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value) {

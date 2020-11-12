@@ -29,8 +29,8 @@
 #include <QRegularExpression>
 
 Nedrysoft::Ribbon::RibbonGroup::RibbonGroup(QWidget *parent) :
-    QWidget(parent),
-    m_fontMetrics(QFont()) {
+        QWidget(parent),
+        m_fontMetrics(QFont()) {
 
     auto fontManager = RibbonFontManager::getInstance();
 

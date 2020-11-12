@@ -21,8 +21,8 @@
 #include "RibbonWidgetPlugin.h"
 #include <QtPlugin>
 
-RibbonWidgetPlugin::RibbonWidgetPlugin(QObject *parent)
-    : QObject(parent) {
+RibbonWidgetPlugin::RibbonWidgetPlugin(QObject *parent) :
+        QObject(parent) {
 
     qRegisterMetaType<RibbonWidgetPlugin *>("RibbonWidgetPlugin");
 }

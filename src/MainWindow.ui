@@ -76,6 +76,9 @@
            <string>File</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_3">
+           <property name="leftMargin">
+            <number>12</number>
+           </property>
            <property name="topMargin">
             <number>6</number>
            </property>
@@ -86,108 +89,40 @@
             <number>6</number>
            </property>
            <item row="0" column="1">
-            <layout class="QVBoxLayout" name="LoadSaveLayout">
-             <item>
-              <widget class="QPushButton" name="loadButton">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>64</height>
-                </size>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="icon">
-                <iconset resource="app.qrc">
-                 <normaloff>:/assets/load.png</normaloff>:/assets/load.png</iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>32</width>
-                 <height>48</height>
-                </size>
-               </property>
-               <property name="flat">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="saveLabel">
-               <property name="font">
-                <font>
-                 <family>Open Sans</family>
-                 <pointsize>11</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>Load</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <widget class="Nedrysoft::Ribbon::RibbonButton" name="loadButton">
+             <property name="icon">
+              <iconset resource="app.qrc">
+               <normaloff>:/assets/load.png</normaloff>:/assets/load.png</iconset>
+             </property>
+             <property name="text">
+              <string>Load</string>
+             </property>
+            </widget>
            </item>
            <item row="0" column="0">
-            <layout class="QVBoxLayout" name="verticalLayout_5">
-             <item>
-              <widget class="QPushButton" name="saveButton">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>64</height>
-                </size>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="icon">
-                <iconset resource="app.qrc">
-                 <normaloff>:/assets/save.png</normaloff>:/assets/save.png</iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>32</width>
-                 <height>48</height>
-                </size>
-               </property>
-               <property name="flat">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="loadLabel">
-               <property name="font">
-                <font>
-                 <family>Open Sans</family>
-                 <pointsize>10</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>Save</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <widget class="Nedrysoft::Ribbon::RibbonButton" name="newButton">
+             <property name="icon">
+              <iconset resource="app.qrc">
+               <normaloff>:/assets/add.png</normaloff>:/assets/add.png</iconset>
+             </property>
+             <property name="text">
+              <string>New</string>
+             </property>
+             <property name="groupName" stdset="0">
+              <string>Group</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="Nedrysoft::Ribbon::RibbonButton" name="SaveButton">
+             <property name="icon">
+              <iconset resource="app.qrc">
+               <normaloff>:/assets/save.png</normaloff>:/assets/save.png</iconset>
+             </property>
+             <property name="text">
+              <string>Save</string>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -995,6 +930,12 @@
    <class>Nedrysoft::Ribbon::RibbonDropButton</class>
    <extends>QWidget</extends>
    <header>Ribbon/RibbonDropButton.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Nedrysoft::Ribbon::RibbonButton</class>
+   <extends>QWidget</extends>
+   <header>Ribbon/RibbonButton.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

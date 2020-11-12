@@ -35,6 +35,8 @@ set(library_SOURCES
     RibbonWidget.h
     RibbonDropButton.cpp
     RibbonDropButton.h
+    RibbonButton.cpp
+    RibbonButton.h
     RibbonSpec.h
 )
 
@@ -74,6 +76,8 @@ if(Build_RibbonDesignerPlugin)
         RibbonDropButton.h
         RibbonDropButtonPlugin.cpp
         RibbonDropButtonPlugin.h
+        RibbonButtonPlugin.cpp
+        RibbonButtonPlugin.h
     )
 
     if(APPLE)

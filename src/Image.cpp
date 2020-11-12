@@ -1,27 +1,28 @@
- /*
- * Copyright (C) 2020 Adrian Carpenter
- *
- * This file is part of dmgee
- *
- * Created by Adrian Carpenter on 29/10/2020.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+/*
+* Copyright (C) 2020 Adrian Carpenter
+*
+* This file is part of dmgee
+*
+* Created by Adrian Carpenter on 29/10/2020.
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 #include "Image.h"
 #include "ImageLoader.h"
 #include <IL/ilu.h>
+#include <QBuffer>
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
 #include <cmath>
@@ -45,7 +46,7 @@ Nedrysoft::Image::Image(QString filename, bool loadContent, int width, int heigh
 
     ILboolean success = IL_FALSE;
     char *tiffData;
-    float scale=1;
+    float scale = 1;
     auto expression = QRegularExpression(R"(@(?P<scale>(\d*))x\..*$)");
     const char *errorString;
     int errorOffset;
@@ -65,7 +66,8 @@ Nedrysoft::Image::Image(QString filename, bool loadContent, int width, int heigh
     // DevIL seems to crash loading .icns files, so we try to use NSImage to load the requested image which returns a
     // TIFF representation of the file, we then load the TIFF file using DevIL.
     //
-    // If NSImage fails to load the image then we fall back onto DevIL (and keep our fingers crossed)
+    // If NSImage fails to load the image then we fall back onto QImage, if QImage fails to load then we
+    // fallback onto DevIL (and keep our fingers crossed)
 
     bool loadedData = false;
     unsigned int imageLength;
@@ -81,19 +83,31 @@ Nedrysoft::Image::Image(QString filename, bool loadContent, int width, int heigh
 
         free(tiffData);
     } else {
-        success = ilLoadImage(filename.toLatin1());
+        QImage image;
+
+        if (image.load(filename)) {
+            QByteArray tiffData;
+            QBuffer saveBuffer(&tiffData);
+
+            saveBuffer.open(QIODevice::WriteOnly);
+
+            image.save(&saveBuffer, "TIFF");
+
+            saveBuffer.close();
+
+            success = ilLoadL(IL_TIF, tiffData.data(), static_cast<unsigned int>(tiffData.length()));
+        } else {
+            success = ilLoadImage(filename.toLatin1());
+        }
     }
 
     if (success == IL_TRUE) {
         success = ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
 
         if (success == IL_TRUE) {
-            if (scale>1) {
-                auto imageWidth = ilGetInteger(IL_IMAGE_WIDTH) / scale;
-                auto imageHeight = ilGetInteger(IL_IMAGE_HEIGHT) / scale;
-
-                iluScale(static_cast<unsigned int>(imageWidth),
-                         static_cast<unsigned int>(imageHeight),
+            if (scale > 1) {
+                iluScale(static_cast<int>(static_cast<float>(ilGetInteger(IL_IMAGE_WIDTH)) / scale),
+                         static_cast<int>(static_cast<float>(ilGetInteger(IL_IMAGE_HEIGHT)) / scale),
                          static_cast<unsigned int>(ilGetInteger(IL_IMAGE_DEPTH)));
             }
 
@@ -101,8 +115,8 @@ Nedrysoft::Image::Image(QString filename, bool loadContent, int width, int heigh
             m_height = static_cast<unsigned int>(ilGetInteger(IL_IMAGE_HEIGHT));
             m_data = reinterpret_cast<char *>(ilGetData());
             m_length = static_cast<unsigned int>(ilGetInteger(IL_IMAGE_SIZE_OF_DATA));
+            m_stride =static_cast<unsigned int>(ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL)) * m_width;
 
-            m_stride = m_width * 4;
             m_isValid = true;
         }
     }

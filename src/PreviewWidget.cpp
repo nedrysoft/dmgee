@@ -32,14 +32,13 @@
 #include "SnappedGraphicsPixmapItem.h"
 
 Nedrysoft::PreviewWidget::PreviewWidget(QWidget *parent) :
-    QWidget(parent),
-    m_gridSize(20,20),
-    m_iconSize(160),
-    m_gridIsVisible(true),
-    m_gridShouldSNap(false),
-    m_snapToFeatures(true),
-
-    m_iconPosition() {
+        QWidget(parent),
+        m_gridSize(20,20),
+        m_iconSize(160),
+        m_gridIsVisible(true),
+        m_gridShouldSNap(false),
+        m_snapToFeatures(true),
+        m_iconPosition() {
 
     m_targetPixmap = QPixmap(":/assets/target.png");
 

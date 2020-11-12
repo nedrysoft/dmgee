@@ -17,83 +17,82 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "RibbonDropButton.h"
+#include "RibbonButton.h"
+#include "RibbonFontManager.h"
 #include <QApplication>
 #include <QDebug>
 #include <QSpacerItem>
 #include "ThemeSupport.h"
 
-Nedrysoft::Ribbon::RibbonDropButton::RibbonDropButton(QWidget *parent) :
+Nedrysoft::Ribbon::RibbonButton::RibbonButton(QWidget *parent) :
         QWidget(parent),
-        m_iconSize(QSize(RibbonDropButtonDefaultIconWidth,RibbonDropButtonDefaultIconHeight)) {
+        m_iconSize(QSize(RibbonButtonDefaultIconWidth,RibbonButtonDefaultIconHeight)) {
 
     m_layout = new QVBoxLayout;
     m_mainButton = new QPushButton;
-    m_dropButton = new QPushButton;
+    m_buttonLabel = new QLabel;
+
+    m_buttonLabel->setAlignment(Qt::AlignHCenter);
+
+    auto fontManager = RibbonFontManager::getInstance();
+
+    auto font = QFont(fontManager->normalFont(), RibbonButtonDefaultFontSize);
+
+    m_buttonLabel->setFont(font);
 
     m_layout->addWidget(m_mainButton);
-    m_layout->addWidget(m_dropButton);
+    m_layout->addWidget(m_buttonLabel);
 
     m_layout->setContentsMargins(0,0,0,0);
 
-    m_dropButton->setMinimumHeight(RibbonDropButtonDefaultHeight);
-    m_dropButton->setMaximumHeight(RibbonDropButtonDefaultHeight);
-
-    m_dropButton->setFlat(true);
     m_mainButton->setFlat(true);
 
     setLayout(m_layout);
 
     connect(qobject_cast<QApplication *>(QCoreApplication::instance()), &QApplication::paletteChanged, [=] (const QPalette &) {
-        updateDropIcon();
     });
 
     connect(m_mainButton, &QPushButton::clicked, [=] (bool checked) {
-        emit clicked(false);
+        emit clicked();
     });
 
-    connect(m_dropButton, &QPushButton::clicked, [=] (bool checked) {
-        emit clicked(true);
-    });
-
-    updateDropIcon();
     updateSizes();
 }
 
-Nedrysoft::Ribbon::RibbonDropButton::~RibbonDropButton() {
+Nedrysoft::Ribbon::RibbonButton::~RibbonButton() {
     m_mainButton->deleteLater();
-    m_dropButton->deleteLater();
+    m_buttonLabel->deleteLater();
     m_layout->deleteLater();
 }
 
-void Nedrysoft::Ribbon::RibbonDropButton::updateDropIcon() {
-    if (Nedrysoft::Utils::ThemeSupport::isDarkMode()) {
-        m_dropButton->setIcon(QIcon(":/Nedrysoft/Ribbon/icons/arrow_drop-light.png"));
-    } else {
-        m_dropButton->setIcon(QIcon(":/Nedrysoft/Ribbon/icons/arrow_drop-dark.png"));
-    }
-}
-
-QIcon Nedrysoft::Ribbon::RibbonDropButton::icon() {
+QIcon Nedrysoft::Ribbon::RibbonButton::icon() {
     return m_mainButton->icon();
 }
 
-void Nedrysoft::Ribbon::RibbonDropButton::setIcon(QIcon &icon) {
+void Nedrysoft::Ribbon::RibbonButton::setIcon(QIcon &icon) {
     m_mainButton->setIcon(icon);
 }
 
-QSize Nedrysoft::Ribbon::RibbonDropButton::iconSize() {
+QSize Nedrysoft::Ribbon::RibbonButton::iconSize() {
     return m_iconSize;
 }
 
-void Nedrysoft::Ribbon::RibbonDropButton::setIconSize(QSize iconSize)
+void Nedrysoft::Ribbon::RibbonButton::setIconSize(QSize iconSize)
 {
     m_iconSize = iconSize;
 
     updateSizes();
 }
 
-void Nedrysoft::Ribbon::RibbonDropButton::updateSizes() {
+QString Nedrysoft::Ribbon::RibbonButton::text() {
+    return m_buttonLabel->text();
+}
+
+void Nedrysoft::Ribbon::RibbonButton::setText(QString text) {
+    m_buttonLabel->setText(text);
+}
+
+void Nedrysoft::Ribbon::RibbonButton::updateSizes() {
     m_mainButton->setMinimumSize(m_iconSize);
     m_mainButton->setMaximumSize(QSize(16777215, m_iconSize.height()));
     m_mainButton->setIconSize(m_iconSize);

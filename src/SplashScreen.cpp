@@ -27,7 +27,8 @@ constexpr auto fontFamily = "Open Sans";
 constexpr auto fontSize = 14;
 
 Nedrysoft::SplashScreen::SplashScreen() :
-    QSplashScreen(QPixmap(splashScreenFilename), Qt::WindowStaysOnTopHint) {
+        QSplashScreen(QPixmap(splashScreenFilename),
+        Qt::WindowStaysOnTopHint) {
 
     setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
 

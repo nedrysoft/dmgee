@@ -26,7 +26,7 @@
 #include <QDebug>
 
 Nedrysoft::Ribbon::RibbonWidget::RibbonWidget(QWidget *parent) :
-    QTabWidget(parent) {
+        QTabWidget(parent) {
 
     m_tabBar = new RibbonTabBar(this);
 

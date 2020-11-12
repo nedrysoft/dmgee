@@ -34,7 +34,7 @@ constexpr int DefaultFontSize = 10;
 #endif
 
 Nedrysoft::Ribbon::RibbonTabBar::RibbonTabBar(QWidget *parent) :
-    QTabBar(parent) {
+        QTabBar(parent) {
 
     auto fontManager = Nedrysoft::Ribbon::RibbonFontManager::getInstance();
 
