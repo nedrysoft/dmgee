@@ -24,6 +24,7 @@
 
 #include <QString>
 #include <QStringList>
+#include <QObject>
 
 //! @note these must be included in this order otherwise compilation will fail
 
@@ -36,53 +37,74 @@ namespace Nedrysoft {
     /**
      * @brief       Convenience class for executing python code using libpython
      */
-    class Python {
-        public:
-            /**
-             * @brief       Constructs a python instance
-             *
-             * @note        The python instance is bound to the thread that constructed it, do not call any other functions
-             *              from a different thread as this will result in crash.
-             */
-            Python();
+    class Python :
+        public QObject {
+            public:
+                Q_OBJECT
 
-            /**
-             * @brief       Destroys a python instance
-             *
-             * @param[in]   argc is the argument count passed into main()
-             * @param[in]   argv is the argument vector passed into main()
-             */
-            ~Python();
+                enum ErrorCode {
+                    Ok,
+                    ScriptNotFound,
+                    ScriptInvalid
+                };
 
-            /**
-             * @brief       Loads the script from disk and then executes it
-             *
-             * @param[in]   filename is the path to the script to execute
-             *
-             * @return      true if executed without error; otherwise false.
-             */
-            bool run(QString &filename);
+            public:
+                /**
+                 * @brief       Constructs a python instance
+                 *
+                 * @note        The python instance is bound to the thread that constructed it, do not call any other functions
+                 *              from a different thread as this will result in crash.
+                 */
+                Python();
 
-            /**
-             * @brief       Runs the given script source
-             *
-             * @param[in]   script is the python script to execute.
-             * @param[in]   locals is an object that contain local variables exposed to python
-             *
-             * @return      true if executed without error; otherwise false.
-             */
-            bool runScript(const QString& script, PyObject *locals);
+                /**
+                 * @brief       Destroys a python instance
+                 *
+                 * @param[in]   argc is the argument count passed into main()
+                 * @param[in]   argv is the argument vector passed into main()
+                 */
+                ~Python();
 
-            /**
-             * @brief       Inserts paths to local python modules to override system libraries
-             *
-             * @param[in]   modulePaths is a list of paths to insert
-             */
-            void addModulePaths(QStringList modulePaths);
+                /**
+                 * @brief       Loads the script from disk and then executes it.
+                 *
+                 * @note        Python script is executed in a separate thread as to not block the UI, the object will
+                 *              emit the finished signal with an error code once the script has finished.
+                 *
+                 * @param[in]   filename is the path to the script to execute
+                 */
+                void run(QString &filename);
 
-        private:
-            QStringList m_modulePaths;           //! list of extra paths to search for modules in
+                /**
+                 * @brief       Runs the given script source
+                 *
+                 * @note        Python script is executed in a separate thread as to not block the UI, the object will
+                 *              emit the finished signal with an error code once the script has finished.
+                 *
+                 * @param[in]   script is the python script to execute.
+                 * @param[in]   locals is an object that contain local variables exposed to python
+                 */
+                void runScript(const QString &script, PyObject *locals);
+
+                /**
+                 * @brief       Inserts paths to local python modules to override system libraries
+                 *
+                 * @param[in]   modulePaths is a list of paths to insert
+                 */
+                void addModulePaths(QStringList modulePaths);
+
+            public:
+                /**
+                 * @brief       Emitted when the thread has finished running
+                 *
+                 * @param[in]   result is 0 if no error occurred; otherwise it indicates an error occured.
+                 * @param[in]   pythonResult is the error code from python if applicable.
+                 */
+                Q_SIGNAL void finished(int result, int pythonResult);
+
+            private:
+                QStringList m_modulePaths;           //! list of extra paths to search for modules in
     };
-}
+};
 
 #endif //NEDRYSOFT_PYTHON_H

@@ -30,8 +30,9 @@ RibbonWidgetPlugin::RibbonWidgetPlugin(QObject *parent) :
 void RibbonWidgetPlugin::initialize(QDesignerFormEditorInterface *core) {
     Q_UNUSED(core)
 
-    if (m_initialized)
+    if (m_initialized) {
         return;
+    }
 
     m_initialized = true;
 }

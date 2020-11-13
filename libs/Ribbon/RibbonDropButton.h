@@ -93,13 +93,13 @@ namespace Nedrysoft::Ribbon {
              */
             void updateSizes();
 
-        signals:
+        public:
             /**
              * @brief       Signal that is emitted when the button is pressed
              *
              * @param[in]   dropdown is true if the drop down button was clicked; otherwise false (main button was clicked)
              */
-            void clicked(bool dropdown);
+            Q_SIGNAL void clicked(bool dropdown);
 
         private:
             QVBoxLayout *m_layout;                          //! the layout for this widget

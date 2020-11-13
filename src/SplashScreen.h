@@ -35,7 +35,7 @@ namespace Nedrysoft {
             private:
                 Q_OBJECT
 
-            public:
+            private:
                 /**
                  * @brief           Constructs a splash screen dialog.
                  */
@@ -45,6 +45,24 @@ namespace Nedrysoft {
                  * @brief           Destructor for the splash screen dialog.
                  */
                 ~SplashScreen() override;
+
+                /**
+                 * @brief`          Delete the copy constructor
+                 */
+                SplashScreen(const SplashScreen&) = delete;
+
+                /**
+                 * @brief`          Delete the copy constructor
+                 */
+                SplashScreen& operator=(const SplashScreen&) = delete;
+
+            public:
+                /**
+                 * @brief           Get the splash screen singleton
+                 *
+                 * @return          The splash screen instance
+                 */
+                static SplashScreen *getInstance();
 
             protected:
                 /**

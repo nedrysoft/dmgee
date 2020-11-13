@@ -39,6 +39,8 @@ Nedrysoft::Ribbon::RibbonDropButton::RibbonDropButton(QWidget *parent) :
     m_dropButton->setMinimumHeight(RibbonDropButtonDefaultHeight);
     m_dropButton->setMaximumHeight(RibbonDropButtonDefaultHeight);
 
+    m_dropButton->setIconSize(QSize(5,4));
+
     m_dropButton->setFlat(true);
     m_mainButton->setFlat(true);
 
@@ -49,11 +51,11 @@ Nedrysoft::Ribbon::RibbonDropButton::RibbonDropButton(QWidget *parent) :
     });
 
     connect(m_mainButton, &QPushButton::clicked, [=] (bool checked) {
-        emit clicked(false);
+        Q_EMIT clicked(false);
     });
 
     connect(m_dropButton, &QPushButton::clicked, [=] (bool checked) {
-        emit clicked(true);
+        Q_EMIT clicked(true);
     });
 
     updateDropIcon();
@@ -68,9 +70,9 @@ Nedrysoft::Ribbon::RibbonDropButton::~RibbonDropButton() {
 
 void Nedrysoft::Ribbon::RibbonDropButton::updateDropIcon() {
     if (Nedrysoft::Utils::ThemeSupport::isDarkMode()) {
-        m_dropButton->setIcon(QIcon(":/Nedrysoft/Ribbon/icons/arrow_drop-light.png"));
+        m_dropButton->setIcon(QIcon(":/Nedrysoft/Ribbon/icons/arrow_drop-light@2x.png"));
     } else {
-        m_dropButton->setIcon(QIcon(":/Nedrysoft/Ribbon/icons/arrow_drop-dark.png"));
+        m_dropButton->setIcon(QIcon(":/Nedrysoft/Ribbon/icons/arrow_drop-dark@2xpng"));
     }
 }
 

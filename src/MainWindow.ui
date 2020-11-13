@@ -33,13 +33,16 @@
     <item>
      <widget class="Nedrysoft::Ribbon::RibbonWidget" name="ribbonWidget">
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="homeRibboonPage">
        <attribute name="title">
         <string>Home</string>
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout">
+        <property name="spacing">
+         <number>0</number>
+        </property>
         <property name="leftMargin">
          <number>0</number>
         </property>
@@ -108,9 +111,6 @@
              <property name="text">
               <string>New</string>
              </property>
-             <property name="groupName" stdset="0">
-              <string>Group</string>
-             </property>
             </widget>
            </item>
            <item row="0" column="2">
@@ -121,62 +121,6 @@
              </property>
              <property name="text">
               <string>Save</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="Nedrysoft::Ribbon::RibbonGroup" name="testRibbonGroup">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="groupName">
-           <string>Group</string>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_8">
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>6</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>6</number>
-           </property>
-           <item>
-            <widget class="Nedrysoft::Ribbon::RibbonDropButton" name="ribbonDropButton">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="icon">
-              <iconset resource="app.qrc">
-               <normaloff>:/assets/add.png</normaloff>:/assets/add.png</iconset>
-             </property>
-             <property name="iconSize">
-              <size>
-               <width>32</width>
-               <height>48</height>
-              </size>
-             </property>
-             <property name="groupName" stdset="0">
-              <string>Group</string>
              </property>
             </widget>
            </item>
@@ -206,6 +150,9 @@
         <string>Design</string>
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <property name="spacing">
+         <number>0</number>
+        </property>
         <property name="leftMargin">
          <number>0</number>
         </property>
@@ -243,7 +190,7 @@
           </property>
           <layout class="QGridLayout" name="gridLayout">
            <property name="leftMargin">
-            <number>12</number>
+            <number>0</number>
            </property>
            <property name="topMargin">
             <number>6</number>
@@ -253,6 +200,9 @@
            </property>
            <property name="bottomMargin">
             <number>6</number>
+           </property>
+           <property name="horizontalSpacing">
+            <number>12</number>
            </property>
            <property name="verticalSpacing">
             <number>-1</number>
@@ -277,7 +227,7 @@
             </widget>
            </item>
            <item row="4" column="1">
-            <widget class="QLabel" name="label">
+            <widget class="QLabel" name="minFeatureSliderLabel">
              <property name="font">
               <font>
                <family>Open Sans</family>
@@ -290,7 +240,7 @@
             </widget>
            </item>
            <item row="5" column="1">
-            <spacer name="verticalSpacer">
+            <spacer name="featuresGroupVerticalSpacer">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
              </property>
@@ -303,7 +253,7 @@
             </spacer>
            </item>
            <item row="1" column="1">
-            <widget class="QCheckBox" name="featureAutpDetectCheckbox">
+            <widget class="QCheckBox" name="featureAutoDetectCheckbox">
              <property name="font">
               <font>
                <family>Open Sans</family>
@@ -346,7 +296,7 @@
             <number>0</number>
            </property>
            <property name="topMargin">
-            <number>0</number>
+            <number>6</number>
            </property>
            <property name="rightMargin">
             <number>0</number>
@@ -354,91 +304,16 @@
            <property name="bottomMargin">
             <number>6</number>
            </property>
-           <property name="horizontalSpacing">
+           <property name="spacing">
             <number>0</number>
            </property>
-           <property name="verticalSpacing">
-            <number>-1</number>
-           </property>
            <item row="0" column="0">
-            <layout class="QVBoxLayout" name="FileAddLayout" stretch="0,0">
-             <property name="spacing">
-              <number>6</number>
+            <widget class="Nedrysoft::Ribbon::RibbonDropButton" name="designFilesAddButton">
+             <property name="icon">
+              <iconset resource="app.qrc">
+               <normaloff>:/assets/add.png</normaloff>:/assets/add.png</iconset>
              </property>
-             <property name="sizeConstraint">
-              <enum>QLayout::SetDefaultConstraint</enum>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QPushButton" name="insertAppPushButton">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>1677215</width>
-                 <height>64</height>
-                </size>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="icon">
-                <iconset resource="app.qrc">
-                 <normaloff>:/assets/add.png</normaloff>:/assets/add.png</iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>32</width>
-                 <height>48</height>
-                </size>
-               </property>
-               <property name="flat">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="dropAppPushButton">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>10</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>10</height>
-                </size>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="icon">
-                <iconset resource="app.qrc">
-                 <normaloff>:/assets/arrow_drop-light.png</normaloff>:/assets/arrow_drop-light.png</iconset>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -446,7 +321,7 @@
         <item>
          <widget class="Nedrysoft::Ribbon::RibbonGroup" name="iconsRibbonGroup">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -462,13 +337,13 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">
            <property name="spacing">
-            <number>3</number>
+            <number>12</number>
            </property>
            <property name="leftMargin">
             <number>0</number>
            </property>
            <property name="topMargin">
-            <number>3</number>
+            <number>6</number>
            </property>
            <property name="rightMargin">
             <number>0</number>
@@ -546,6 +421,9 @@
                <property name="text">
                 <string>Show Icons</string>
                </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
               </widget>
              </item>
             </layout>
@@ -567,7 +445,7 @@
          </widget>
         </item>
         <item>
-         <widget class="Nedrysoft::Ribbon::RibbonGroup" name="gridGroup">
+         <widget class="Nedrysoft::Ribbon::RibbonGroup" name="gridRibbonGroup">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -585,82 +463,20 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_2">
            <property name="spacing">
-            <number>3</number>
+            <number>12</number>
            </property>
            <property name="leftMargin">
             <number>0</number>
            </property>
            <property name="topMargin">
-            <number>0</number>
+            <number>6</number>
            </property>
            <property name="rightMargin">
             <number>0</number>
            </property>
-           <item>
-            <layout class="QHBoxLayout" name="snapAndVisibleLayout">
-             <property name="sizeConstraint">
-              <enum>QLayout::SetMaximumSize</enum>
-             </property>
-             <item>
-              <widget class="QCheckBox" name="gridSnapCheckbox">
-               <property name="font">
-                <font>
-                 <family>Open Sans</family>
-                 <pointsize>10</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>Snap</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer_5">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Minimum</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <widget class="QCheckBox" name="gridVisibleCheckbox">
-               <property name="font">
-                <font>
-                 <family>Open Sans</family>
-                 <pointsize>10</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>Visible</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer_3">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Minimum</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-            </layout>
-           </item>
+           <property name="bottomMargin">
+            <number>6</number>
+           </property>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_3">
              <property name="sizeConstraint">
@@ -739,6 +555,32 @@
             </layout>
            </item>
            <item>
+            <widget class="QCheckBox" name="gridSnapCheckbox">
+             <property name="font">
+              <font>
+               <family>Open Sans</family>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Snap</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="gridVisibleCheckbox">
+             <property name="font">
+              <font>
+               <family>Open Sans</family>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Visible</string>
+             </property>
+            </widget>
+           </item>
+           <item>
             <spacer name="verticalSpacer_2">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
@@ -755,7 +597,7 @@
          </widget>
         </item>
         <item>
-         <spacer name="horizontalSpacer_2">
+         <spacer name="designSpacer">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -774,6 +616,9 @@
         <string>Build</string>
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_6">
+        <property name="spacing">
+         <number>0</number>
+        </property>
         <property name="leftMargin">
          <number>0</number>
         </property>
@@ -897,6 +742,9 @@
            <property name="bottomMargin">
             <number>0</number>
            </property>
+           <property name="verticalSpacing">
+            <number>12</number>
+           </property>
            <item row="2" column="0">
             <spacer name="verticalSpacer_4">
              <property name="orientation">
@@ -925,7 +773,7 @@
               <number>-1</number>
              </property>
              <property name="verticalSpacing">
-              <number>4</number>
+              <number>12</number>
              </property>
              <item row="0" column="0">
               <widget class="QLabel" name="formatComboBoxLabel">
@@ -1022,7 +870,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>22</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

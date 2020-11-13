@@ -40,7 +40,7 @@ namespace Nedrysoft::Ribbon {
 
 
     static constexpr QRgb TabBarBackgroundColor[] = {                           //! Background colour of the tab bar
-        qRgb(246, 243, 247),
+        qRgb(0xf5, 0xf5, 0xf5),
         qRgb(0x2d, 0x2d, 0x2d)
     };
 
@@ -65,9 +65,17 @@ namespace Nedrysoft::Ribbon {
     };
 
 #if defined(Q_OS_MACOS)
+
+#else
+
+#endif
+
+#if defined(Q_OS_MACOS)
     static constexpr int TabBarHeight = 34;                                     //! Height of the tab bar portion of the control
+    static constexpr int DefaultFontSize = 12;                                  //! Default text size for macOS
 #else
     static constexpr int TabBarHeight = 28;                                     //! Height of the tab bar portion of the control
+    static constexpr int DefaultFontSize = 10;                                  //! Default text size for targets other than macOS
 #endif
     static constexpr int RibbonBarHeight = 100;                                 //! Height of the entire control
     static constexpr int TabHighlightHeight = 3;                                //! Height of the highlight mark on the selected page

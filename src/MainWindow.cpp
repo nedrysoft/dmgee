@@ -45,7 +45,7 @@ constexpr auto splashScreenDuration = 100ms;//3s;
 
 Nedrysoft::MainWindow *Nedrysoft::MainWindow::m_instance = nullptr;
 
-Nedrysoft::MainWindow::MainWindow(Nedrysoft::SplashScreen *splashScreen) :
+Nedrysoft::MainWindow::MainWindow() :
         QMainWindow(nullptr),
         ui(new Ui::MainWindow),
         m_minimumPixelArea(10000),
@@ -54,18 +54,15 @@ Nedrysoft::MainWindow::MainWindow(Nedrysoft::SplashScreen *splashScreen) :
         m_gridIsVisible(true),
         m_gridShouldSnap(true),
         m_snapToFeatures(true),
-        m_showIcons(true) {
+        m_showIcons(true),
+        m_builder(new Builder) {
 
     ui->setupUi(this);
 
     qobject_cast<QApplication *>(QCoreApplication::instance())->installEventFilter(this);
 
-    m_instance = this;
-
-    m_builder = new Builder;
-
-    QTimer::singleShot(splashScreenDuration, [splashScreen]() {
-        splashScreen->close();
+    QTimer::singleShot(splashScreenDuration, []() {
+        Nedrysoft::SplashScreen::getInstance()->close();
     });
 
     connect(ui->actionQuit, &QAction::triggered, [this](bool isChecked) {
@@ -85,14 +82,14 @@ Nedrysoft::MainWindow::MainWindow(Nedrysoft::SplashScreen *splashScreen) :
     connect(ui->minFeatureSlider, &QSlider::valueChanged, [this](int newValue) {
         m_minimumPixelArea = newValue;
 
-        if (ui->featureAutpDetectCheckbox->isChecked()) {
+        if (ui->featureAutoDetectCheckbox->isChecked()) {
             processBackground();
         }
     });
 
     ui->gridVisibleCheckbox->setCheckState(m_gridIsVisible ? Qt::Checked : Qt::Unchecked);
     ui->gridSnapCheckbox->setCheckState(m_gridShouldSnap ? Qt::Checked : Qt::Unchecked);
-    ui->featureAutpDetectCheckbox->setCheckState(m_snapToFeatures ? Qt::Checked : Qt::Unchecked);
+    ui->featureAutoDetectCheckbox->setCheckState(m_snapToFeatures ? Qt::Checked : Qt::Unchecked);
     ui->showIconsCheckBox->setCheckState(m_showIcons ? Qt::Checked : Qt::Unchecked);
 
     connect(ui->gridVisibleCheckbox, &QCheckBox::stateChanged, [this](int state) {
@@ -103,7 +100,7 @@ Nedrysoft::MainWindow::MainWindow(Nedrysoft::SplashScreen *splashScreen) :
         ui->previewWidget->setIconsVisible(( state == Qt::Checked ) ? true : false);
     });
 
-    connect(ui->featureAutpDetectCheckbox, &QCheckBox::stateChanged, [this](int state) {
+    connect(ui->featureAutoDetectCheckbox, &QCheckBox::stateChanged, [this](int state) {
         if (!state) {
             ui->previewWidget->clearCentroids();
         } else {
@@ -111,20 +108,18 @@ Nedrysoft::MainWindow::MainWindow(Nedrysoft::SplashScreen *splashScreen) :
         }
     });
 
-    connect(ui->insertAppPushButton, &QPushButton::clicked, [](bool isChecked) {
+    connect(ui->designFilesAddButton, &Nedrysoft::Ribbon::RibbonDropButton::clicked, [this](bool dropdown) {
+        if (dropdown) {
+            QMenu popupMenu;
+            auto menuPos = ui->designFilesAddButton->mapToGlobal(ui->designFilesAddButton->rect().bottomLeft());
 
-    });
+            popupMenu.addAction("Background Image...");
+            popupMenu.addAction("Shortcut To Applications");
+            popupMenu.addAction("Shortcut...");
+            popupMenu.addAction("Icon...");
 
-    connect(ui->dropAppPushButton, &QPushButton::clicked, [this](bool isChecked) {
-        QMenu popupMenu;
-        auto menuPos = ui->dropAppPushButton->mapToGlobal(ui->dropAppPushButton->rect().bottomLeft());
-
-        popupMenu.addAction("Background Image...");
-        popupMenu.addAction("Shortcut To Applications");
-        popupMenu.addAction("Shortcut...");
-        popupMenu.addAction("Icon...");
-
-        popupMenu.exec(menuPos);
+            popupMenu.exec(menuPos);
+        }
     });
 
     connect(ui->iconsSizeLineEdit, &QLineEdit::textChanged, [this](const QString &text) {
@@ -140,7 +135,7 @@ Nedrysoft::MainWindow::MainWindow(Nedrysoft::SplashScreen *splashScreen) :
 
     ui->previewWidget->setGrid(m_grid, true, true);
 
-    ui->featureAutpDetectCheckbox->setCheckState(Qt::Checked);
+    ui->featureAutoDetectCheckbox->setCheckState(Qt::Checked);
 
     QTemporaryDir temporaryDir;
 
@@ -156,10 +151,6 @@ Nedrysoft::MainWindow::MainWindow(Nedrysoft::SplashScreen *splashScreen) :
             ui->previewWidget->addIcon(applicationIcon, QPoint(100, 100), PreviewWidget::Icon);
         }
     }
-
-    connect(ui->ribbonDropButton, &Nedrysoft::Ribbon::RibbonDropButton::clicked, [=](bool dropdown) {
-        // TODO: handle click
-    });
 
     QList<QPair<QString, QString> > diskFormats;
 
@@ -196,10 +187,18 @@ Nedrysoft::MainWindow::MainWindow(Nedrysoft::SplashScreen *splashScreen) :
 
 Nedrysoft::MainWindow::~MainWindow() {
     delete ui;
+
+    delete getInstance();
 }
 
 Nedrysoft::MainWindow *Nedrysoft::MainWindow::getInstance() {
-    return m_instance;
+    static Nedrysoft::MainWindow *instance = nullptr;
+
+    if (!instance) {
+        instance = new Nedrysoft::MainWindow;
+    }
+
+    return instance;
 }
 
 void Nedrysoft::MainWindow::handleOpenByUrl(const QUrl &url) {
@@ -294,7 +293,7 @@ bool Nedrysoft::MainWindow::loadConfiguration(QString filename) {
         ui->iconsSizeLineEdit->setText(QString("%1").arg(configValue("iconSize", 128).toInt()));
         ui->minFeatureSlider->setValue(configValue("featureSize", 10000).toInt());
 
-        ui->featureAutpDetectCheckbox->setCheckState(configValue("detectFeatures", true).toBool() ? Qt::Checked : Qt::Unchecked);
+        ui->featureAutoDetectCheckbox->setCheckState(configValue("detectFeatures", true).toBool() ? Qt::Checked : Qt::Unchecked);
 
         updatePixmap();
     }
@@ -312,7 +311,7 @@ void Nedrysoft::MainWindow::updatePixmap() {
 
         ui->previewWidget->setPixmap(m_backgroundPixmap);
 
-        if (ui->featureAutpDetectCheckbox->isChecked()) {
+        if (ui->featureAutoDetectCheckbox->isChecked()) {
             processBackground();
         }
     } else {

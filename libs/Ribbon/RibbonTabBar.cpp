@@ -27,12 +27,6 @@
 #include <QPainter>
 #include <QWindow>
 
-#if defined(Q_OS_MACOS)
-constexpr int DefaultFontSize = 12;
-#else
-constexpr int DefaultFontSize = 10;
-#endif
-
 Nedrysoft::Ribbon::RibbonTabBar::RibbonTabBar(QWidget *parent) :
         QTabBar(parent) {
 
@@ -111,7 +105,7 @@ void Nedrysoft::Ribbon::RibbonTabBar::paintEvent(QPaintEvent *event) {
     Q_UNUSED(event)
     auto globalCursorPos = QCursor::pos();
     auto textRect = QRect();
-    auto cursorPos = this->mapFromGlobal(globalCursorPos);
+    auto cursorPos = mapFromGlobal(globalCursorPos);
     auto hoveredTab = tabAt(cursorPos);
     auto backgroundColor = QColor();
     QPainter painter(this);
@@ -122,13 +116,14 @@ void Nedrysoft::Ribbon::RibbonTabBar::paintEvent(QPaintEvent *event) {
     }
 
 #if defined(Q_OS_MACOS)
-    if (!m_mouseInWidget)
+    if (!m_mouseInWidget) {
         hoveredTab = -1;
+    }
 #endif
 
     painter.save();
 
-    for(auto tabIndex=0;tabIndex<this->count();tabIndex++) {
+    for(auto tabIndex=0;tabIndex<count();tabIndex++) {
         auto rect = tabRect(tabIndex);
 
 #if defined(Q_OS_MACOS)

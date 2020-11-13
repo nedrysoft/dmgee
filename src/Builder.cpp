@@ -196,7 +196,7 @@ bool Nedrysoft::Builder::createDMG(QString outputFilename) {
                              "print('Today is', ctime(time()))\n",
                       locals);
 
-    delete python;
+    //delete python;
 
     return true;
 }

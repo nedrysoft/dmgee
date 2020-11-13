@@ -55,7 +55,7 @@ Nedrysoft::Ribbon::RibbonButton::RibbonButton(QWidget *parent) :
     });
 
     connect(m_mainButton, &QPushButton::clicked, [=] (bool checked) {
-        emit clicked();
+        Q_EMIT clicked();
     });
 
     updateSizes();

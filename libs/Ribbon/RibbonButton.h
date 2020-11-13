@@ -104,11 +104,11 @@ namespace Nedrysoft::Ribbon {
              */
             void updateSizes();
 
-        signals:
+        public:
             /**
              * @brief       Signal that is emitted when the button is pressed
              */
-            void clicked();
+            Q_SIGNAL void clicked();
 
         private:
             QVBoxLayout *m_layout;                          //! the layout for this widget

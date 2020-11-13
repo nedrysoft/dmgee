@@ -53,6 +53,10 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
+# disable Qt keyboards as they clash with Python
+
+ADD_DEFINITIONS(-DQT_NO_KEYWORDS)
+
 # list of packages we need for the application
 
 find_package(Python3 COMPONENTS Development REQUIRED)

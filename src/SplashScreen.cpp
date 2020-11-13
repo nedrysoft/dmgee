@@ -36,6 +36,17 @@ Nedrysoft::SplashScreen::SplashScreen() :
 }
 
 Nedrysoft::SplashScreen::~SplashScreen() {
+    delete getInstance();
+}
+
+Nedrysoft::SplashScreen *Nedrysoft::SplashScreen::getInstance() {
+    static Nedrysoft::SplashScreen *instance;
+
+    if (!instance) {
+        instance = new Nedrysoft::SplashScreen;
+    }
+
+    return(instance);
 }
 
 void Nedrysoft::SplashScreen::drawContents(QPainter *painter) {

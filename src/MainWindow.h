@@ -43,20 +43,18 @@ namespace Nedrysoft {
             private:
                 Q_OBJECT
 
-            public:
+            private:
                 /**
                  * @brief           Constructs the main window.
-                 *
-                 * @param[in]       splashScreen is a pointer to the splashscreen that was created
-                 *                  by the main thread at startup.
                  */
-                explicit MainWindow(Nedrysoft::SplashScreen *splashScreen);
+                explicit MainWindow();
 
                 /**
                  * @brief           Destroys the main window.
                  */
                 ~MainWindow() override;
 
+            public:
                 /**
                  * @brief           Handles opening links via URL.
                  *

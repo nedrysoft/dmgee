@@ -21,6 +21,8 @@ set(LIBRARY_NAME Ribbon)
 
 set(NEDRYSOFT_LIBRARY_RIBBON_EXPORT)
 
+ADD_DEFINITIONS(-DQT_NO_KEYWORDS)
+
 set(library_SOURCES
     ThemeSupport.mm
     ThemeSupport.h

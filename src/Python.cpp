@@ -20,6 +20,7 @@
  */
 
 #include "Python.h"
+#include <QApplication>
 #include <QByteArray>
 #include <QDebug>
 #include <QDirIterator>
@@ -29,6 +30,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <thread>
 #include <utility>
 
 Nedrysoft::Python::Python() {
@@ -39,54 +41,72 @@ Nedrysoft::Python::~Python() {
     Py_Finalize();
 }
 
-bool Nedrysoft::Python::run(QString &filename) {
+void Nedrysoft::Python::run(QString &filename) {
     QFile pythonFile(filename);
 
     if (pythonFile.open(QFile::ReadOnly)) {
         QByteArray pythonContent = pythonFile.readAll();
 
         if (pythonContent.length()) {
-            return runScript(QString::fromUtf8(pythonContent), nullptr);
+            runScript(QString::fromUtf8(pythonContent), nullptr);
+        } else {
+            Q_EMIT finished(ScriptInvalid, 0);
         }
+    } else {
+        Q_EMIT finished(ScriptNotFound, 0);
     }
-
-    return false;
 }
 
 void Nedrysoft::Python::addModulePaths(QStringList modulePaths) {
     m_modulePaths = std::move(modulePaths);
 }
 
-bool Nedrysoft::Python::runScript(const QString& script, PyObject * locals) {
-    PyObject *systemModule = PyImport_ImportModule("sys");
-    PyObject *systemPath = PyObject_GetAttrString(systemModule, "path");
+void Nedrysoft::Python::runScript(const QString& script, PyObject *locals) {
+    auto threadState = PyEval_SaveThread();
 
-    // add our local packages & dependencies to load first
+    auto thread = std::thread([this, script, locals, threadState]() {
+        PyGILState_STATE gilState;
 
-    for (const auto& modulePath : m_modulePaths) {
-        QDirIterator dirIterator(modulePath);
+        gilState = PyGILState_Ensure();
 
-        while (dirIterator.hasNext()) {
-            QFileInfo fileInfo(dirIterator.next());
+        PyObject *systemModule = PyImport_ImportModule("sys");
+        PyObject *systemPath = PyObject_GetAttrString(systemModule, "path");
 
-            if (fileInfo.fileName().startsWith(".")) {
-                continue;
+        // add our local packages & dependencies to load first
+
+        for (const auto& modulePath : m_modulePaths) {
+            QDirIterator dirIterator(modulePath);
+
+            while (dirIterator.hasNext()) {
+                QFileInfo fileInfo(dirIterator.next());
+
+                if (fileInfo.fileName().startsWith(".")) {
+                    continue;
+                }
+
+                auto localModulePath = PyUnicode_FromString(fileInfo.absoluteFilePath().toLatin1().data());
+
+                PyList_Insert(systemPath, 0, localModulePath);
+
+                Py_DECREF(localModulePath);
             }
-
-            auto localModulePath = PyUnicode_FromString(fileInfo.absoluteFilePath().toLatin1().data());
-
-            PyList_Insert(systemPath, 0, localModulePath);
-
-            Py_DECREF(localModulePath);
         }
-    }
 
-    auto dict = PyDict_New();
+        auto dict = PyDict_New();
 
-    PyRun_String(script.toLatin1().data(), Py_file_input, dict, locals);
+        PyRun_String(script.toLatin1().data(), Py_file_input, dict, locals);
 
-    Py_DECREF(systemModule);
-    Py_DECREF(systemPath);
+        Py_DECREF(systemModule);
+        Py_DECREF(systemPath);
 
-    return true;
+        PyGILState_Release(gilState);
+
+        Q_EMIT finished(Ok, 0);
+
+        QMetaObject::invokeMethod(qobject_cast<QApplication *>(QCoreApplication::instance()), [threadState]() {
+            PyEval_RestoreThread(threadState);
+        });
+    });
+
+    thread.detach();
 }

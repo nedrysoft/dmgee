@@ -10,9 +10,33 @@
         <file>OpenSans/OpenSans-Regular.ttf</file>
         <file>OpenSans/OpenSans-SemiBold.ttf</file>
         <file>OpenSans/OpenSans-SemiBoldItalic.ttf</file>
+
         <file>LightStyle.css</file>
         <file>DarkStyle.css</file>
+
         <file>icons/arrow_drop-light.png</file>
+        <file>icons/arrow_drop-light@2x.png</file>
         <file>icons/arrow_drop-dark.png</file>
+        <file>icons/arrow_drop-dark@2x.png</file>
+
+        <file>icons/checked-dark.png</file>
+        <file>icons/checked-dark@2x.png</file>
+        <file>icons/checked-hover-dark.png</file>
+        <file>icons/checked-hover-dark@2x.png</file>
+
+        <file>icons/unchecked-dark.png</file>
+        <file>icons/unchecked-dark@2x.png</file>
+        <file>icons/unchecked-hover-dark.png</file>
+        <file>icons/unchecked-hover-dark@2x.png</file>
+
+        <file>icons/checked-light.png</file>
+        <file>icons/checked-light@2x.png</file>
+        <file>icons/checked-hover-light.png</file>
+        <file>icons/checked-hover-light@2x.png</file>
+
+        <file>icons/unchecked-light.png</file>
+        <file>icons/unchecked-light@2x.png</file>
+        <file>icons/unchecked-hover-light.png</file>
+        <file>icons/unchecked-hover-light@2x.png</file>
     </qresource>
 </RCC>

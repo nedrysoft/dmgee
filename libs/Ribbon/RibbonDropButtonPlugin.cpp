@@ -29,8 +29,9 @@ RibbonDropButtonPlugin::RibbonDropButtonPlugin(QObject *parent) :
 void RibbonDropButtonPlugin::initialize(QDesignerFormEditorInterface *core) {
     Q_UNUSED(core);
 
-    if (m_initialized)
+    if (m_initialized) {
         return;
+    }
 
     m_initialized = true;
 }

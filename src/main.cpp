@@ -27,6 +27,7 @@
 #include "MainWindow.h"
 #include "SplashScreen.h"
 #include <QApplication>
+#include <QDateTime>
 #include <QDebug>
 #include <QDirIterator>
 #include <QFontDatabase>
@@ -36,11 +37,57 @@
 constexpr auto applicationName = APPLICATION_LONG_NAME;                     //! Provided by CMake to the preprocessor
 constexpr auto applicationFontsPrefix = ":/fonts";                          //! Fonts are stored under :/fonts (recursive search is performed)
 
+void qtMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+    QByteArray localMsg = msg.toLocal8Bit();
+    QDateTime date = QDateTime::currentDateTime();
+
+    QMap<QtMsgType, QString> typeMap{
+        {QtInfoMsg, "QtInfoMsg"},
+        {QtDebugMsg, "QtDebugMsg"},
+        {QtWarningMsg, "QtWarningMsg"},
+        {QtCriticalMsg, "QtCriticalMsg"},
+        {QtFatalMsg, "QtFatalMsg"}};
+
+    switch (type) {
+        case QtDebugMsg: {
+            std::cout << localMsg.toStdString() << std::endl;
+            break;
+        }
+
+        case QtInfoMsg:
+        case QtWarningMsg:
+        case QtCriticalMsg:
+        case QtFatalMsg: {
+            std::cout << "["
+                      << typeMap[type].toStdString()
+                      << ": " << date.toString().toStdString()
+                      << "] " << localMsg.toStdString()
+                      << " ("
+                      << context.file
+                      << ":"
+                      << context.line
+                      << ", "
+                      << context.function
+                      << std::endl;
+
+            if (type==QtFatalMsg) {
+                abort();
+            }
+
+            break;
+        }
+    }
+}
+
 int main(int argc, char *argv[]) {
+    qInstallMessageHandler(qtMessageHandler);
     QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication application(argc, argv);
     QMimeDatabase mimeDatabase;
     int returnValue = 0;
+
+    qDebug() << "hello";
 
     CLI::App appCli("dmgee is an application for designing and creating custom DMG images.\n", APPLICATION_SHORT_NAME);
 
@@ -98,20 +145,18 @@ int main(int argc, char *argv[]) {
 
         ilSetInteger(IL_ORIGIN_MODE, IL_ORIGIN_UPPER_LEFT);
 
-        Nedrysoft::SplashScreen splashScreen;
+        auto splashScreen = Nedrysoft::SplashScreen::getInstance();
 
         application.setApplicationDisplayName(applicationName);
         application.setApplicationName(applicationName);
 
-        auto mainWindow = new Nedrysoft::MainWindow(&splashScreen);
+        auto mainWindow = Nedrysoft::MainWindow::getInstance();
 
         mainWindow->show();
 
         mainWindow->loadConfiguration(QString::fromStdString(configFilename));
 
         returnValue = application.exec();
-
-        delete mainWindow;
     }
 
     return returnValue;

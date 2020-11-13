@@ -32,19 +32,19 @@ Nedrysoft::Ribbon::RibbonWidget::RibbonWidget(QWidget *parent) :
 
     setTabBar(m_tabBar);
 
-    this->setMinimumHeight(RibbonBarHeight+TabBarHeight);
-    this->setMaximumHeight(RibbonBarHeight+TabBarHeight);
+    setMinimumHeight(RibbonBarHeight+TabBarHeight);
+    setMaximumHeight(RibbonBarHeight+TabBarHeight);
 
 #if defined(Q_OS_MACOS)
-    this->setDocumentMode(true);
+    setDocumentMode(true);
 #endif
 }
 
 void Nedrysoft::Ribbon::RibbonWidget::paintEvent(QPaintEvent *event) {
     Q_UNUSED(event)
     QPainter painter(this);
-    auto rect = this->rect();
-    auto  currentTheme = Nedrysoft::Ribbon::Light;
+    auto widgetRect = rect();
+    auto currentTheme = Nedrysoft::Ribbon::Light;
 
     if (Nedrysoft::Utils::ThemeSupport::isDarkMode()) {
         currentTheme = Nedrysoft::Ribbon::Dark;
@@ -52,11 +52,11 @@ void Nedrysoft::Ribbon::RibbonWidget::paintEvent(QPaintEvent *event) {
 
     painter.save();
 
-    painter.fillRect(rect, TabBarBackgroundColor[currentTheme]);
+    painter.fillRect(widgetRect, TabBarBackgroundColor[currentTheme]);
 
-    rect.setTop(rect.bottom());
+    widgetRect.setTop(widgetRect.bottom());
 
-    painter.fillRect(rect, RibbonBorderColor[currentTheme]);
+    painter.fillRect(widgetRect, RibbonBorderColor[currentTheme]);
 
     painter.restore();
 }

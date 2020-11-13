@@ -1,5 +1,25 @@
+/*
+ * Copyright (C) 2020 Adrian Carpenter
+ *
+ * https://github.com/fizzyade
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 QWidget {
     font-family: "Open Sans";
+    font-size: 10pt;
 }
 
 QPushButton {
@@ -13,17 +33,20 @@ QToolButton {
 }
 
 QToolButton::hover {
-    background: rgb(65, 65, 65)
+    background: #414141;
 }
 
 QPushButton::hover {
-    background: rgb(65, 65, 65)
+    background: #414141;
 }
 
 QComboBox {
     padding: 2px;
     height:13px;
     border: 2px solid #323232;
+}
+
+QComboBox:!editable {
     background: #434343;
 }
 
@@ -33,7 +56,9 @@ QComboBox::drop-down:button{
 
 QComboBox::down-arrow {
     background-color: #434343;
-    image: url(:/assets/arrow_drop-light.png);
+    image: url(':/Nedrysoft/Ribbon/icons/arrow_drop-light@2x.png');
+    width: 5px;
+    height: 4px;
 }
 
 QLineEdit {
@@ -45,4 +70,32 @@ QLineEdit {
 
 QLineEdit:focus {
     border-color: none;
+}
+
+QCheckBox::indicator:checked {
+    image: url(':/Nedrysoft/Ribbon/icons/checked-dark@2x.png');
+    width: 14px;
+    height: 14px;
+    padding-right:2px;
+}
+
+QCheckBox::indicator:checked:hover {
+    image: url(':/Nedrysoft/Ribbon/icons/checked-hover-dark@2x.png');
+    width: 14px;
+    height: 14px;
+    padding-right:2px;
+}
+
+QCheckBox::indicator:unchecked {
+    image: url(':/Nedrysoft/Ribbon/icons/unchecked-dark@2x.png');
+    width: 14px;
+    height: 14px;
+    padding-right:2px;
+}
+
+QCheckBox::indicator:unchecked:hover {
+    image: url(':/Nedrysoft/Ribbon/icons/unchecked-hover-dark@2x.png');
+    width: 14px;
+    height: 14px;
+    padding-right:2px;
 }
