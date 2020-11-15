@@ -21,7 +21,7 @@
 
 #include "AboutDialog.h"
 #include "ui_AboutDialog.h"
-#include <QDebug>
+
 #include <QDesktopWidget>
 #include <QDialog>
 #include <QFont>

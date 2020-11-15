@@ -18,11 +18,12 @@
  */
 
 #include "RibbonComboBox.h"
+
 #include "RibbonFontManager.h"
-#include <QApplication>
-#include <QDebug>
-#include <QSpacerItem>
 #include "ThemeSupport.h"
+
+#include <QApplication>
+#include <QSpacerItem>
 
 constexpr auto ThemeStylesheet = R"(
     QComboBox {

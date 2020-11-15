@@ -18,13 +18,14 @@
  */
 
 #include "RibbonButton.h"
+
 #include "RibbonFontManager.h"
 #include "RibbonWidget.h"
+#include "ThemeSupport.h"
+
 #include <QApplication>
-#include <QDebug>
 #include <QSpacerItem>
 #include <QStyle>
-#include "ThemeSupport.h"
 
 constexpr auto ThemeStylesheet = R"(
     QPushButton {

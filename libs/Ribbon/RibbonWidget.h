@@ -21,9 +21,10 @@
 #define NEDRYSOFT_RIBBONWIDGET_H
 
 #include "RibbonSpec.h"
-#include <QTabWidget>
+
 #include <QHBoxLayout>
 #include <QMetaProperty>
+#include <QTabWidget>
 
 namespace Nedrysoft::Ribbon {
     class RibbonTabBar;

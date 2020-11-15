@@ -17,14 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "RibbonGroupPlugin.h"
-#include "RibbonWidgetPlugin.h"
 #include "RibbonWidgetsCollection.h"
-#include "RibbonDropButtonPlugin.h"
+
 #include "RibbonButtonPlugin.h"
-#include "RibbonLineEditPlugin.h"
-#include "RibbonComboBoxPlugin.h"
 #include "RibbonCheckBoxPlugin.h"
+#include "RibbonComboBoxPlugin.h"
+#include "RibbonDropButtonPlugin.h"
+#include "RibbonGroupPlugin.h"
+#include "RibbonLineEditPlugin.h"
+#include "RibbonWidgetPlugin.h"
 
 RibbonWidgetsCollection::RibbonWidgetsCollection(QObject *parent) :
         QObject(parent) {

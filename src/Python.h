@@ -22,16 +22,14 @@
 #ifndef NEDRYSOFT_PYTHON_H
 #define NEDRYSOFT_PYTHON_H
 
+#include <QObject>
 #include <QString>
 #include <QStringList>
-#include <QObject>
-
-//! @note these must be included in this order otherwise compilation will fail
 
 #include <list>
 #include <string>
-#define PY_SSIZE_T_CLEAN
-#include <Python.h>
+
+#include <Python.h>         //! @note global python include must be included after other includes
 
 namespace Nedrysoft {
     /**

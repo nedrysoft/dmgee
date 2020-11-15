@@ -26,7 +26,9 @@
 #include "CLI/CLI.hpp"
 #include "MainWindow.h"
 #include "SplashScreen.h"
+
 #include <QApplication>
+#include <QComboBox>
 #include <QDateTime>
 #include <QDebug>
 #include <QDirIterator>
@@ -34,7 +36,6 @@
 #include <QMimeDatabase>
 #include <QRegularExpression>
 #include <QStyle>
-#include <QComboBox>
 
 constexpr auto applicationName = APPLICATION_LONG_NAME;                     //! Provided by CMake to the preprocessor
 constexpr auto applicationFontsPrefix = ":/fonts";                          //! Fonts are stored under :/fonts (recursive search is performed)

@@ -19,8 +19,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-background = "/Users/adriancarpenter/Documents/Development/dmgee/images/dmg_background.tiff"
-icon = "/Users/adriancarpenter/Documents/Development/dmgee/icons/dmgee.icns"
+background = "./images/dmg_background.tiff"
+icon = "./icons/dmgee.icns"
 filename = "dmgee"
 volumename = "dmgee"
 iconsize = 92
@@ -32,7 +32,7 @@ format = "UDBZ"
 [[file]]
 x = 140
 y = 248
-file = "/Users/adriancarpenter/Documents/Development/dmgee/bin/x86_64/Debug/dmgee.app"
+file = "./bin/x86_64/Debug/dmgee.app"
 
 [[symlink]]
 x = 518

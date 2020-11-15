@@ -21,11 +21,12 @@
 #define NEDRYSOFT_RIBBONBUTTON_H
 
 #include "RibbonSpec.h"
+#include "ThemeSupport.h"
+
 #include <QLabel>
 #include <QPushButton>
-#include <QWidget>
 #include <QVBoxLayout>
-#include "ThemeSupport.h"
+#include <QWidget>
 
 namespace Nedrysoft::Ribbon {
     constexpr auto RibbonButtonDefaultIconWidth = 32;

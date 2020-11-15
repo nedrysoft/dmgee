@@ -21,6 +21,7 @@
 #define NEDRYSOFT_RIBBONGROUP_H
 
 #include "RibbonSpec.h"
+
 #include <QFontMetrics>
 #include <QMap>
 #include <QWidget>

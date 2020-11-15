@@ -17,9 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "RibbonDropButton.h"
 #include "RibbonDropButtonPlugin.h"
+#include "RibbonDropButton.h"
+
 #include <QtPlugin>
+
+constexpr auto ConfigurationXML = R"(
+    <ui language="c++" displayname="Ribbon Drop Button">
+        <widget class="Nedrysoft::Ribbon::RibbonDropButton" name="ribbonDropButton">
+            <property name="geometry">
+                <rect>
+                    <x>0</x>
+                    <y>0</y>
+                    width>100</width>
+                    <height>100</height>
+                </rect>
+            </property>
+        </widget>
+    </ui>
+)";
 
 RibbonDropButtonPlugin::RibbonDropButtonPlugin(QObject *parent) :
         QObject(parent),
@@ -69,20 +85,7 @@ bool RibbonDropButtonPlugin::isContainer() const {
 }
 
 QString RibbonDropButtonPlugin::domXml() const {
-    return "<ui language=\"c++\" displayname=\"Ribbon Drop Button\">\n"
-           " <widget class=\"Nedrysoft::Ribbon::RibbonDropButton\" name=\"ribbonDropButton\">\n"
-
-           "  <property name=\"geometry\">\n"
-           "   <rect>\n"
-           "    <x>0</x>\n"
-           "    <y>0</y>\n"
-           "    <width>100</width>\n"
-           "    <height>100</height>\n"
-           "   </rect>\n"
-           "  </property>\n"
-
-           " </widget>\n"
-           "</ui>\n";
+    return ConfigurationXML;
 }
 
 QString RibbonDropButtonPlugin::includeFile() const {

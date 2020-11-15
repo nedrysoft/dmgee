@@ -19,25 +19,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <opencv2/opencv.hpp>
+#include "MainWindow.h"
+#include "ui_MainWindow.h"
 
 #include "AboutDialog.h"
 #include "ImageLoader.h"
-#include "MainWindow.h"
-#include "ui_MainWindow.h"
+
 #include <QAction>
 #include <QDebug>
 #include <QDesktopServices>
+#include <QFileInfo>
+#include <QList>
 #include <QMenu>
+#include <QMimeData>
+#include <opencv2/opencv.hpp>
 #include <QPaintEvent>
 #include <QPainter>
+#include <QTemporaryDir>
 #include <QTimer>
 #include <QWindow>
-#include <QFileInfo>
-#include <QMimeData>
-#include <QTemporaryDir>
 #include <utility>
-#include <QList>
 
 using namespace std::chrono_literals;
 
@@ -213,7 +214,7 @@ Nedrysoft::MainWindow::MainWindow() :
     // build controls
 
     connect(ui->buildButton, &Nedrysoft::Ribbon::RibbonButton::clicked, [this]() {
-        m_builder->createDMG("/Users/adriancarpenter/Desktop/test.dmg");
+        m_builder->createDMG("~/Desktop/test.dmg");
     });
 }
 

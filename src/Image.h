@@ -22,10 +22,11 @@
 #ifndef NEDRYSOFT_IMAGE_H
 #define NEDRYSOFT_IMAGE_H
 
-#include <opencv2/opencv.hpp>
 #include "IL/il.h"
+
 #include <QImage>
 #include <QString>
+#include <opencv2/opencv.hpp>
 
 namespace Nedrysoft {
     /**

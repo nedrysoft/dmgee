@@ -22,13 +22,14 @@
 #ifndef NEDRYSOFT_PREVIEWWIDGET_H
 #define NEDRYSOFT_PREVIEWWIDGET_H
 
+#include "Image.h"
+
 #include <QGraphicsItemGroup>
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QGridLayout>
 #include <QPixmap>
 #include <QWidget>
-#include "Image.h"
 
 namespace Nedrysoft {
     /**

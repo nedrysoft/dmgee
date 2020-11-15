@@ -22,6 +22,7 @@
 
 #include "RibbonSpec.h"
 #include "ThemeSupport.h"
+
 #include <QLineEdit>
 
 namespace Nedrysoft::Ribbon {

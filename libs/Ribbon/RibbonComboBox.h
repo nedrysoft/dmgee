@@ -21,8 +21,9 @@
 #define NEDRYSOFT_RIBBONCOMBOBOX_H
 
 #include "RibbonSpec.h"
-#include <QComboBox>
 #include "ThemeSupport.h"
+
+#include <QComboBox>
 
 namespace Nedrysoft::Ribbon {
     /**

@@ -21,6 +21,7 @@
 #define NEDRYSOFT_RIBBONFONTMANAGER_H
 
 #include "RibbonSpec.h"
+
 #include <QString>
 
 namespace Nedrysoft::Ribbon {

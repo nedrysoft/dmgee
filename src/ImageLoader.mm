@@ -19,8 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#import "AppKit/AppKit.h"
 #include "ImageLoader.h"
+
+#import "AppKit/AppKit.h"
 
 bool Nedrysoft::ImageLoader::load(QString &filename, char **data, unsigned int *length) {
     NSString *fileName = filename.toNSString();

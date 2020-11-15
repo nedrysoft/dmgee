@@ -20,7 +20,6 @@
 #ifndef NEDRYSOFT_RIBBONWIDGETSCOLLECTION_H
 #define NEDRYSOFT_RIBBONWIDGETSCOLLECTION_H
 
-#include <QObject>
 #include <QtUiPlugin/QDesignerCustomWidgetCollectionInterface>
 
 /**

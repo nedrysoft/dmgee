@@ -24,10 +24,10 @@
 
 #include "tomlplusplus/toml.hpp"
 #include <QList>
-#include <QString>
-#include <fstream>
 #include <QMetaProperty>
 #include <QPoint>
+#include <QString>
+#include <fstream>
 
 namespace Nedrysoft {
     /**
@@ -147,6 +147,5 @@ namespace Nedrysoft {
 Q_DECLARE_METATYPE(Nedrysoft::Builder::File *);
 Q_DECLARE_METATYPE(Nedrysoft::Builder::Symlink *);
 Q_DECLARE_METATYPE(Nedrysoft::Builder::TextPosition);
-
 
 #endif //NEDRYSOFT_BUILDER_H

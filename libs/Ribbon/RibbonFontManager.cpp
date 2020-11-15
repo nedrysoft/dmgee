@@ -18,6 +18,7 @@
  */
 
 #include "RibbonFontManager.h"
+
 #include <QFontDatabase>
 
 Nedrysoft::Ribbon::RibbonFontManager::RibbonFontManager() :

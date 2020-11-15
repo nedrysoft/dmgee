@@ -21,8 +21,9 @@
 #define NEDRYSOFT_RIBBONCHECKBOX_H
 
 #include "RibbonSpec.h"
-#include <QCheckBox>
 #include "ThemeSupport.h"
+
+#include <QCheckBox>
 
 namespace Nedrysoft::Ribbon {
     /**

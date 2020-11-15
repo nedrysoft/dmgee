@@ -18,13 +18,12 @@
  */
 
 #include "ThemeSupport.h"
-#import <Foundation/Foundation.h>
+
+#include <QApplication>
+#include <QStyle>
+
 #import <AppKit/NSAppearance.h>
 #import <AppKit/NSColor.h>
-#include <QApplication>
-#include <QDebug>
-#include <QStyle>
-#include <CoreGraphics/CGColor.h>
 
 Nedrysoft::Utils::ThemeSupport::ThemeSupport() {
     connect(qobject_cast<QApplication *>(QCoreApplication::instance()), &QApplication::paletteChanged, [=] (const QPalette &) {

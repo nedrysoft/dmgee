@@ -20,10 +20,10 @@
 #ifndef NEDRYSOFT_THEMESUPPORT_H
 #define NEDRYSOFT_THEMESUPPORT_H
 
-#include <QtGlobal>
+#include <QColor>
 #include <QObject>
 #include <QRgb>
-#include <QColor>
+#include <QtGlobal>
 
 namespace Nedrysoft::Utils {
     /**

@@ -19,20 +19,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Python.h"
+#include "Python.h"                         //! @note must be included first
 #include "Builder.h"
 #include "Image.h"
-#include "Python/Python.h"
-#include <optional>
+
 #include <QApplication>
 #include <QDebug>
+#include <QDir>
 #include <QFileInfo>
 #include <QPoint>
+#include <QRegularExpression>
 #include <QStyle>
+#include <optional>
+
+constexpr auto BuildScript = R"(
+# settings is passed in from C++.  See dmgbuild for more information
+
+import sys
+import os
+import dmgbuild
+
+dmgbuild.build_dmg(volume_name=parameters["volume_name"],
+                   filename=parameters["filename"],
+                   settings=settings,
+                   lookForHiDPI=parameters["lookForHiDPI"],
+                   detach_retries=parameters["detach_retries"])
+)";
 
 bool Nedrysoft::Builder::createDMG(QString outputFilename) {
     QList<QString> modulePaths;
     int imageWidth, imageHeight;
+
+    outputFilename = outputFilename.replace(QRegularExpression("(^~)"), QDir::homePath());
+
+    QFileInfo outputFileInfo(outputFilename.isEmpty() ? m_configuration.m_filename : outputFilename);
 
     QFileInfo fileInfo(m_configuration.m_background);
 
@@ -53,13 +73,8 @@ bool Nedrysoft::Builder::createDMG(QString outputFilename) {
 
     PyDict_SetItemString(parameters, "volume_name", PyUnicode_FromString( m_configuration.m_volumename.toLatin1().constData()));
 
-    if (outputFilename.isNull()) {
-        PyDict_SetItemString(parameters, "filename",
-                             PyUnicode_FromString(m_configuration.m_filename.toLatin1().constData()));
-    } else {
-        PyDict_SetItemString(parameters, "filename",
-                             PyUnicode_FromString(outputFilename.toLatin1().constData()));
-    }
+    PyDict_SetItemString(parameters, "filename",
+                         PyUnicode_FromString(outputFileInfo.absoluteFilePath().toLatin1().constData()));
 
     PyDict_SetItemString(parameters, "lookForHiDPI", Py_False);
     PyDict_SetItemString(parameters, "detach_retries", PyLong_FromLong(5));
@@ -79,7 +94,7 @@ bool Nedrysoft::Builder::createDMG(QString outputFilename) {
 
     PyDict_SetItemString(settings, "sidebar_width", PyLong_FromLong(180));
 
-    auto titleBarHeight = qobject_cast<QApplication *>(QApplication::instance())->style()->pixelMetric(QStyle::PM_TitleBarHeight);    qDebug() << "titlebarheight: " <<  titleBarHeight;
+    auto titleBarHeight = qobject_cast<QApplication *>(QApplication::instance())->style()->pixelMetric(QStyle::PM_TitleBarHeight);
 
     auto windowRectOrigin = PyTuple_Pack(2, PyLong_FromLong(0), PyLong_FromLong(0));
     auto windowRectSize = PyTuple_Pack(2, PyLong_FromLong(imageWidth), PyLong_FromLong(imageHeight+titleBarHeight));
@@ -158,13 +173,13 @@ bool Nedrysoft::Builder::createDMG(QString outputFilename) {
     auto iconLocations = PyDict_New();
 
     for(auto file : m_configuration.m_files) {
-        QFileInfo currentfileInfo(file->file);
+        QFileInfo currentFileInfo(file->file);
 
         PyList_Append(files, PyUnicode_FromString(file->file.toLatin1().data()));
 
         auto position = PyTuple_Pack(2, PyLong_FromLong(file->x), PyLong_FromLong(file->y));
 
-        PyDict_SetItemString(iconLocations, currentfileInfo.fileName().toUtf8().data(), position);
+        PyDict_SetItemString(iconLocations, currentFileInfo.fileName().toUtf8().data(), position);
     }
 
     for(auto symlink : m_configuration.m_symlinks) {
@@ -186,28 +201,15 @@ bool Nedrysoft::Builder::createDMG(QString outputFilename) {
 
     python->addModulePaths(modulePaths);
 
-    python->runScript("import sys\n"
-                             "print(sys.path)\n"
-                             "import os\n"
-                             "import dmg_build\n"
-                             "from time import time,ctime\n"
-                             "print(settings)\n"
-                             "print(parameters)\n"
-                             "dmg_build.build_dmg(volume_name=parameters[\"volume_name\"],\n"
-                             "                   filename=parameters[\"filename\"],\n"
-                             "                   settings=settings,\n"
-                             "                   lookForHiDPI=parameters[\"lookForHiDPI\"],\n"
-                             "                   detach_retries=parameters[\"detach_retries\"])\n"
-                             "print('Today is', ctime(time()))\n",
-                      locals);
-
-    //delete python;
+    python->runScript(BuildScript, locals);
 
     return true;
 }
 
 bool Nedrysoft::Builder::loadConfiguration(const QString& filename) {
     auto configuration = toml::parse_file(filename.toStdString());
+    auto fileInfo = QFileInfo(filename);
+    auto dir = QDir(fileInfo.path());
 
     m_configuration.m_symlinks.clear();
     m_configuration.m_files.clear();
@@ -215,11 +217,18 @@ bool Nedrysoft::Builder::loadConfiguration(const QString& filename) {
     for (toml::node &elem : *configuration["symlink"].as_array()) {
         auto symlink = new Symlink;
         auto entry = *elem.as_table();
+        auto filePath = QString::fromStdString(*entry["shortcut"].value<std::string>());
+
+        filePath = filePath.replace(QRegularExpression("(^~)"), QDir::homePath());
+
+        if (QFileInfo(filePath).isRelative()) {
+            filePath = dir.absoluteFilePath(filePath);
+        }
 
         symlink->x = *entry["x"].value<int>();
         symlink->y = *entry["y"].value<int>();
         symlink->name = QString::fromStdString(*entry["name"].value<std::string>());
-        symlink->shortcut = QString::fromStdString(*entry["shortcut"].value<std::string>());
+        symlink->shortcut =  filePath;;
 
         m_configuration.m_symlinks.push_back(symlink);
     }
@@ -227,18 +236,25 @@ bool Nedrysoft::Builder::loadConfiguration(const QString& filename) {
     for (toml::node &elem : *configuration["file"].as_array()) {
         auto file = new File;
         auto entry = *elem.as_table();
+        auto filePath = QString::fromStdString(*entry["file"].value<std::string>());
+
+        filePath = filePath.replace(QRegularExpression("(^~)"), QDir::homePath());
+
+        if (QFileInfo(filePath).isRelative()) {
+            filePath = dir.absoluteFilePath(filePath);
+        }
 
         file->x = *entry["x"].value<int>();
         file->y = *entry["y"].value<int>();
-        file->file = QString::fromStdString(*entry["file"].value<std::string>());
+        file->file = filePath;
 
         m_configuration.m_files.push_back(file);
     }
 
     m_configuration.m_format = QString::fromStdString(*configuration["format"].value<std::string>());
-    m_configuration.m_background = QString::fromStdString(*configuration["background"].value<std::string>());
+    m_configuration.m_background = QString::fromStdString(*configuration["background"].value<std::string>()).replace(QRegularExpression("(^~)"), QDir::homePath());;
     m_configuration.m_icon = QString::fromStdString(*configuration["icon"].value<std::string>());
-    m_configuration.m_filename = QString::fromStdString(*configuration["filename"].value<std::string>());
+    m_configuration.m_filename = QString::fromStdString(*configuration["filename"].value<std::string>()).replace(QRegularExpression("(^~)"), QDir::homePath());;
     m_configuration.m_volumename = QString::fromStdString(*configuration["volumename"].value<std::string>());
     m_configuration.m_iconsize = *configuration["iconsize"].value<int>();
     m_configuration.m_textSize = *configuration["textsize"].value<int>();

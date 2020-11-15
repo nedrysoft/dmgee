@@ -17,9 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "RibbonButton.h"
 #include "RibbonButtonPlugin.h"
+
+#include "RibbonButton.h"
+
 #include <QtPlugin>
+
+constexpr auto ConfigurationXML = R"(
+    <ui language="c++" displayname="Ribbon Button">
+        <widget class="Nedrysoft::Ribbon::RibbonButton" name="ribbonButton">
+            <property name="geometry">
+                <rect>
+                    <x>0</x>
+                    <y>0</y>
+                    <width>100</width>
+                    <height>100</height>
+                </rect>
+            </property>
+        </widget>
+    </ui>
+)";
 
 RibbonButtonPlugin::RibbonButtonPlugin(QObject *parent) :
         QObject(parent),
@@ -69,20 +86,7 @@ bool RibbonButtonPlugin::isContainer() const {
 }
 
 QString RibbonButtonPlugin::domXml() const {
-    return "<ui language=\"c++\" displayname=\"Ribbon Button\">\n"
-           " <widget class=\"Nedrysoft::Ribbon::RibbonButton\" name=\"ribbonButton\">\n"
-
-           "  <property name=\"geometry\">\n"
-           "   <rect>\n"
-           "    <x>0</x>\n"
-           "    <y>0</y>\n"
-           "    <width>100</width>\n"
-           "    <height>100</height>\n"
-           "   </rect>\n"
-           "  </property>\n"
-
-           " </widget>\n"
-           "</ui>\n";
+    return ConfigurationXML;
 }
 
 QString RibbonButtonPlugin::includeFile() const {

@@ -20,9 +20,9 @@
  */
 
 #include "SnappedGraphicsPixmapItem.h"
-#include <QDebug>
-#include <QMenu>
+
 #include <QGraphicsScene>
+#include <QMenu>
 
 Nedrysoft::SnappedGraphicsPixmapItem::SnappedGraphicsPixmapItem(std::function<QPoint(const QPoint &point)> snapFunction) :
         m_snapFunction(snapFunction) {

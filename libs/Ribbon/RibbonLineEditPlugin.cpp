@@ -17,9 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "RibbonLineEdit.h"
 #include "RibbonLineEditPlugin.h"
+#include "RibbonLineEdit.h"
+
 #include <QtPlugin>
+
+constexpr auto ConfigurationXML = R"(
+    <ui language="c++" displayname="Ribbon Line Edit">
+        <widget class="Nedrysoft::Ribbon::RibbonLineEdit" name="ribbonLineEdit">
+            <property name="geometry">
+                <rect>
+                    <x>0</x>
+                    <y>0</y>
+                    <width>100</width>
+                    <height>13</height>
+                </rect>
+            </property>
+        </widget>
+    </ui>
+)";
 
 RibbonLineEditPlugin::RibbonLineEditPlugin(QObject *parent) :
         QObject(parent),
@@ -69,20 +85,7 @@ bool RibbonLineEditPlugin::isContainer() const {
 }
 
 QString RibbonLineEditPlugin::domXml() const {
-    return "<ui language=\"c++\" displayname=\"Ribbon Line Edit\">\n"
-           " <widget class=\"Nedrysoft::Ribbon::RibbonLineEdit\" name=\"ribbonLineEdit\">\n"
-
-           "  <property name=\"geometry\">\n"
-           "   <rect>\n"
-           "    <x>0</x>\n"
-           "    <y>0</y>\n"
-           "    <width>100</width>\n"
-           "    <height>13</height>\n"
-           "   </rect>\n"
-           "  </property>\n"
-
-           " </widget>\n"
-           "</ui>\n";
+    return ConfigurationXML;
 }
 
 QString RibbonLineEditPlugin::includeFile() const {

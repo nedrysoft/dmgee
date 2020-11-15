@@ -20,6 +20,7 @@
  */
 
 #include "Python.h"
+
 #include <QApplication>
 #include <QByteArray>
 #include <QDebug>

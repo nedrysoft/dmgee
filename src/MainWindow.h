@@ -25,6 +25,7 @@
 #include "Builder.h"
 #include "Image.h"
 #include "SplashScreen.h"
+
 #include <QFileOpenEvent>
 #include <QMainWindow>
 

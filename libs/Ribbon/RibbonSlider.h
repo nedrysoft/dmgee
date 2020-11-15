@@ -21,8 +21,9 @@
 #define NEDRYSOFT_RIBBONSLIDER_H
 
 #include "RibbonSpec.h"
-#include <QSlider>
 #include "ThemeSupport.h"
+
+#include <QSlider>
 
 namespace Nedrysoft::Ribbon {
     /**

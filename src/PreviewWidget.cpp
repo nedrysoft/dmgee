@@ -20,16 +20,18 @@
  */
 
 #include "PreviewWidget.h"
+
 #include "Image.h"
+#include "SnappedGraphicsPixmapItem.h"
+
 #include <QDebug>
-#include <QGraphicsPixmapItem>
+#include <QDrag>
 #include <QGraphicsLineItem>
+#include <QGraphicsPixmapItem>
 #include <QMimeData>
 #include <QPaintEvent>
-#include <QPainterPath>
 #include <QPainter>
-#include <QDrag>
-#include "SnappedGraphicsPixmapItem.h"
+#include <QPainterPath>
 
 Nedrysoft::PreviewWidget::PreviewWidget(QWidget *parent) :
         QWidget(parent),
@@ -53,27 +55,26 @@ Nedrysoft::PreviewWidget::PreviewWidget(QWidget *parent) :
     setLayout(&m_layout);
 
 /*
-        for (auto i = 0; i < width / m_gridSize.width(); i++) {
-            float gridX = ( i * m_gridSize.width()) + x;
+    for (auto i = 0; i < width / m_gridSize.width(); i++) {
+        float gridX = ( i * m_gridSize.width()) + x;
 
-            auto line = new QGraphicsLineItem(gridX, y, gridX, y + height);
+        auto line = new QGraphicsLineItem(gridX, y, gridX, y + height);
 
-            line.setPen(QPen(QColor(255, 255, 255, 45)));
+        line.setPen(QPen(QColor(255, 255, 255, 45)));
 
-            m_grid.addToGroup(line);
-        }
-
-        for (auto i = 0; i < height / m_gridSize.height(); i++) {
-            float gridY = ( i * m_gridSize.height()) + y;
-
-            gridPath.moveTo(QPointF(x, gridY));
-            gridPath.lineTo(QPointF(x + width, gridY));
-        }
-
-        painter.setPen();
-
-        painter.drawPath(gridPath);
+        m_grid.addToGroup(line);
     }
+
+    for (auto i = 0; i < height / m_gridSize.height(); i++) {
+        float gridY = ( i * m_gridSize.height()) + y;
+
+        gridPath.moveTo(QPointF(x, gridY));
+        gridPath.lineTo(QPointF(x + width, gridY));
+    }
+
+    painter.setPen();
+
+    painter.drawPath(gridPath);
 */
 }
 

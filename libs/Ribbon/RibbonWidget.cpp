@@ -18,12 +18,13 @@
  */
 
 #include "RibbonWidget.h"
+
 #include "RibbonTabBar.h"
 #include "ThemeSupport.h"
-#include <QTabBar>
-#include <QPainter>
+
 #include <QPaintEvent>
-#include <QDebug>
+#include <QPainter>
+#include <QTabBar>
 
 Nedrysoft::Ribbon::RibbonWidget::RibbonWidget(QWidget *parent) :
         QTabWidget(parent) {

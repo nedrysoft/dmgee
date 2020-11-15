@@ -22,6 +22,7 @@
 
 #include "RibbonSpec.h"
 #include "ThemeSupport.h"
+
 #include <QFont>
 #include <QTabBar>
 

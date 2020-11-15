@@ -17,9 +17,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "RibbonGroup.h"
 #include "RibbonGroupPlugin.h"
+#include "RibbonGroup.h"
+
 #include <QtPlugin>
+
+constexpr auto ConfigurationXML = R"(
+    <ui language="c++" displayname="Ribbon Group">
+        <widget class="Nedrysoft::Ribbon::RibbonGroup" name="ribbonGroup">
+            <property name="groupName">
+                <string>Group</string>
+            </property>
+
+            <property name="geometry">
+                <rect>
+                    <x>0</x>
+                    <y>0</y>
+                    <width>100</width>
+                    <height>100</height>
+                </rect>
+            </property>
+        </widget>
+    </ui>
+)";
 
 RibbonGroupPlugin::RibbonGroupPlugin(QObject *parent) :
         QObject(parent),
@@ -69,24 +89,7 @@ bool RibbonGroupPlugin::isContainer() const {
 }
 
 QString RibbonGroupPlugin::domXml() const {
-    return "<ui language=\"c++\" displayname=\"Ribbon Group\">\n"
-           " <widget class=\"Nedrysoft::Ribbon::RibbonGroup\" name=\"ribbonGroup\">\n"
-
-           "  <property name=\"groupName\">\n"
-           "   <string>Group</string>\n"
-           "  </property>\n"
-
-           "  <property name=\"geometry\">\n"
-           "   <rect>\n"
-           "    <x>0</x>\n"
-           "    <y>0</y>\n"
-           "    <width>100</width>\n"
-           "    <height>100</height>\n"
-           "   </rect>\n"
-           "  </property>\n"
-
-           " </widget>\n"
-           "</ui>\n";
+    return ConfigurationXML;
 }
 
 QString RibbonGroupPlugin::includeFile() const {

@@ -17,9 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "RibbonWidget.h"
 #include "RibbonWidgetPlugin.h"
+
+#include "RibbonWidget.h"
+
 #include <QtPlugin>
+
+constexpr auto ConfigurationXML = R"(
+    <ui language="c++" displayname="Ribbon Widget">
+        <widget class="Nedrysoft::Ribbon::RibbonWidget" name="ribbonWidget">
+        </widget>
+    </ui>
+)";
 
 RibbonWidgetPlugin::RibbonWidgetPlugin(QObject *parent) :
         QObject(parent) {
@@ -70,10 +79,7 @@ bool RibbonWidgetPlugin::isContainer() const {
 }
 
 QString RibbonWidgetPlugin::domXml() const {
-    return "<ui language=\"c++\" displayname=\"Ribbon Widget\">\n"
-           " <widget class=\"Nedrysoft::Ribbon::RibbonWidget\" name=\"ribbonWidget\">\n"
-           " </widget>\n"
-           "</ui>\n";
+    return ConfigurationXML;
 }
 
 QString RibbonWidgetPlugin::includeFile() const {

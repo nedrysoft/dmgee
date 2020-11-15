@@ -17,12 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "RibbonFontManager.h"
 #include "RibbonTabBar.h"
+
+#include "RibbonFontManager.h"
 #include "RibbonWidget.h"
 #include "ThemeSupport.h"
+
 #include <QApplication>
-#include <QDebug>
 #include <QPaintEvent>
 #include <QPainter>
 #include <QWindow>

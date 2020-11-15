@@ -20,7 +20,9 @@
 */
 
 #include "Image.h"
+
 #include "ImageLoader.h"
+
 #include <IL/ilu.h>
 #include <QBuffer>
 #include <QRegularExpression>

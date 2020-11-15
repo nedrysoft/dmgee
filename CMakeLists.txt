@@ -57,6 +57,10 @@ set(CMAKE_AUTORCC ON)
 
 ADD_DEFINITIONS(-DQT_NO_KEYWORDS)
 
+# define required for python
+
+ADD_DEFINITIONS(-DPY_SSIZE_T_CLEAN)
+
 # list of packages we need for the application
 
 find_package(Python3 COMPONENTS Development REQUIRED)
