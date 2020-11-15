@@ -20,6 +20,13 @@
 #include "ThemeSupport.h"
 #import <Foundation/Foundation.h>
 #import <AppKit/NSAppearance.h>
+#include <QApplication>
+
+Nedrysoft::Utils::ThemeSupport::ThemeSupport() {
+    connect(qobject_cast<QApplication *>(QCoreApplication::instance()), &QApplication::paletteChanged, [=] (const QPalette &) {
+        Q_EMIT themeChanged(Nedrysoft::Utils::ThemeSupport::isDarkMode());
+    });
+}
 
 bool Nedrysoft::Utils::ThemeSupport::isDarkMode()
 {
@@ -37,3 +44,6 @@ bool Nedrysoft::Utils::ThemeSupport::isDarkMode()
     }
 }
 
+QColor Nedrysoft::Utils::ThemeSupport::getColor(const QRgb colourPair[]) {
+    return QColor(colourPair[isDarkMode() ? 1 : 0]);
+}

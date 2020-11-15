@@ -40,7 +40,7 @@ Nedrysoft::PreviewWidget::PreviewWidget(QWidget *parent) :
         m_snapToFeatures(true),
         m_iconPosition() {
 
-    m_targetPixmap = QPixmap(":/assets/target.png");
+    m_targetPixmap = QPixmap(":/icons/target.png");
 
     m_graphicsView.setScene(&m_graphicsScene);
 
@@ -126,10 +126,10 @@ void Nedrysoft::PreviewWidget::setGrid(QSize size, bool visible, bool snap) {
     m_gridShouldSNap = snap;
 }
 
-void Nedrysoft::PreviewWidget::addIcon(Nedrysoft::Image *image, const QPoint &point, IconType iconType) {
+void Nedrysoft::PreviewWidget::addIcon(Nedrysoft::Image *image, const QPoint &point, IconType iconType, std::function<void(QPoint &point)> updateFunction) {
     auto pixmap = QPixmap::fromImage(image->image());
 
-    auto snappedIcon = new SnappedGraphicsPixmapItem([pixmap, this](const QPoint &point) {
+    auto snappedIcon = new SnappedGraphicsPixmapItem([pixmap, this, updateFunction](const QPoint &point) {
         QPoint snapPoint = point;
         float scale = static_cast<float>(m_iconSize)/static_cast<float>(pixmap.width());
         float width = static_cast<float>(pixmap.width())*scale;
@@ -151,6 +151,8 @@ void Nedrysoft::PreviewWidget::addIcon(Nedrysoft::Image *image, const QPoint &po
                 }
             }
         }
+
+        updateFunction(snapPoint);
 
         return snapPoint;
     });
@@ -206,4 +208,8 @@ void Nedrysoft::PreviewWidget::clearCentroids() {
             m_graphicsScene.removeItem(item);
         }
     }
+}
+
+void Nedrysoft::PreviewWidget::setTextSize(int textSize) {
+    //! TODO:
 }

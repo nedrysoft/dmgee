@@ -19,14 +19,17 @@
 
 #include "RibbonButton.h"
 #include "RibbonFontManager.h"
+#include "RibbonWidget.h"
 #include <QApplication>
 #include <QDebug>
 #include <QSpacerItem>
+#include <QStyle>
 #include "ThemeSupport.h"
 
 Nedrysoft::Ribbon::RibbonButton::RibbonButton(QWidget *parent) :
         QWidget(parent),
-        m_iconSize(QSize(RibbonButtonDefaultIconWidth,RibbonButtonDefaultIconHeight)) {
+        m_iconSize(QSize(RibbonButtonDefaultIconWidth,RibbonButtonDefaultIconHeight)),
+        m_themeSupport(new Nedrysoft::Utils::ThemeSupport) {
 
     m_layout = new QVBoxLayout;
     m_mainButton = new QPushButton;
@@ -38,27 +41,33 @@ Nedrysoft::Ribbon::RibbonButton::RibbonButton(QWidget *parent) :
 
     auto font = QFont(fontManager->normalFont(), RibbonButtonDefaultFontSize);
 
+    m_mainButton->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    m_buttonLabel->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+
     m_buttonLabel->setFont(font);
 
     m_layout->addWidget(m_mainButton);
     m_layout->addWidget(m_buttonLabel);
-
-    m_layout->setAlignment(Qt::AlignHCenter);
+    m_layout->addSpacerItem(new QSpacerItem(0,0, QSizePolicy::Minimum, QSizePolicy::MinimumExpanding));
 
     m_layout->setContentsMargins(0,0,0,0);
+    m_layout->setSpacing(0);
 
     m_mainButton->setFlat(true);
 
     setLayout(m_layout);
 
-    connect(qobject_cast<QApplication *>(QCoreApplication::instance()), &QApplication::paletteChanged, [=] (const QPalette &) {
-    });
-
     connect(m_mainButton, &QPushButton::clicked, [=] (bool checked) {
         Q_EMIT clicked();
     });
 
+    connect(m_themeSupport, &Nedrysoft::Utils::ThemeSupport::themeChanged, [=](bool isDarkMode) {
+        updateStyleSheets(isDarkMode);
+    });
+
     updateSizes();
+
+    updateStyleSheets(Nedrysoft::Utils::ThemeSupport::isDarkMode());
 }
 
 Nedrysoft::Ribbon::RibbonButton::~RibbonButton() {
@@ -92,11 +101,22 @@ QString Nedrysoft::Ribbon::RibbonButton::text() {
 
 void Nedrysoft::Ribbon::RibbonButton::setText(QString text) {
     m_buttonLabel->setText(text);
+
+    m_buttonLabel->setVisible(!m_buttonLabel->text().isEmpty());
 }
 
 void Nedrysoft::Ribbon::RibbonButton::updateSizes() {
     m_mainButton->setMinimumSize(m_iconSize);
-    m_mainButton->setMaximumSize(QSize(16777215, m_iconSize.height()));
-    //m_mainButton->setMaximumSize(QSize(m_iconSize.height(), m_iconSize.height()));
     m_mainButton->setIconSize(m_iconSize);
 }
+
+void Nedrysoft::Ribbon::RibbonButton::updateStyleSheets(bool isDarkMode) {
+    auto colour = Nedrysoft::Utils::ThemeSupport::getColor(Nedrysoft::Ribbon::PushButtonColor).name();
+    auto styleSheet = QString("QPushButton {border: 0px;padding: 3px;} QPushButton::hover {background: %1;}").arg(colour);
+
+    m_mainButton->setStyleSheet(styleSheet);
+    m_buttonLabel->setStyleSheet(styleSheet);
+}
+
+
+

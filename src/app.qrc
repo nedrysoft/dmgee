@@ -1,27 +1,28 @@
 <RCC>
     <qresource prefix="/">
-        <file>../assets/splash_620x375.png</file>
-        <file>../assets/splash_620x375@2x.png</file>
+        <file>../images/splash_620x375.png</file>
+        <file>../images/splash_620x375@2x.png</file>
 
-        <file>../assets/Open_Sans/OpenSans-Bold.ttf</file>
-        <file>../assets/Open_Sans/OpenSans-BoldItalic.ttf</file>
-        <file>../assets/Open_Sans/OpenSans-ExtraBold.ttf</file>
-        <file>../assets/Open_Sans/OpenSans-ExtraBoldItalic.ttf</file>
-        <file>../assets/Open_Sans/OpenSans-Italic.ttf</file>
-        <file>../assets/Open_Sans/OpenSans-Light.ttf</file>
-        <file>../assets/Open_Sans/OpenSans-LightItalic.ttf</file>
-        <file>../assets/Open_Sans/OpenSans-Regular.ttf</file>
-        <file>../assets/Open_Sans/OpenSans-SemiBold.ttf</file>
-        <file>../assets/Open_Sans/OpenSans-SemiBoldItalic.ttf</file>
+        <file>../fonts/Open_Sans/OpenSans-Bold.ttf</file>
+        <file>../fonts/Open_Sans/OpenSans-BoldItalic.ttf</file>
+        <file>../fonts/Open_Sans/OpenSans-ExtraBold.ttf</file>
+        <file>../fonts/Open_Sans/OpenSans-ExtraBoldItalic.ttf</file>
+        <file>../fonts/Open_Sans/OpenSans-Italic.ttf</file>
+        <file>../fonts/Open_Sans/OpenSans-Light.ttf</file>
+        <file>../fonts/Open_Sans/OpenSans-LightItalic.ttf</file>
+        <file>../fonts/Open_Sans/OpenSans-Regular.ttf</file>
+        <file>../fonts/Open_Sans/OpenSans-SemiBold.ttf</file>
+        <file>../fonts/Open_Sans/OpenSans-SemiBoldItalic.ttf</file>
 
-        <file>../assets/target.png</file>
+        <file>../icons/target.png</file>
 
-        <file>../assets/arrow_drop-dark.png</file>
-        <file>../assets/arrow_drop-light.png</file>
-
-        <file>../assets/save.png</file>
-        <file>../assets/load.png</file>
-        <file>../assets/add.png</file>
-        <file>../assets/build.png</file>
+        <file>../icons/save.png</file>
+        <file>../icons/save@2x.png</file>
+        <file>../icons/load.png</file>
+        <file>../icons/load@2x.png</file>
+        <file>../icons/add.png</file>
+        <file>../icons/add@2x.png</file>
+        <file>../icons/build.png</file>
+        <file>../icons/build@2x.png</file>
     </qresource>
 </RCC>

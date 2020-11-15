@@ -124,6 +124,16 @@ namespace Nedrysoft {
                  */
                 QVariant configValue(const QString& valueName, QVariant defaultValue);
 
+                /**
+                 * @brief           Sets a value in the configuration
+                 *
+                 * @param[in]       valueName is the configuration key to set the value for
+                 * @param[in]       value is the value for the given key
+                 *
+                 * @returns         true if successfully set; otherwise false
+                 */
+                bool setConfigValue(const QString& valueName, QVariant value);
+
         private:
                 Ui::MainWindow *ui;                                     //! ui class for the main window
                 static MainWindow *m_instance;                          //! instance of the main window
@@ -132,11 +142,6 @@ namespace Nedrysoft {
                 QPixmap m_backgroundPixmap;                             //! the background image as a cached pixmap
                 QList<QPointF> m_centroids;                             //! list of centroids discovered from image
 
-                QSize m_grid;                                           //! grid size
-                bool m_gridIsVisible;                                   //! grid visibility
-                bool m_gridShouldSnap;                                  //! whether the grid should be used to snap to
-                bool m_snapToFeatures;                                  //! whether features should be snapped to
-                bool m_showIcons;                                       //! whether the icons for applications & shortcuts are visible
                 Builder *m_builder;                                     //! builder instance for generating DMG
 
                 QVariantMap m_config;                                   //! the configuration as a variant map

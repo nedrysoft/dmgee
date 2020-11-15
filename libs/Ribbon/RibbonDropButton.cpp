@@ -18,6 +18,7 @@
  */
 
 #include "RibbonDropButton.h"
+#include "RibbonWidget.h"
 #include <QApplication>
 #include <QDebug>
 #include <QSpacerItem>
@@ -25,7 +26,8 @@
 
 Nedrysoft::Ribbon::RibbonDropButton::RibbonDropButton(QWidget *parent) :
         QWidget(parent),
-        m_iconSize(QSize(RibbonDropButtonDefaultIconWidth,RibbonDropButtonDefaultIconHeight)) {
+        m_iconSize(QSize(RibbonDropButtonDefaultIconWidth,RibbonDropButtonDefaultIconHeight)),
+        m_themeSupport(new Nedrysoft::Utils::ThemeSupport) {
 
     m_layout = new QVBoxLayout;
     m_mainButton = new QPushButton;
@@ -33,22 +35,23 @@ Nedrysoft::Ribbon::RibbonDropButton::RibbonDropButton(QWidget *parent) :
 
     m_layout->addWidget(m_mainButton);
     m_layout->addWidget(m_dropButton);
+    m_layout->addSpacerItem(new QSpacerItem(0,0, QSizePolicy::Minimum, QSizePolicy::MinimumExpanding));
 
     m_layout->setContentsMargins(0,0,0,0);
+    m_layout->setSpacing(0);
 
     m_dropButton->setMinimumHeight(RibbonDropButtonDefaultHeight);
     m_dropButton->setMaximumHeight(RibbonDropButtonDefaultHeight);
 
-    m_dropButton->setIconSize(QSize(5,4));
+    m_mainButton->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    m_dropButton->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+
+    m_dropButton->setIconSize(QSize(RubbonDropButtonArrowWidth,RubbonDropButtonArrowHeight));
 
     m_dropButton->setFlat(true);
     m_mainButton->setFlat(true);
 
     setLayout(m_layout);
-
-    connect(qobject_cast<QApplication *>(QCoreApplication::instance()), &QApplication::paletteChanged, [=] (const QPalette &) {
-        updateDropIcon();
-    });
 
     connect(m_mainButton, &QPushButton::clicked, [=] (bool checked) {
         Q_EMIT clicked(false);
@@ -58,22 +61,19 @@ Nedrysoft::Ribbon::RibbonDropButton::RibbonDropButton(QWidget *parent) :
         Q_EMIT clicked(true);
     });
 
-    updateDropIcon();
     updateSizes();
+
+    connect(m_themeSupport, &Nedrysoft::Utils::ThemeSupport::themeChanged, [=](bool isDarkMode) {
+        updateStyleSheets(isDarkMode);
+    });
+
+    updateStyleSheets(Nedrysoft::Utils::ThemeSupport::isDarkMode());
 }
 
 Nedrysoft::Ribbon::RibbonDropButton::~RibbonDropButton() {
     m_mainButton->deleteLater();
     m_dropButton->deleteLater();
     m_layout->deleteLater();
-}
-
-void Nedrysoft::Ribbon::RibbonDropButton::updateDropIcon() {
-    if (Nedrysoft::Utils::ThemeSupport::isDarkMode()) {
-        m_dropButton->setIcon(QIcon(":/Nedrysoft/Ribbon/icons/arrow_drop-light@2x.png"));
-    } else {
-        m_dropButton->setIcon(QIcon(":/Nedrysoft/Ribbon/icons/arrow_drop-dark@2xpng"));
-    }
 }
 
 QIcon Nedrysoft::Ribbon::RibbonDropButton::icon() {
@@ -97,6 +97,19 @@ void Nedrysoft::Ribbon::RibbonDropButton::setIconSize(QSize iconSize)
 
 void Nedrysoft::Ribbon::RibbonDropButton::updateSizes() {
     m_mainButton->setMinimumSize(m_iconSize);
-    m_mainButton->setMaximumSize(QSize(16777215, m_iconSize.height()));
     m_mainButton->setIconSize(m_iconSize);
+}
+
+void Nedrysoft::Ribbon::RibbonDropButton::updateStyleSheets(bool isDarkMode) {
+    auto colour = Nedrysoft::Utils::ThemeSupport::getColor(Nedrysoft::Ribbon::PushButtonColor).name();
+    auto styleSheet = QString("QPushButton {border: 0px;padding: 3px;} QPushButton::hover {background: %1;}").arg(colour);
+
+    m_mainButton->setStyleSheet(styleSheet);
+    m_dropButton->setStyleSheet(styleSheet);
+
+    if (isDarkMode) {
+        m_dropButton->setIcon(QIcon(":/Nedrysoft/Ribbon/icons/arrow-drop-dark@2x.png"));
+    } else {
+        m_dropButton->setIcon(QIcon(":/Nedrysoft/Ribbon/icons/arrow-drop-light@2x.png"));
+    }
 }

@@ -92,7 +92,7 @@ list(APPEND app_SOURCES
     src/SnappedGraphicsPixmapItem.h
 
     src/app.qrc
-    assets/dmgee.icns
+    icons/dmgee.icns
 )
 
 list(APPEND all_SOURCES ${app_SOURCES})
@@ -100,7 +100,7 @@ list(APPEND all_SOURCES ${app_SOURCES})
 # Create an application executable (and ensure it's an application bundle under macOS)
 
 set(MACOSX_BUNDLE_ICON_FILE dmgee.icns)
-set(dmgee_ICON ${CMAKE_CURRENT_SOURCE_DIR}/assets/dmgee.icns)
+set(dmgee_ICON ${CMAKE_CURRENT_SOURCE_DIR}/icons/dmgee.icns)
 set_source_files_properties(${dmgee_ICON} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
 
 add_executable(${APPLICATION_SHORT_NAME} MACOSX_BUNDLE ${all_SOURCES})

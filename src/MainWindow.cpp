@@ -50,11 +50,6 @@ Nedrysoft::MainWindow::MainWindow() :
         ui(new Ui::MainWindow),
         m_minimumPixelArea(10000),
         m_backgroundImage(),
-        m_grid(20,20),
-        m_gridIsVisible(true),
-        m_gridShouldSnap(true),
-        m_snapToFeatures(true),
-        m_showIcons(true),
         m_builder(new Builder) {
 
     ui->setupUi(this);
@@ -87,13 +82,13 @@ Nedrysoft::MainWindow::MainWindow() :
         }
     });
 
-    ui->gridVisibleCheckbox->setCheckState(m_gridIsVisible ? Qt::Checked : Qt::Unchecked);
-    ui->gridSnapCheckbox->setCheckState(m_gridShouldSnap ? Qt::Checked : Qt::Unchecked);
-    ui->featureAutoDetectCheckbox->setCheckState(m_snapToFeatures ? Qt::Checked : Qt::Unchecked);
-    ui->showIconsCheckBox->setCheckState(m_showIcons ? Qt::Checked : Qt::Unchecked);
+    ui->gridVisibleCheckbox->setCheckState(configValue("gridVisible", false).toBool() ? Qt::Checked : Qt::Unchecked);
+    ui->gridSnapCheckbox->setCheckState(configValue("gridShouldSnap", false).toBool() ? Qt::Checked : Qt::Unchecked);
+    ui->featureAutoDetectCheckbox->setCheckState(configValue("snapToFeatures", true).toBool() ? Qt::Checked : Qt::Unchecked);
+    ui->showIconsCheckBox->setCheckState(configValue("iconsVisible", true).toBool() ? Qt::Checked : Qt::Unchecked);
 
     connect(ui->gridVisibleCheckbox, &QCheckBox::stateChanged, [this](int state) {
-        ui->previewWidget->setGrid(m_grid, ( state == Qt::Checked ) ? true : false, true);
+        ui->previewWidget->setGrid(configValue("grid", QSize(20,20)).value<QSize>(), ( state == Qt::Checked ) ? true : false, true);
     });
 
     connect(ui->showIconsCheckBox, &QCheckBox::stateChanged, [this](int state) {
@@ -107,6 +102,8 @@ Nedrysoft::MainWindow::MainWindow() :
             processBackground();
         }
     });
+
+    // design controls
 
     connect(ui->designFilesAddButton, &Nedrysoft::Ribbon::RibbonDropButton::clicked, [this](bool dropdown) {
         if (dropdown) {
@@ -122,35 +119,70 @@ Nedrysoft::MainWindow::MainWindow() :
         }
     });
 
+    // icon size controls
+
+    ui->iconsSizeLineEdit->setValidator(new QIntValidator(16, 512));
+    ui->previewWidget->setIconSize(configValue("iconSize", 64).value<int>());
+
     connect(ui->iconsSizeLineEdit, &QLineEdit::textChanged, [this](const QString &text) {
         bool ok = false;
         int size = text.toInt(&ok);
 
         if (( ok ) && ( size != 0 )) {
+            setConfigValue("iconSize", size);
             ui->previewWidget->setIconSize(text.toInt());
         }
     });
 
+    // grid controls
+
+    ui->gridXLineEdit->setValidator(new QIntValidator(0, 100));
+    ui->gridYLineEdit->setValidator(new QIntValidator(0, 100));
+
+    connect(ui->gridSnapCheckbox, &QCheckBox::clicked, [=](bool checked) {
+        setConfigValue("snapToGrid", checked);
+
+        ui->previewWidget->setGrid(QSize(ui->gridXLineEdit->text().toInt(),ui->gridYLineEdit->text().toInt()),
+                                   ui->gridVisibleCheckbox->isChecked(),
+                                   ui->gridSnapCheckbox->isChecked());
+    });
+
+    connect(ui->gridVisibleCheckbox, &QCheckBox::clicked, [=](bool checked) {
+        setConfigValue("gridVisible", checked);
+
+        ui->previewWidget->setGrid(QSize(ui->gridXLineEdit->text().toInt(),ui->gridYLineEdit->text().toInt()),
+                                   ui->gridVisibleCheckbox->isChecked(),
+                                   ui->gridSnapCheckbox->isChecked());
+    });
+
+    // text controls
+
+    ui->fontSizeLineEdit->setValidator(new QIntValidator(6, 72));
+
+    connect(ui->fontSizeLineEdit, &QLineEdit::textChanged, [this](const QString &text) {
+        bool ok = false;
+        int size = text.toInt(&ok);
+
+        if (( ok ) && ( size != 0 )) {
+            setConfigValue("textSize", size);
+            ui->previewWidget->setTextSize(text.toInt());
+        }
+    });
+
+    ui->positionComboBox->addItems(QStringList() << "Bottom" << "Right");
+    ui->positionComboBox->setCurrentIndex(configValue("textPosition", Nedrysoft::Builder::Bottom).value<Nedrysoft::Builder::TextPosition>());
+
+    // process the background image (if there is one loaded) to detect
+
     processBackground();
 
-    ui->previewWidget->setGrid(m_grid, true, true);
+    ui->previewWidget->setGrid(QSize(ui->gridXLineEdit->text().toInt(),ui->gridYLineEdit->text().toInt()),
+                               ui->gridVisibleCheckbox->isChecked(),
+                               ui->gridSnapCheckbox->isChecked());
 
     ui->featureAutoDetectCheckbox->setCheckState(Qt::Checked);
 
-    QTemporaryDir temporaryDir;
-
-    if (temporaryDir.isValid()) {
-        auto temporaryName = temporaryDir.path() + "/Applications";
-
-        if (QFile::link("/Applications", temporaryName)) {
-            auto applicationsShortcutImage = new Nedrysoft::Image(temporaryName, false, 160, 160);
-            auto applicationIcon = new Nedrysoft::Image(
-                    "/Users/adriancarpenter/Documents/Development/dmgee/bin/x86_64/Debug/dmgee.app", false, 160, 160);
-
-            ui->previewWidget->addIcon(applicationsShortcutImage, QPoint(100, 100), PreviewWidget::Shortcut);
-            ui->previewWidget->addIcon(applicationIcon, QPoint(100, 100), PreviewWidget::Icon);
-        }
-    }
+    // set up the disk image formats that are supported
 
     QList<QPair<QString, QString> > diskFormats;
 
@@ -178,11 +210,11 @@ Nedrysoft::MainWindow::MainWindow() :
 
     ui->formatComboBox->setCurrentText("UDBZ");
 
-    connect(ui->buildButton, &QPushButton::clicked, [this](bool checked) {
+    // build controls
+
+    connect(ui->buildButton, &Nedrysoft::Ribbon::RibbonButton::clicked, [this]() {
         m_builder->createDMG("/Users/adriancarpenter/Desktop/test.dmg");
     });
-
-    ui->volumeNameLineEdit->setAttribute(Qt::WA_MacShowFocusRect,false);
 }
 
 Nedrysoft::MainWindow::~MainWindow() {
@@ -240,11 +272,18 @@ void Nedrysoft::MainWindow::processBackground()
 
         // apply thresholding
 
-        cv::threshold(image, image, 225, 255, cv::THRESH_BINARY);
+        cv::threshold(image, image, 1, 32, cv::THRESH_TRUNC);
+
+        // apply second stage thresholding (to black and white)
+
+        cv::threshold(image, image, 230, 255, cv::THRESH_BINARY | cv::THRESH_OTSU);
 
         // find contours in image
 
         cv::findContours(image, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
+
+        cv::namedWindow("Image");
+        cv::imshow("Image", image);
 
         // find centre of discovered objects in image
 
@@ -273,8 +312,18 @@ void Nedrysoft::MainWindow::processBackground()
     }
 }
 
+bool Nedrysoft::MainWindow::setConfigValue(const QString& valueName, QVariant value) {
+    if (m_builder->property(valueName.toLatin1().constData()).isValid()) {
+        m_builder->setProperty(valueName.toLatin1().constData(), value);
+
+        return true;
+    }
+
+    return false;
+}
+
 QVariant Nedrysoft::MainWindow::configValue(const QString& valueName, QVariant defaultValue) {
-    if (m_config.contains(valueName)) {
+    if (m_builder->property(valueName.toLatin1().constData()).isValid()) {
         return m_builder->property(valueName.toLatin1().constData());
     }
 
@@ -282,7 +331,6 @@ QVariant Nedrysoft::MainWindow::configValue(const QString& valueName, QVariant d
 }
 
 bool Nedrysoft::MainWindow::loadConfiguration(QString filename) {
-
     if (m_builder->loadConfiguration(std::move(filename))) {
         ui->gridSnapCheckbox->setCheckState(configValue("snapToGrid", false).toBool() ? Qt::Checked : Qt::Unchecked);
         ui->gridVisibleCheckbox->setCheckState(configValue("gridVisible", false).toBool() ? Qt::Checked : Qt::Unchecked);
@@ -292,8 +340,42 @@ bool Nedrysoft::MainWindow::loadConfiguration(QString filename) {
 
         ui->iconsSizeLineEdit->setText(QString("%1").arg(configValue("iconSize", 128).toInt()));
         ui->minFeatureSlider->setValue(configValue("featureSize", 10000).toInt());
+        ui->fontSizeLineEdit->setText(QString("%1").arg(configValue("textSize", 12).toInt()));
 
         ui->featureAutoDetectCheckbox->setCheckState(configValue("detectFeatures", true).toBool() ? Qt::Checked : Qt::Unchecked);
+
+        // add the icons from the configuration to the preview window.
+
+        auto iconSize = configValue("iconSize", 128).toInt();
+        auto files = m_builder->property("files").value<QList<Nedrysoft::Builder::File *>>();
+
+        for (auto file : files) {
+            auto applicationIcon = new Nedrysoft::Image(file->file, false, iconSize, iconSize);
+
+            ui->previewWidget->addIcon(applicationIcon, QPoint(file->x, file->y), PreviewWidget::Icon, [=](QPoint& point){
+                file->x = point.x();
+                file->y = point.y();
+            });
+        }
+
+        auto symlinks = m_builder->property("symlinks").value<QList<Nedrysoft::Builder::Symlink *>>();
+
+        for (auto symlink : symlinks) {
+            QTemporaryDir temporaryDir;
+
+            if (temporaryDir.isValid()) {
+                auto temporaryName = temporaryDir.path() + symlink->shortcut;
+
+                if (QFile::link(symlink->shortcut, temporaryName)) {
+                    auto applicationsShortcutImage = new Nedrysoft::Image(temporaryName, false, iconSize, iconSize);
+
+                    ui->previewWidget->addIcon(applicationsShortcutImage, QPoint(symlink->x, symlink->y), PreviewWidget::Shortcut, [=](QPoint& point){
+                        symlink->x = point.x();
+                        symlink->y = point.y();
+                    });
+                }
+            }
+        }
 
         updatePixmap();
     }
@@ -302,7 +384,7 @@ bool Nedrysoft::MainWindow::loadConfiguration(QString filename) {
 }
 
 void Nedrysoft::MainWindow::updatePixmap() {
-    QFileInfo fileInfo(m_builder->property("background").toString());
+    QFileInfo fileInfo(configValue("background", "").value<QString>());
 
     if (!fileInfo.absoluteFilePath().isEmpty()) {
         m_backgroundImage = Nedrysoft::Image(fileInfo.absoluteFilePath(), true);
@@ -321,3 +403,4 @@ void Nedrysoft::MainWindow::updatePixmap() {
         ui->previewWidget->clearCentroids();
     }
 }
+

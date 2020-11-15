@@ -25,6 +25,7 @@
 #include <QPushButton>
 #include <QWidget>
 #include <QVBoxLayout>
+#include "ThemeSupport.h"
 
 namespace Nedrysoft::Ribbon {
     constexpr auto RibbonButtonDefaultIconWidth = 32;
@@ -104,6 +105,13 @@ namespace Nedrysoft::Ribbon {
              */
             void updateSizes();
 
+            /**
+             * @brief       Set the style sheet on sub-controls according to current light/dark mode
+             *
+             * @param[in]   isDarkMode true if dark mode; otherwise false
+             */
+            void updateStyleSheets(bool isDarkMode);
+
         public:
             /**
              * @brief       Signal that is emitted when the button is pressed
@@ -111,10 +119,11 @@ namespace Nedrysoft::Ribbon {
             Q_SIGNAL void clicked();
 
         private:
-            QVBoxLayout *m_layout;                          //! the layout for this widget
-            QPushButton *m_mainButton;                      //! the main button
-            QLabel *m_buttonLabel;                          //! the drop down button
-            QSize m_iconSize;                               //! the size of the icon
+            QVBoxLayout *m_layout;                              //! the layout for this widget
+            QPushButton *m_mainButton;                          //! the main button
+            QLabel *m_buttonLabel;                              //! the drop down button
+            QSize m_iconSize;                                   //! the size of the icon
+            Nedrysoft::Utils::ThemeSupport *m_themeSupport;     //! an instance of theme support
     };
 }
 

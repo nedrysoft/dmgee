@@ -64,11 +64,10 @@ namespace Nedrysoft::Ribbon {
         qRgb(0x57, 0x57, 0x57)
     };
 
-#if defined(Q_OS_MACOS)
-
-#else
-
-#endif
+    static constexpr QRgb PushButtonColor[] = {                               //! Colour of the push button
+        qRgb(209, 198, 197),
+        qRgb(65, 65, 65)
+    };
 
 #if defined(Q_OS_MACOS)
     static constexpr int TabBarHeight = 34;                                     //! Height of the tab bar portion of the control

@@ -11,13 +11,13 @@
         <file>OpenSans/OpenSans-SemiBold.ttf</file>
         <file>OpenSans/OpenSans-SemiBoldItalic.ttf</file>
 
-        <file>LightStyle.css</file>
-        <file>DarkStyle.css</file>
+        <file>LightStyle.qss</file>
+        <file>DarkStyle.qss</file>
 
-        <file>icons/arrow_drop-light.png</file>
-        <file>icons/arrow_drop-light@2x.png</file>
-        <file>icons/arrow_drop-dark.png</file>
-        <file>icons/arrow_drop-dark@2x.png</file>
+        <file>icons/arrow-drop-light.png</file>
+        <file>icons/arrow-drop-light@2x.png</file>
+        <file>icons/arrow-drop-dark.png</file>
+        <file>icons/arrow-drop-dark@2x.png</file>
 
         <file>icons/checked-dark.png</file>
         <file>icons/checked-dark@2x.png</file>
@@ -38,5 +38,10 @@
         <file>icons/unchecked-light@2x.png</file>
         <file>icons/unchecked-hover-light.png</file>
         <file>icons/unchecked-hover-light@2x.png</file>
+
+        <file>icons/slider-dark.png</file>
+        <file>icons/slider-dark@2x.png</file>
+        <file>icons/slider-light.png</file>
+        <file>icons/slider-light@2x.png</file>
     </qresource>
 </RCC>

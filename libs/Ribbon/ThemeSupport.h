@@ -21,6 +21,9 @@
 #define NEDRYSOFT_THEMESUPPORT_H
 
 #include <QtGlobal>
+#include <QObject>
+#include <QRgb>
+#include <QColor>
 
 namespace Nedrysoft::Utils {
     /**
@@ -28,8 +31,14 @@ namespace Nedrysoft::Utils {
      *
      * @details     used by the macOS to detect if the OS is in dark or light mode, all other platforms default off.
      */
-    class ThemeSupport {
+    class ThemeSupport :
+            public QObject {
         public:
+            Q_OBJECT
+
+        public:
+            explicit ThemeSupport();
+
             /**
              * @brief       Check if dark mode is being used
              *
@@ -42,6 +51,19 @@ namespace Nedrysoft::Utils {
                 return false;
             }
 #endif
+            /**
+             * @brief       Emitted when the theme changes
+             *
+             * @param[in]   isDarkMode true if dark mode; otherwise false
+             */
+            Q_SIGNAL void themeChanged(bool isDarkMode);
+
+            /**
+             * @brief       Get the Dark or Light colour for the given array
+             *
+             * @returns     the colour as a QRgb
+             */
+            static QColor getColor(const QRgb PushButtonColor[]);
     };
 }
 

@@ -41,7 +41,7 @@ Nedrysoft::Ribbon::RibbonGroup::RibbonGroup(QWidget *parent) :
 
     QFile styleSheet;
 
-    styleSheet.setFileName(":/Nedrysoft/Ribbon/LightStyle.css");
+    styleSheet.setFileName(":/Nedrysoft/Ribbon/LightStyle.qss");
 
     if (styleSheet.open(QFile::ReadOnly)) {
         m_lightStyleSheet = styleSheet.readAll();
@@ -49,7 +49,7 @@ Nedrysoft::Ribbon::RibbonGroup::RibbonGroup(QWidget *parent) :
         styleSheet.close();
     }
 
-    styleSheet.setFileName(":/Nedrysoft/Ribbon/DarkStyle.css");
+    styleSheet.setFileName(":/Nedrysoft/Ribbon/DarkStyle.qss");
 
     if (styleSheet.open(QFile::ReadOnly)) {
         m_darkStyleSheet = styleSheet.readAll();

@@ -24,11 +24,15 @@
 #include <QPushButton>
 #include <QWidget>
 #include <QVBoxLayout>
+#include "ThemeSupport.h"
 
 namespace Nedrysoft::Ribbon {
     constexpr auto RibbonDropButtonDefaultIconWidth = 32;
     constexpr auto RibbonDropButtonDefaultIconHeight = 48;
     constexpr auto RibbonDropButtonDefaultHeight = 16;
+    constexpr auto RubbonDropButtonArrowWidth = 5;
+    constexpr auto RubbonDropButtonArrowHeight = 5;
+
 
     /**
      * @brief       Ribbon Pushbutton with Drop down
@@ -84,14 +88,16 @@ namespace Nedrysoft::Ribbon {
 
         private:
             /**
-             * @brief           Updates the drop icon according to current light/dark mode
-             */
-            void updateDropIcon();
-
-            /**
              * @brief       When the icon size is changed, this function is called to synchronise the widget sizes
              */
             void updateSizes();
+
+            /**
+             * @brief       Set the style sheet on sub-controls according to current light/dark mode
+             *
+             * @param[in]   isDarkMode true if dark mode; otherwise false
+             */
+            void updateStyleSheets(bool isDarkMode);
 
         public:
             /**
@@ -102,10 +108,11 @@ namespace Nedrysoft::Ribbon {
             Q_SIGNAL void clicked(bool dropdown);
 
         private:
-            QVBoxLayout *m_layout;                          //! the layout for this widget
-            QPushButton *m_mainButton;                      //! the main button
-            QPushButton *m_dropButton;                      //! the drop down button
-            QSize m_iconSize;                               //! the size of the icon
+            QVBoxLayout *m_layout;                              //! the layout for this widget
+            QPushButton *m_mainButton;                          //! the main button
+            QPushButton *m_dropButton;                          //! the drop down button
+            QSize m_iconSize;                                   //! the size of the icon
+            Nedrysoft::Utils::ThemeSupport *m_themeSupport;     //! theme support instance
     };
 }
 

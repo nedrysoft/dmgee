@@ -24,8 +24,11 @@
 #include "Image.h"
 #include "Python/Python.h"
 #include <optional>
+#include <QApplication>
+#include <QDebug>
 #include <QFileInfo>
 #include <QPoint>
+#include <QStyle>
 
 bool Nedrysoft::Builder::createDMG(QString outputFilename) {
     QList<QString> modulePaths;
@@ -58,7 +61,7 @@ bool Nedrysoft::Builder::createDMG(QString outputFilename) {
                              PyUnicode_FromString(outputFilename.toLatin1().constData()));
     }
 
-    PyDict_SetItemString(parameters, "lookForHiDPI", Py_True);
+    PyDict_SetItemString(parameters, "lookForHiDPI", Py_False);
     PyDict_SetItemString(parameters, "detach_retries", PyLong_FromLong(5));
 
     auto settings = PyDict_New();
@@ -75,11 +78,11 @@ bool Nedrysoft::Builder::createDMG(QString outputFilename) {
     PyDict_SetItemString(settings, "show_sidebar", Py_False);
 
     PyDict_SetItemString(settings, "sidebar_width", PyLong_FromLong(180));
-    PyDict_SetItemString(settings, "image_width", PyLong_FromLong(imageWidth));
-    PyDict_SetItemString(settings, "image_height", PyLong_FromLong(imageHeight));
+
+    auto titleBarHeight = qobject_cast<QApplication *>(QApplication::instance())->style()->pixelMetric(QStyle::PM_TitleBarHeight);    qDebug() << "titlebarheight: " <<  titleBarHeight;
 
     auto windowRectOrigin = PyTuple_Pack(2, PyLong_FromLong(0), PyLong_FromLong(0));
-    auto windowRectSize = PyTuple_Pack(2, PyLong_FromLong(imageWidth), PyLong_FromLong(imageHeight));
+    auto windowRectSize = PyTuple_Pack(2, PyLong_FromLong(imageWidth), PyLong_FromLong(imageHeight+titleBarHeight));
 
     auto windowRect = PyTuple_Pack(2, windowRectOrigin, windowRectSize);
 
@@ -96,10 +99,10 @@ bool Nedrysoft::Builder::createDMG(QString outputFilename) {
     auto gridOffset = PyTuple_Pack(2, PyLong_FromLong(0), PyLong_FromLong(0));
 
     PyDict_SetItemString(settings, "grid_offset", gridOffset);
-    PyDict_SetItemString(settings, "grid_spacing", PyLong_FromLong(180));
+    PyDict_SetItemString(settings, "grid_spacing", PyLong_FromLong(10));
     PyDict_SetItemString(settings, "label_pos", PyUnicode_FromString("bottom"));
     PyDict_SetItemString(settings, "text_size", PyLong_FromLong(16));
-    PyDict_SetItemString(settings, "icon_size", PyLong_FromLong(m_configuration.m_iconsize));
+    PyDict_SetItemString(settings, "icon_size", PyLong_FromLong(m_configuration.m_iconsize/1.333333));
 
     PyDict_SetItemString(settings, "list_icon_size", PyLong_FromLong(16));
     PyDict_SetItemString(settings, "list_text_size", PyLong_FromLong(12));
@@ -155,19 +158,21 @@ bool Nedrysoft::Builder::createDMG(QString outputFilename) {
     auto iconLocations = PyDict_New();
 
     for(auto file : m_configuration.m_files) {
-        PyList_Append(files, PyUnicode_FromString(file.file.toLatin1().data()));
+        QFileInfo currentfileInfo(file->file);
 
-        auto position = PyTuple_Pack(2, PyLong_FromLong(file.x), PyLong_FromLong(file.y));
+        PyList_Append(files, PyUnicode_FromString(file->file.toLatin1().data()));
 
-        PyDict_SetItemString(iconLocations, file.file.toUtf8().data(), position);
+        auto position = PyTuple_Pack(2, PyLong_FromLong(file->x), PyLong_FromLong(file->y));
+
+        PyDict_SetItemString(iconLocations, currentfileInfo.fileName().toUtf8().data(), position);
     }
 
     for(auto symlink : m_configuration.m_symlinks) {
-        PyDict_SetItemString(symLinks, symlink.name.toLatin1().constData(), PyUnicode_FromString(symlink.shortcut.toLatin1().constData()));
+        PyDict_SetItemString(symLinks, symlink->name.toLatin1().constData(), PyUnicode_FromString(symlink->shortcut.toLatin1().constData()));
 
-        auto position = PyTuple_Pack(2, PyLong_FromLong(symlink.x), PyLong_FromLong(symlink.y));
+        auto position = PyTuple_Pack(2, PyLong_FromLong(symlink->x), PyLong_FromLong(symlink->y));
 
-        PyDict_SetItemString(iconLocations, symlink.name.toLatin1().constData(), position);
+        PyDict_SetItemString(iconLocations, symlink->name.toLatin1().constData(), position);
     }
 
     PyDict_SetItemString(settings, "icon_locations", iconLocations);
@@ -208,24 +213,24 @@ bool Nedrysoft::Builder::loadConfiguration(const QString& filename) {
     m_configuration.m_files.clear();
 
     for (toml::node &elem : *configuration["symlink"].as_array()) {
-        struct Symlink symlink;
+        auto symlink = new Symlink;
         auto entry = *elem.as_table();
 
-        symlink.x = *entry["x"].value<int>();
-        symlink.y = *entry["y"].value<int>();
-        symlink.name = QString::fromStdString(*entry["name"].value<std::string>());
-        symlink.shortcut = QString::fromStdString(*entry["shortcut"].value<std::string>());
+        symlink->x = *entry["x"].value<int>();
+        symlink->y = *entry["y"].value<int>();
+        symlink->name = QString::fromStdString(*entry["name"].value<std::string>());
+        symlink->shortcut = QString::fromStdString(*entry["shortcut"].value<std::string>());
 
         m_configuration.m_symlinks.push_back(symlink);
     }
 
     for (toml::node &elem : *configuration["file"].as_array()) {
-        struct File file;
+        auto file = new File;
         auto entry = *elem.as_table();
 
-        file.x = *entry["x"].value<int>();
-        file.y = *entry["y"].value<int>();
-        file.file = QString::fromStdString(*entry["file"].value<std::string>());
+        file->x = *entry["x"].value<int>();
+        file->y = *entry["y"].value<int>();
+        file->file = QString::fromStdString(*entry["file"].value<std::string>());
 
         m_configuration.m_files.push_back(file);
     }
@@ -236,6 +241,17 @@ bool Nedrysoft::Builder::loadConfiguration(const QString& filename) {
     m_configuration.m_filename = QString::fromStdString(*configuration["filename"].value<std::string>());
     m_configuration.m_volumename = QString::fromStdString(*configuration["volumename"].value<std::string>());
     m_configuration.m_iconsize = *configuration["iconsize"].value<int>();
+    m_configuration.m_textSize = *configuration["textsize"].value<int>();
+
+    auto textPosition = QString::fromStdString(*configuration["textPosition"].value<std::string>());
+
+    if (textPosition.toLower() == "bottom") {
+        m_configuration.m_textPosition = Bottom;
+    } else if (textPosition.toLower() == "right") {
+        m_configuration.m_textPosition = Right;
+    } else {
+        // TODO: some error handling
+    }
 
     auto gridSize = *configuration["gridsize"].as_array();
 
@@ -246,4 +262,20 @@ bool Nedrysoft::Builder::loadConfiguration(const QString& filename) {
     m_configuration.m_featureSize = *configuration["featuresize"].value<int>();
 
     return true;
+}
+
+void Nedrysoft::Builder::setSymlinks(QList<Nedrysoft::Builder::Symlink *> symlinks) {
+    m_configuration.m_symlinks = symlinks;
+}
+
+QList<Nedrysoft::Builder::Symlink *> Nedrysoft::Builder::symlinks() {
+    return m_configuration.m_symlinks;
+}
+
+void Nedrysoft::Builder::setFiles(QList<Nedrysoft::Builder::File *> files) {
+    m_configuration.m_files = files;
+}
+
+QList<Nedrysoft::Builder::File *> Nedrysoft::Builder::files() {
+    return m_configuration.m_files;
 }

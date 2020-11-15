@@ -39,6 +39,7 @@ namespace Nedrysoft {
             private:
                 Q_OBJECT
 
+            public:
                 /**
                  * @brief       Holds the information on files that are contained in the DMG, the x, y coordinates are
                  *              relative to the DMG background
@@ -61,6 +62,15 @@ namespace Nedrysoft {
                 };
 
                 /**
+                 * @brief       Sets the text position relative to the icon
+                 */
+                enum TextPosition {
+                    Bottom = 0,
+                    Right = 1
+                };
+
+            private:
+                /**
                  * @brief       Holds the configuration, this information is interchanged between this structure and a TOML format
                  *              configuration file.
                  */
@@ -73,12 +83,16 @@ namespace Nedrysoft {
                     QPoint m_gridSize;                              //! the grid spacing
                     bool m_snapToGrid;                              //! whether to snap points to grid
                     bool m_gridVisible;                             //! whether the grid is visible
+                    bool m_snapToFeatures;                          //! whether to snap to features
                     int m_featureSize;                              //! minimum size in px^2 for feature detection
                     bool m_detectFeatures;                          //! whether we auto-detect features
+                    bool m_iconsVisible;                            //! whether icons are displayed on the preview
                     QString m_format;                               //! format of the disk image
+                    int m_textSize;                                 //! size of the icon text in points
+                    TextPosition m_textPosition;                    //! the position of the text relative to the icon
 
-                    QList<Symlink> m_symlinks;                      //! list of symlinks in the DMG
-                    QList<File> m_files;                            //! list of files in the DMG
+                    QList<Symlink *> m_symlinks;                    //! list of symlinks in the DMG
+                    QList<File *> m_files;                          //! list of files in the DMG
                 };
 
             public:
@@ -100,6 +114,12 @@ namespace Nedrysoft {
                  */
                 bool loadConfiguration(const QString& filename);
 
+            private:
+                void setSymlinks(QList<Symlink *> symlinks);
+                QList<Symlink *> symlinks();
+                void setFiles(QList<File *> files);
+                QList<File *> files();
+
             public:
                 Q_PROPERTY(QString background MEMBER (m_configuration.m_background));
                 Q_PROPERTY(QString icon MEMBER (m_configuration.m_icon));
@@ -109,13 +129,24 @@ namespace Nedrysoft {
                 Q_PROPERTY(int iconSize MEMBER (m_configuration.m_iconsize));
                 Q_PROPERTY(QPoint gridSize MEMBER (m_configuration.m_gridSize));
                 Q_PROPERTY(bool snapToGrid MEMBER (m_configuration.m_snapToGrid));
+                Q_PROPERTY(bool snapToFeatures MEMBER (m_configuration.m_snapToFeatures));
                 Q_PROPERTY(bool gridVisible MEMBER (m_configuration.m_gridVisible));
+                Q_PROPERTY(bool iconsVisible MEMBER (m_configuration.m_iconsVisible));
                 Q_PROPERTY(int featureSize MEMBER (m_configuration.m_featureSize));
                 Q_PROPERTY(bool detectFeatures MEMBER (m_configuration.m_detectFeatures));
+                Q_PROPERTY(QList<Nedrysoft::Builder::Symlink *> symlinks READ symlinks WRITE setSymlinks);
+                Q_PROPERTY(QList<Nedrysoft::Builder::File *> files READ files WRITE setFiles);
+                Q_PROPERTY(int textSize MEMBER (m_configuration.m_textSize));
+                Q_PROPERTY(Nedrysoft::Builder::TextPosition textPosition MEMBER (m_configuration.m_textPosition));
 
             private:
                 Configuration m_configuration;                      //! the configuration for the DMG
     };
 }
+
+Q_DECLARE_METATYPE(Nedrysoft::Builder::File *);
+Q_DECLARE_METATYPE(Nedrysoft::Builder::Symlink *);
+Q_DECLARE_METATYPE(Nedrysoft::Builder::TextPosition);
+
 
 #endif //NEDRYSOFT_BUILDER_H

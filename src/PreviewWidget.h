@@ -94,8 +94,9 @@ namespace Nedrysoft {
                  * @param[in]       image the image to be displayed
                  * @param[in]       point the initial location of the icon
                  * @param[in]       iconType the type of icon being inserted
+                 * @param[in]       updateFunction is a function called when the icon is moved
                  */
-                void addIcon(Nedrysoft::Image *image, const QPoint &point, IconType iconType);
+                void addIcon(Nedrysoft::Image *image, const QPoint &point, IconType iconType, std::function<void(QPoint &point)> updateFunction);
 
                 /**
                  * @brief           Sets whether the icons for the application/applications shortcut are shown
@@ -110,6 +111,13 @@ namespace Nedrysoft {
                  * @param[in]       size in pixels of the icon (square)
                  */
                 void setIconSize(int size);
+
+                /**
+                 * @brief           Sets the size of the text on the DMG
+                 *
+                 * @param[in]       size in points of the text
+                 */
+                void setTextSize(int textSize);
 
         private:
                 QPixmap m_pixmap;                           //! the background image pixmap

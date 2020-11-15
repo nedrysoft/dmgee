@@ -22,7 +22,7 @@
 #include "SplashScreen.h"
 #include <QPainter>
 
-constexpr auto splashScreenFilename = ":/assets/splash_620x375@2x.png";
+constexpr auto splashScreenFilename = ":/images/splash_620x375@2x.png";
 constexpr auto fontFamily = "Open Sans";
 constexpr auto fontSize = 14;
 
