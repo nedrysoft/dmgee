@@ -125,7 +125,7 @@ int main(int argc, char *argv[]) {
 
         return 0;
     }
-    
+
     if ((editOption->count()) || (!buildOption->count())) {
         // search the /fonts folder in the resources and attempt to load any found fonts
 

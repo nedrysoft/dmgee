@@ -1,8 +1,8 @@
-# dmgee
+# dmge²
 
 /diː ɛm ʤiː/
 
-dmgee is a utility that can be used to design and and create DMG files for macOS applications quickly and easily.  It uses python internally to generate the DMG which gives excellent flexibility.
+dmge² is a utility that can be used to design and and create DMG files for macOS applications quickly and easily.  It uses python internally to generate the DMG which gives excellent flexibility.
 
 It utiliises opencv to analyse the background image to try to locate the centre points of objects where it believes that an icon (either the application or a symlink to a folder) can be placed, by providing a background image with suitable visual information in, it makes creating a configuration as simple as a couple of clicks.
 
@@ -10,11 +10,15 @@ It utiliises opencv to analyse the background image to try to locate the centre 
 
 Due to the toolset requirements for generating DMG files, this software will only run on macOS.
 
+## Status
+
+The application is work in progress and currently requires a bit more work to be properly usable, but the basic system is in place and it is capable of building disk images.  Some configuration options are not currently linked between the front end and the python backend.
+
 ## Installation
 
 Binary distributions can be found under the assets on the [github releases](https://github.com/fizzyade/dmgee/releases) page.
 
-- **Mac OS**.  The application is supplied as a dmg disk image (which itself was built with itself).  Download and open the disk image and drag the dmgee icon into the Applications folder, the application can be launched into design mode by double clicking on the dmgee icon in Applications folder.
+- **Mac OS**.  The application is supplied as a dmg disk image (which itself was built with itself).  Download and open the disk image and drag the dmge² icon into the Applications folder, the application can be launched into design mode by double clicking on the dmge2 icon in Applications folder.
 
 ## Requirements (Development)
 
@@ -26,9 +30,27 @@ Binary distributions can be found under the assets on the [github releases](http
 - toml++ development libraries
 - CLI11 development libraries
 
+***The application requires Python 3 to be installed, currently the build does not bundle the python libraries and system modules into the application bundle and relies on them being correctly installed an accessible.***
+
+***Furthermore, there is currently no indication or output when a build is triggered, I am going to make changes to the dmgbuild python module so that the build progress and status can be displayed in the application.***
+
+## The Ribbon Bar
+
+I have provided a simplified Ribbon Bar widget, this will be moved to it's own repository and switched to a submodule in the near future so that it can be developed indepentently of this or any other projects that make use of it.
+
+It is provided as a dyanmically loaded library and I have added QtDesigner support so that ribbon bars can be created and edited inside designer for convenience.
+
+To build the Ribbon Bar, the following CMake option needs to be on:
+
+```
+Build_RibbonDesignerPlugin ON
+```
+
+***I recommend creating a symlink from the designer plugin in the binary output folder to the Qt Designer (Or Qt Creator) designer plugins folder, this will allow any changes to the plugin to be made directly avaialble to the IDE (after restarting the IDE) and won't require further copying steps.***
+
 # Credits
 
-The following third party libraries/assets/tools/services have been used in the development of dmgee.
+The following third party libraries/assets/tools/services have been used in the development of dmge2.
 
 - [cmake](https://www.cmake.org) - cross platform project build system, licensed under [BSD license](https://gitlab.kitware.com/cmake/cmake/raw/master/Copyright.txt).
 - [Catch2](https://github.com/catchorg/Catch2) - unit testing framework, licensed under the [BSL-1.0 license](https://github.com/catchorg/Catch2/blob/master/LICENSE.txt).
@@ -42,6 +64,7 @@ In addition, the following commercially licensed tools/services have also been u
 - [Affinity Designer](https://www.serif.com/designer) - Vector artwork design application.
 - [Affinity Photo](https://www.serif.com/photo) - Bitmap artwork design application.
 - [CLion](https://www.jetbrains.com/clion/) - C/C++/Obj-C development IDE.
+- [Noun Project](https://thenounproject.com) - An icon service with thousands of fantastic icons.  (I have a commercial license)
 
 # License
 
