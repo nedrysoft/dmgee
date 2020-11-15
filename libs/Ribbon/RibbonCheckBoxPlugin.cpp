@@ -65,19 +65,19 @@ QString RibbonCheckBoxPlugin::name() const {
 }
 
 QString RibbonCheckBoxPlugin::group() const {
-    return QStringLiteral("Ribbon Widgets");
+    return QStringLiteral("Nedrysoft Ribbon Widgets");
 }
 
 QIcon RibbonCheckBoxPlugin::icon() const {
-    return QIcon();
+    return QIcon(":/Nedrysoft/Ribbon/icons/ribbon.png");
 }
 
 QString RibbonCheckBoxPlugin::toolTip() const {
-    return QString();
+    return tr("A Ribbon Check Box");
 }
 
 QString RibbonCheckBoxPlugin::whatsThis() const {
-    return QString();
+    return tr("The Ribbon Check Box is a QCheckBox subclass that is styled to match the Ribbon.");
 }
 
 bool RibbonCheckBoxPlugin::isContainer() const {

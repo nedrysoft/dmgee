@@ -59,19 +59,19 @@ QString RibbonWidgetPlugin::name() const {
 }
 
 QString RibbonWidgetPlugin::group() const {
-    return QStringLiteral("Ribbon Widgets");
+    return QStringLiteral("Nedrysoft Ribbon Widgets");
 }
 
 QIcon RibbonWidgetPlugin::icon() const {
-    return QIcon();
+    return QIcon(":/Nedrysoft/Ribbon/icons/ribbon.png");
 }
 
 QString RibbonWidgetPlugin::toolTip() const {
-    return QString();
+    return tr("A Ribbon Widget");
 }
 
 QString RibbonWidgetPlugin::whatsThis() const {
-    return QString();
+    return tr("The Ribbon Widget is the top level container of the Ribbon Bar.");
 }
 
 bool RibbonWidgetPlugin::isContainer() const {

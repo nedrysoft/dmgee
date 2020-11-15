@@ -29,8 +29,6 @@ constexpr auto ThemeStylesheet = R"(
     QPushButton {
         border: 0px;
         padding: 3px;
-        font-family: "Open Sans";
-        font-size: 10pt;
     }
 
     QPushButton::hover {

@@ -65,11 +65,11 @@ QString RibbonSliderPlugin::name() const {
 }
 
 QString RibbonSliderPlugin::group() const {
-    return QStringLiteral("Ribbon Widgets");
+    return QStringLiteral("Nedrysoft Ribbon Widgets");
 }
 
 QIcon RibbonSliderPlugin::icon() const {
-    return QIcon();
+    return QIcon(":/Nedrysoft/Ribbon/icons/ribbon.png");
 }
 
 QString RibbonSliderPlugin::toolTip() const {
@@ -77,7 +77,7 @@ QString RibbonSliderPlugin::toolTip() const {
 }
 
 QString RibbonSliderPlugin::whatsThis() const {
-    return QString();
+    return tr("The Ribbon Line Edit is a QSlider subclass that is styled to match the Ribbon.");
 }
 
 bool RibbonSliderPlugin::isContainer() const {

@@ -65,19 +65,19 @@ QString RibbonDropButtonPlugin::name() const {
 }
 
 QString RibbonDropButtonPlugin::group() const {
-    return QStringLiteral("Ribbon Widgets");
+    return QStringLiteral("Nedrysoft Ribbon Widgets");
 }
 
 QIcon RibbonDropButtonPlugin::icon() const {
-    return QIcon();
+    return QIcon(":/Nedrysoft/Ribbon/icons/ribbon.png");
 }
 
 QString RibbonDropButtonPlugin::toolTip() const {
-    return QString();
+    return tr("A Ribbon Drop Button");
 }
 
 QString RibbonDropButtonPlugin::whatsThis() const {
-    return QString();
+    return tr("The Ribbon Drop Button is button which contains a main action button and a drop down button for extended actions and is styled to match the Ribbon.");
 }
 
 bool RibbonDropButtonPlugin::isContainer() const {

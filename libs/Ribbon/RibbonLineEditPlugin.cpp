@@ -65,19 +65,19 @@ QString RibbonLineEditPlugin::name() const {
 }
 
 QString RibbonLineEditPlugin::group() const {
-    return QStringLiteral("Ribbon Widgets");
+    return QStringLiteral("Nedrysoft Ribbon Widgets");
 }
 
 QIcon RibbonLineEditPlugin::icon() const {
-    return QIcon();
+    return QIcon(":/Nedrysoft/Ribbon/icons/ribbon.png");
 }
 
 QString RibbonLineEditPlugin::toolTip() const {
-    return QString();
+    return tr("A Ribbon Line Edit");
 }
 
 QString RibbonLineEditPlugin::whatsThis() const {
-    return QString();
+    return tr("The Ribbon Line Edit is a QLineEdit subclass that is styled to match the Ribbon.");
 }
 
 bool RibbonLineEditPlugin::isContainer() const {

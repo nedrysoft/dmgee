@@ -21,6 +21,7 @@
 
 #include "RibbonButton.h"
 
+#include <QRegularExpression>
 #include <QtPlugin>
 
 constexpr auto ConfigurationXML = R"(
@@ -66,19 +67,19 @@ QString RibbonButtonPlugin::name() const {
 }
 
 QString RibbonButtonPlugin::group() const {
-    return QStringLiteral("Ribbon Widgets");
+    return QStringLiteral("Nedrysoft Ribbon Widgets");
 }
 
 QIcon RibbonButtonPlugin::icon() const {
-    return QIcon();
+    return QIcon(":/Nedrysoft/Ribbon/icons/ribbon.png");
 }
 
 QString RibbonButtonPlugin::toolTip() const {
-    return QString();
+    return tr("A Ribbon Button");
 }
 
 QString RibbonButtonPlugin::whatsThis() const {
-    return QString();
+    return tr("The Ribbon Button Box is a control that provides a main push button with optional text and is styled to match the Ribbon.");
 }
 
 bool RibbonButtonPlugin::isContainer() const {

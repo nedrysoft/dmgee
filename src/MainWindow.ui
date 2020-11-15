@@ -1007,19 +1007,19 @@
  <customwidgets>
  <customwidget>
    <class>Nedrysoft::Ribbon::RibbonComboBox</class>
-   <extends>QWidget</extends>
+   <extends>QComboBox</extends>
    <header>Ribbon/RibbonComboBox.h</header>
    <container>1</container>
   </customwidget> 
   <customwidget>
    <class>Nedrysoft::Ribbon::RibbonCheckBox</class>
-   <extends>QWidget</extends>
+   <extends>QCheckBox</extends>
    <header>Ribbon/RibbonCheckBox.h</header>
    <container>1</container>
   </customwidget> 
   <customwidget>
    <class>Nedrysoft::Ribbon::RibbonSlider</class>
-   <extends>QWidget</extends>
+   <extends>QSlider</extends>
    <header>Ribbon/RibbonSlider.h</header>
    <container>1</container>
   </customwidget> 

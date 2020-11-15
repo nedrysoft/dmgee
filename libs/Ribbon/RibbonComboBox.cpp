@@ -32,8 +32,6 @@ constexpr auto ThemeStylesheet = R"(
         border: 1px solid [border-colour];
         background-color: [background-colour];
         selection-background-color: [selected-background-colour];
-        font-family: "Open Sans";
-        font-size: 10pt;
     }
 
     QComboBox::drop-down {

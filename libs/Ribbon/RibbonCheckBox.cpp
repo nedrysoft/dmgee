@@ -26,11 +26,6 @@
 #include <QSpacerItem>
 
 constexpr auto ThemeStylesheet = R"(
-    QCheckBox {
-        font-family: "Open Sans";
-        font-size: 10pt;
-    }
-
     QCheckBox::indicator:checked {
         image: url(':/Nedrysoft/Ribbon/icons/checked-[theme]@2x.png');
         width: 14px;

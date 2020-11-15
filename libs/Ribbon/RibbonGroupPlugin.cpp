@@ -69,19 +69,19 @@ QString RibbonGroupPlugin::name() const {
 }
 
 QString RibbonGroupPlugin::group() const {
-    return QStringLiteral("Ribbon Widgets");
+    return QStringLiteral("Nedrysoft Ribbon Widgets");
 }
 
 QIcon RibbonGroupPlugin::icon() const {
-    return QIcon();
+    return QIcon(":/Nedrysoft/Ribbon/icons/ribbon.png");
 }
 
 QString RibbonGroupPlugin::toolTip() const {
-    return QString();
+    return tr("A Ribbon Group");
 }
 
 QString RibbonGroupPlugin::whatsThis() const {
-    return QString();
+    return tr("The Ribbon Group is a container that contains a set of controls that are logically grouped together.");
 }
 
 bool RibbonGroupPlugin::isContainer() const {

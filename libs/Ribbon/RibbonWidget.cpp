@@ -26,12 +26,20 @@
 #include <QPainter>
 #include <QTabBar>
 
+constexpr auto ThemeStylesheet = R"(
+    QWidget {
+        font-family: "Open Sans";
+        font-size: 10pt;
+    }
+)";
+
 Nedrysoft::Ribbon::RibbonWidget::RibbonWidget(QWidget *parent) :
         QTabWidget(parent) {
 
     m_tabBar = new RibbonTabBar(this);
 
     setTabBar(m_tabBar);
+    setStyleSheet(ThemeStylesheet);
 
     setMinimumHeight(RibbonBarHeight+TabBarHeight);
     setMaximumHeight(RibbonBarHeight+TabBarHeight);

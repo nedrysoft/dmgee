@@ -283,8 +283,10 @@ void Nedrysoft::MainWindow::processBackground()
 
         cv::findContours(image, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
 
+        /*
         cv::namedWindow("Image");
         cv::imshow("Image", image);
+         */
 
         // find centre of discovered objects in image
 

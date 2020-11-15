@@ -40,5 +40,8 @@
         <file>icons/slider-dark@2x.png</file>
         <file>icons/slider-light.png</file>
         <file>icons/slider-light@2x.png</file>
+
+        <file>icons/ribbon.png</file>
+        <file>icons/ribbon@2x.png</file>
     </qresource>
 </RCC>

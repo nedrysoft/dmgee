@@ -31,8 +31,6 @@ constexpr auto ThemeStylesheet = R"(
         height: 13px;
         border: 1px solid [border-colour];
         padding: 2px;
-        font-family: "Open Sans";
-        font-size: 10pt;
     }
 
     QLineEdit:focus {

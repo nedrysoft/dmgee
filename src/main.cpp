@@ -35,6 +35,7 @@
 #include <QFontDatabase>
 #include <QMimeDatabase>
 #include <QRegularExpression>
+#include <QResource>
 #include <QStyle>
 
 constexpr auto applicationName = APPLICATION_LONG_NAME;                     //! Provided by CMake to the preprocessor
@@ -124,7 +125,7 @@ int main(int argc, char *argv[]) {
 
         return 0;
     }
-
+    
     if ((editOption->count()) || (!buildOption->count())) {
         // search the /fonts folder in the resources and attempt to load any found fonts
 

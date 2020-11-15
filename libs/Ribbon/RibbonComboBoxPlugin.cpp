@@ -65,19 +65,19 @@ QString RibbonComboBoxPlugin::name() const {
 }
 
 QString RibbonComboBoxPlugin::group() const {
-    return QStringLiteral("Ribbon Widgets");
+    return QStringLiteral("Nedrysoft Ribbon Widgets");
 }
 
 QIcon RibbonComboBoxPlugin::icon() const {
-    return QIcon();
+    return QIcon(":/Nedrysoft/Ribbon/icons/ribbon.png");
 }
 
 QString RibbonComboBoxPlugin::toolTip() const {
-    return QString();
+    return tr("A Ribbon Combo Box");
 }
 
 QString RibbonComboBoxPlugin::whatsThis() const {
-    return QString();
+    return tr("The Ribbon Combo Box is a QComboBox subclass that is styled to match the Ribbon.");
 }
 
 bool RibbonComboBoxPlugin::isContainer() const {
