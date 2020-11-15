@@ -21,6 +21,7 @@
 #define NEDRYSOFT_RIBBONTABBAR_H
 
 #include "RibbonSpec.h"
+#include "ThemeSupport.h"
 #include <QFont>
 #include <QTabBar>
 
@@ -78,9 +79,19 @@ namespace Nedrysoft::Ribbon {
                 bool eventFilter(QObject * obj, QEvent * event) override;
 
             private:
+                /**
+                 * @brief       Sets the stylesheet for dark/light mode
+                 *
+                 * @param[in]   isDarkMode true if dark mode; otherwise false
+                 */
+                void updateStyleSheet(bool isDarkMode);
+
+            private:
                 QFont m_selectedFont;                                   //! font to use on selected tab
                 QFont m_normalFont;                                     //! font to use on deselected tabs
                 bool m_mouseInWidget;                                   //! tracks whether the mouse is tracked inside the widget
+
+                Nedrysoft::Utils::ThemeSupport *m_themeSupport;         //! theme support instance
     };
 }
 #endif // NEDRYSOFT_RIBBONTABBAR_H

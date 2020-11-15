@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "RibbonLineEdit.h"
+#include "RibbonComboBox.h"
 #include "RibbonFontManager.h"
 #include <QApplication>
 #include <QDebug>
@@ -25,23 +25,34 @@
 #include "ThemeSupport.h"
 
 constexpr auto ThemeStylesheet = R"(
-    QLineEdit {
-        background-color: [background-colour];
+    QComboBox {
+        padding: 2px;
         height: 13px;
         border: 1px solid [border-colour];
-        padding: 2px;
+        background-color: [background-colour];
+        selection-background-color: [selected-background-colour];
         font-family: "Open Sans";
         font-size: 10pt;
     }
 
-    QLineEdit:focus {
-        border-color: [border-colour];
+    QComboBox::drop-down {
+        background-color: [background-colour];
+    }
+
+    QComboBox::down-arrow {
+        image: url(':/Nedrysoft/Ribbon/icons/arrow-drop-[theme]@2x.png');
+        width: 5px;
+        height: 4px;
+    }
+
+    QComboBox::down-arrow:hover {
+        background-color: [hover-background-colour];
     }
 )";
 
-Nedrysoft::Ribbon::RibbonLineEdit::RibbonLineEdit(QWidget *parent) :
-        QLineEdit(parent),
-        m_themeSupport(new Nedrysoft::Utils::ThemeSupport){
+Nedrysoft::Ribbon::RibbonComboBox::RibbonComboBox(QWidget *parent) :
+        QComboBox(parent),
+        m_themeSupport(new Nedrysoft::Utils::ThemeSupport) {
 
     setAttribute(Qt::WA_MacShowFocusRect,false);
 
@@ -52,18 +63,24 @@ Nedrysoft::Ribbon::RibbonLineEdit::RibbonLineEdit(QWidget *parent) :
     updateStyleSheet(Nedrysoft::Utils::ThemeSupport::isDarkMode());
 }
 
-Nedrysoft::Ribbon::RibbonLineEdit::~RibbonLineEdit() {
+Nedrysoft::Ribbon::RibbonComboBox::~RibbonComboBox() {
 }
 
-void Nedrysoft::Ribbon::RibbonLineEdit::updateStyleSheet(bool isDarkMode) {
+void Nedrysoft::Ribbon::RibbonComboBox::updateStyleSheet(bool isDarkMode) {
     QString styleSheet(ThemeStylesheet);
+
+    styleSheet.replace("[selected-background-colour]", Nedrysoft::Utils::ThemeSupport::getHighlightedBackground().name());
+    styleSheet.replace("[theme]", isDarkMode ? "dark" : "light");
 
     if (isDarkMode) {
         styleSheet.replace("[background-colour]", "#434343");
-        styleSheet.replace("[border-colour]", "none");
+        styleSheet.replace("[border-colour]", "#323232");
+        styleSheet.replace("[hover-background-colour]", "#626262");
+
     } else {
         styleSheet.replace("[background-colour]", "#ffffff");
         styleSheet.replace("[border-colour]", "#B9B9B9");
+        styleSheet.replace("[hover-background-colour]", "#f5f5f5");
     }
 
     setStyleSheet(styleSheet);

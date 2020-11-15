@@ -17,12 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef NEDRYSOFT_RIBBONLINEDIT_H
-#define NEDRYSOFT_RIBBONLINEDIT_H
+#ifndef NEDRYSOFT_RIBBONCHECKBOX_H
+#define NEDRYSOFT_RIBBONCHECKBOX_H
 
 #include "RibbonSpec.h"
+#include <QCheckBox>
 #include "ThemeSupport.h"
-#include <QLineEdit>
 
 namespace Nedrysoft::Ribbon {
     /**
@@ -30,22 +30,22 @@ namespace Nedrysoft::Ribbon {
      *
      * @details     Flat style line edit subclass which is consitent with the ribbon style
      */
-    class NEDRYSOFT_RIBBON_WIDGET_EXPORT RibbonLineEdit :
-        public QLineEdit {
+    class NEDRYSOFT_RIBBON_WIDGET_EXPORT RibbonCheckBox :
+        public QCheckBox {
             Q_OBJECT
 
         public:
             /**
-             * @brief       Constructs a RibbonLineEdit
+             * @brief       Constructs a Ribbon Combo Box
              *
              * @param[in]   parent is the owner widget
              */
-            explicit RibbonLineEdit(QWidget *parent=nullptr);
+            explicit RibbonCheckBox(QWidget *parent=nullptr);
 
             /**
              * @brief       Destructor
              */
-            ~RibbonLineEdit() override;
+            ~RibbonCheckBox() override;
 
         private:
             /**
@@ -60,4 +60,4 @@ namespace Nedrysoft::Ribbon {
     };
 }
 
-#endif //NEDRYSOFT_RIBBONLINEDIT_H
+#endif //NEDRYSOFT_RIBBONCHECKBOX_H

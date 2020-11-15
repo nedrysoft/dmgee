@@ -11,9 +11,6 @@
         <file>OpenSans/OpenSans-SemiBold.ttf</file>
         <file>OpenSans/OpenSans-SemiBoldItalic.ttf</file>
 
-        <file>LightStyle.qss</file>
-        <file>DarkStyle.qss</file>
-
         <file>icons/arrow-drop-light.png</file>
         <file>icons/arrow-drop-light@2x.png</file>
         <file>icons/arrow-drop-dark.png</file>

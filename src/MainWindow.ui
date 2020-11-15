@@ -208,7 +208,7 @@
             <number>-1</number>
            </property>
            <item row="2" column="1">
-            <widget class="QSlider" name="minFeatureSlider">
+            <widget class="Nedrysoft::Ribbon::RibbonSlider" name="minFeatureSlider">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -259,7 +259,7 @@
             </spacer>
            </item>
            <item row="1" column="1">
-            <widget class="QCheckBox" name="featureAutoDetectCheckbox">
+            <widget class="Nedrysoft::Ribbon::RibbonCheckBox" name="featureAutoDetectCheckbox">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -435,7 +435,7 @@
               <enum>QLayout::SetMinimumSize</enum>
              </property>
              <item>
-              <widget class="QCheckBox" name="showIconsCheckBox">
+              <widget class="Nedrysoft::Ribbon::RibbonCheckBox" name="showIconsCheckBox">
                <property name="font">
                 <font>
                  <family>Open Sans</family>
@@ -537,7 +537,7 @@
               </widget>
              </item>
              <item row="1" column="1">
-              <widget class="QComboBox" name="positionComboBox">
+              <widget class="Nedrysoft::Ribbon::RibbonComboBox" name="positionComboBox">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -668,7 +668,7 @@
             </layout>
            </item>
            <item>
-            <widget class="QCheckBox" name="gridSnapCheckbox">
+            <widget class="Nedrysoft::Ribbon::RibbonCheckBox" name="gridSnapCheckbox">
              <property name="font">
               <font>
                <family>Open Sans</family>
@@ -681,7 +681,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="gridVisibleCheckbox">
+            <widget class="Nedrysoft::Ribbon::RibbonCheckBox" name="gridVisibleCheckbox">
              <property name="font">
               <font>
                <family>Open Sans</family>
@@ -899,7 +899,7 @@
               </widget>
              </item>
              <item row="0" column="1">
-              <widget class="QComboBox" name="formatComboBox">
+              <widget class="Nedrysoft::Ribbon::RibbonComboBox" name="formatComboBox">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -1005,6 +1005,24 @@
   </action>
  </widget>
  <customwidgets>
+ <customwidget>
+   <class>Nedrysoft::Ribbon::RibbonComboBox</class>
+   <extends>QWidget</extends>
+   <header>Ribbon/RibbonComboBox.h</header>
+   <container>1</container>
+  </customwidget> 
+  <customwidget>
+   <class>Nedrysoft::Ribbon::RibbonCheckBox</class>
+   <extends>QWidget</extends>
+   <header>Ribbon/RibbonCheckBox.h</header>
+   <container>1</container>
+  </customwidget> 
+  <customwidget>
+   <class>Nedrysoft::Ribbon::RibbonSlider</class>
+   <extends>QWidget</extends>
+   <header>Ribbon/RibbonSlider.h</header>
+   <container>1</container>
+  </customwidget> 
   <customwidget>
    <class>Nedrysoft::Ribbon::RibbonGroup</class>
    <extends>QWidget</extends>

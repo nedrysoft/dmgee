@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "RibbonLineEdit.h"
+#include "RibbonCheckBox.h"
 #include "RibbonFontManager.h"
 #include <QApplication>
 #include <QDebug>
@@ -25,23 +25,43 @@
 #include "ThemeSupport.h"
 
 constexpr auto ThemeStylesheet = R"(
-    QLineEdit {
-        background-color: [background-colour];
-        height: 13px;
-        border: 1px solid [border-colour];
-        padding: 2px;
+    QCheckBox {
         font-family: "Open Sans";
         font-size: 10pt;
     }
 
-    QLineEdit:focus {
-        border-color: [border-colour];
+    QCheckBox::indicator:checked {
+        image: url(':/Nedrysoft/Ribbon/icons/checked-[theme]@2x.png');
+        width: 14px;
+        height: 14px;
+        padding-right: 2px;
+    }
+
+    QCheckBox::indicator:checked:hover {
+        image: url(':/Nedrysoft/Ribbon/icons/checked-hover-[theme]@2x.png');
+        width: 14px;
+        height: 14px;
+        padding-right: 2px;
+    }
+
+    QCheckBox::indicator:unchecked {
+        image: url(':/Nedrysoft/Ribbon/icons/unchecked-[theme]@2x.png');
+        width: 14px;
+        height: 14px;
+        padding-right: 2px;
+    }
+
+    QCheckBox::indicator:unchecked:hover {
+        image: url(':/Nedrysoft/Ribbon/icons/unchecked-hover-[theme]@2x.png');
+        width: 14px;
+        height: 14px;
+        padding-right: 2px;
     }
 )";
 
-Nedrysoft::Ribbon::RibbonLineEdit::RibbonLineEdit(QWidget *parent) :
-        QLineEdit(parent),
-        m_themeSupport(new Nedrysoft::Utils::ThemeSupport){
+Nedrysoft::Ribbon::RibbonCheckBox::RibbonCheckBox(QWidget *parent) :
+        QCheckBox(parent),
+        m_themeSupport(new Nedrysoft::Utils::ThemeSupport) {
 
     setAttribute(Qt::WA_MacShowFocusRect,false);
 
@@ -52,19 +72,13 @@ Nedrysoft::Ribbon::RibbonLineEdit::RibbonLineEdit(QWidget *parent) :
     updateStyleSheet(Nedrysoft::Utils::ThemeSupport::isDarkMode());
 }
 
-Nedrysoft::Ribbon::RibbonLineEdit::~RibbonLineEdit() {
+Nedrysoft::Ribbon::RibbonCheckBox::~RibbonCheckBox() {
 }
 
-void Nedrysoft::Ribbon::RibbonLineEdit::updateStyleSheet(bool isDarkMode) {
+void Nedrysoft::Ribbon::RibbonCheckBox::updateStyleSheet(bool isDarkMode) {
     QString styleSheet(ThemeStylesheet);
 
-    if (isDarkMode) {
-        styleSheet.replace("[background-colour]", "#434343");
-        styleSheet.replace("[border-colour]", "none");
-    } else {
-        styleSheet.replace("[background-colour]", "#ffffff");
-        styleSheet.replace("[border-colour]", "#B9B9B9");
-    }
+    styleSheet.replace("[theme]", isDarkMode ? "dark" : "light");
 
     setStyleSheet(styleSheet);
 }

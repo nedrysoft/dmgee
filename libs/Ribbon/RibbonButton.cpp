@@ -26,6 +26,19 @@
 #include <QStyle>
 #include "ThemeSupport.h"
 
+constexpr auto ThemeStylesheet = R"(
+    QPushButton {
+        border: 0px;
+        padding: 3px;
+        font-family: "Open Sans";
+        font-size: 10pt;
+    }
+
+    QPushButton::hover {
+        background: [background-colour];
+    }
+)";
+
 Nedrysoft::Ribbon::RibbonButton::RibbonButton(QWidget *parent) :
         QWidget(parent),
         m_iconSize(QSize(RibbonButtonDefaultIconWidth,RibbonButtonDefaultIconHeight)),
@@ -111,8 +124,9 @@ void Nedrysoft::Ribbon::RibbonButton::updateSizes() {
 }
 
 void Nedrysoft::Ribbon::RibbonButton::updateStyleSheets(bool isDarkMode) {
-    auto colour = Nedrysoft::Utils::ThemeSupport::getColor(Nedrysoft::Ribbon::PushButtonColor).name();
-    auto styleSheet = QString("QPushButton {border: 0px;padding: 3px;} QPushButton::hover {background: %1;}").arg(colour);
+    QString styleSheet(ThemeStylesheet);
+
+    styleSheet.replace("[background-colour]", Nedrysoft::Utils::ThemeSupport::getColor(Nedrysoft::Ribbon::PushButtonColor).name());
 
     m_mainButton->setStyleSheet(styleSheet);
     m_buttonLabel->setStyleSheet(styleSheet);

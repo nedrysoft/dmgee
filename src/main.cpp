@@ -33,6 +33,8 @@
 #include <QFontDatabase>
 #include <QMimeDatabase>
 #include <QRegularExpression>
+#include <QStyle>
+#include <QComboBox>
 
 constexpr auto applicationName = APPLICATION_LONG_NAME;                     //! Provided by CMake to the preprocessor
 constexpr auto applicationFontsPrefix = ":/fonts";                          //! Fonts are stored under :/fonts (recursive search is performed)
@@ -86,8 +88,6 @@ int main(int argc, char *argv[]) {
     QApplication application(argc, argv);
     QMimeDatabase mimeDatabase;
     int returnValue = 0;
-
-    qDebug() << "hello";
 
     CLI::App appCli("dmgee is an application for designing and creating custom DMG images.\n", APPLICATION_SHORT_NAME);
 

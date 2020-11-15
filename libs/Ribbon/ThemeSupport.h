@@ -61,9 +61,19 @@ namespace Nedrysoft::Utils {
             /**
              * @brief       Get the Dark or Light colour for the given array
              *
-             * @returns     the colour as a QRgb
+             * @returns     the colour as a QColor
              */
             static QColor getColor(const QRgb PushButtonColor[]);
+
+            /**
+             * @brief       Return the highlighted text background color
+             *
+             * @note        Qt does not return the correct color when using QPalette, this function directly queries
+             *              the OS to discover the real highlighed background color
+             *
+             * @returns     the colour as a QColor
+             */
+            static QColor getHighlightedBackground();
     };
 }
 

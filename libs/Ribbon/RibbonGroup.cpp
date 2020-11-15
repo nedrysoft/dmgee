@@ -39,24 +39,6 @@ Nedrysoft::Ribbon::RibbonGroup::RibbonGroup(QWidget *parent) :
 
     setGroupName(QString("Group"));
 
-    QFile styleSheet;
-
-    styleSheet.setFileName(":/Nedrysoft/Ribbon/LightStyle.qss");
-
-    if (styleSheet.open(QFile::ReadOnly)) {
-        m_lightStyleSheet = styleSheet.readAll();
-
-        styleSheet.close();
-    }
-
-    styleSheet.setFileName(":/Nedrysoft/Ribbon/DarkStyle.qss");
-
-    if (styleSheet.open(QFile::ReadOnly)) {
-        m_darkStyleSheet = styleSheet.readAll();
-
-        styleSheet.close();
-    }
-
     if (Nedrysoft::Utils::ThemeSupport::isDarkMode()) {
         this->setStyleSheet(m_darkStyleSheet);
     } else {
@@ -64,11 +46,7 @@ Nedrysoft::Ribbon::RibbonGroup::RibbonGroup(QWidget *parent) :
     }
 
     connect(qobject_cast<QApplication *>(QCoreApplication::instance()), &QApplication::paletteChanged, [=] (const QPalette &) {
-        if (Nedrysoft::Utils::ThemeSupport::isDarkMode()) {
-            setStyleSheet(m_darkStyleSheet);
-        } else {
-            setStyleSheet(m_lightStyleSheet);
-        }
+        // TODO: anything to do?
     });
 
     updateMargins();

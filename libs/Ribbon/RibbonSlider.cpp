@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "RibbonLineEdit.h"
+#include "RibbonSlider.h"
 #include "RibbonFontManager.h"
 #include <QApplication>
 #include <QDebug>
@@ -25,23 +25,23 @@
 #include "ThemeSupport.h"
 
 constexpr auto ThemeStylesheet = R"(
-    QLineEdit {
-        background-color: [background-colour];
-        height: 13px;
-        border: 1px solid [border-colour];
-        padding: 2px;
-        font-family: "Open Sans";
-        font-size: 10pt;
+    QSlider::groove:horizontal {
+        height: 4px;
+        background: [background-colour];
+        margin: 2px 0;
     }
 
-    QLineEdit:focus {
-        border-color: [border-colour];
+    QSlider::handle:horizontal {
+        image: url(':/Nedrysoft/Ribbon/icons/slider-[theme]@2x.png');
+        width: 10px;
+        height: 10px;
+        margin: -5px 0px;
     }
 )";
 
-Nedrysoft::Ribbon::RibbonLineEdit::RibbonLineEdit(QWidget *parent) :
-        QLineEdit(parent),
-        m_themeSupport(new Nedrysoft::Utils::ThemeSupport){
+Nedrysoft::Ribbon::RibbonSlider::RibbonSlider(QWidget *parent) :
+        QSlider(parent),
+        m_themeSupport(new Nedrysoft::Utils::ThemeSupport) {
 
     setAttribute(Qt::WA_MacShowFocusRect,false);
 
@@ -52,18 +52,18 @@ Nedrysoft::Ribbon::RibbonLineEdit::RibbonLineEdit(QWidget *parent) :
     updateStyleSheet(Nedrysoft::Utils::ThemeSupport::isDarkMode());
 }
 
-Nedrysoft::Ribbon::RibbonLineEdit::~RibbonLineEdit() {
+Nedrysoft::Ribbon::RibbonSlider::~RibbonSlider() {
 }
 
-void Nedrysoft::Ribbon::RibbonLineEdit::updateStyleSheet(bool isDarkMode) {
+void Nedrysoft::Ribbon::RibbonSlider::updateStyleSheet(bool isDarkMode) {
     QString styleSheet(ThemeStylesheet);
+
+    styleSheet.replace("[theme]", isDarkMode ? "dark" : "light");
 
     if (isDarkMode) {
         styleSheet.replace("[background-colour]", "#434343");
-        styleSheet.replace("[border-colour]", "none");
     } else {
-        styleSheet.replace("[background-colour]", "#ffffff");
-        styleSheet.replace("[border-colour]", "#B9B9B9");
+        styleSheet.replace("[background-colour]", "#c8c9c8");
     }
 
     setStyleSheet(styleSheet);

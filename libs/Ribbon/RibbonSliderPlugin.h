@@ -17,17 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef NEDRYSOFT_RIBBONDROPBUTTONPLUGIN_H
-#define NEDRYSOFT_RIBBONDROPBUTTONPLUGIN_H
+#ifndef NEDRYSOFT_RIBBONSLIDERPLUGIN_H
+#define NEDRYSOFT_RIBBONSLIDERPLUGIN_H
 
 #include <QtUiPlugin/QDesignerCustomWidgetInterface>
 
 /**
- * @brief       Ribbon Bar Drop down menu button
+ * @brief       Ribbon Bar SLIDER Plugin
  *
- * @details     Creates instances of the ribbon styled PushButton with drop menu
+ * @details     Creates instances of the ribbon styled SLIDER
  */
-class RibbonDropButtonPlugin :
+class RibbonSliderPlugin :
     public QObject,
     public QDesignerCustomWidgetInterface {
         private:
@@ -37,11 +37,11 @@ class RibbonDropButtonPlugin :
 
         public:
             /**
-             * @brief       Constructs a factory capable of creating RibbonGroup instances
+             * @brief       Constructs a factory capable of creating RibbonSLIDER instances
              *
              * @param[in]   parent is the owner of the factory
              */
-            explicit RibbonDropButtonPlugin(QObject *parent = nullptr);
+            explicit RibbonSliderPlugin(QObject *parent = nullptr);
 
             /**
              * @brief       Returns whether this factory is a container of other widgets
@@ -123,4 +123,4 @@ class RibbonDropButtonPlugin :
             bool m_initialized = false;                         //! holds whether designer has initialised the factory yet
 };
 
-#endif // NEDRYSOFT_RIBBONDROPBUTTONPLUGIN_H
+#endif // NEDRYSOFT_RIBBONSLIDERPLUGIN_H

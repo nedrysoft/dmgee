@@ -27,8 +27,15 @@
 #include <QPainter>
 #include <QWindow>
 
+constexpr auto ThemeStylesheet = R"(
+    QTabBar::tab {
+        padding: 18px
+    }
+)";
+
 Nedrysoft::Ribbon::RibbonTabBar::RibbonTabBar(QWidget *parent) :
-        QTabBar(parent) {
+        QTabBar(parent),
+        m_themeSupport(new Nedrysoft::Utils::ThemeSupport) {
 
     auto fontManager = Nedrysoft::Ribbon::RibbonFontManager::getInstance();
 
@@ -36,7 +43,11 @@ Nedrysoft::Ribbon::RibbonTabBar::RibbonTabBar(QWidget *parent) :
     m_selectedFont = QFont(fontManager->boldFont(), DefaultFontSize, QFont::Bold);
     m_mouseInWidget = false;
 
-    setStyleSheet("QTabBar::tab{padding: 18px}");
+    connect(m_themeSupport, &Nedrysoft::Utils::ThemeSupport::themeChanged, [=](bool isDarkMode) {
+        updateStyleSheet(isDarkMode);
+    });
+
+    updateStyleSheet(Nedrysoft::Utils::ThemeSupport::isDarkMode());
 
 #if defined(Q_OS_UNIX)
     setMouseTracking(true);
@@ -160,4 +171,10 @@ void Nedrysoft::Ribbon::RibbonTabBar::paintEvent(QPaintEvent *event) {
     }
 
     painter.restore();
+}
+
+void Nedrysoft::Ribbon::RibbonTabBar::updateStyleSheet(bool isDarkMode) {
+    QString styleSheet(ThemeStylesheet);
+
+    setStyleSheet(styleSheet);
 }

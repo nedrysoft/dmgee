@@ -43,6 +43,18 @@ set(library_SOURCES
     RibbonLineEdit.h
     RibbonLineEditPlugin.cpp
     RibbonLineEditPlugin.h
+    RibbonComboBox.cpp
+    RibbonComboBox.h
+    RibbonComboBoxPlugin.cpp
+    RibbonComboBoxPlugin.h
+    RibbonCheckBox.cpp
+    RibbonCheckBox.h
+    RibbonCheckBoxPlugin.cpp
+    RibbonCheckBoxPlugin.h
+    RibbonSlider.cpp
+    RibbonSlider.h
+    RibbonSliderPlugin.cpp
+    RibbonSliderPlugin.h
     RibbonSpec.h
 )
 

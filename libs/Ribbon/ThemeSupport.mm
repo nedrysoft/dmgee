@@ -20,7 +20,11 @@
 #include "ThemeSupport.h"
 #import <Foundation/Foundation.h>
 #import <AppKit/NSAppearance.h>
+#import <AppKit/NSColor.h>
 #include <QApplication>
+#include <QDebug>
+#include <QStyle>
+#include <CoreGraphics/CGColor.h>
 
 Nedrysoft::Utils::ThemeSupport::ThemeSupport() {
     connect(qobject_cast<QApplication *>(QCoreApplication::instance()), &QApplication::paletteChanged, [=] (const QPalette &) {
@@ -46,4 +50,16 @@ bool Nedrysoft::Utils::ThemeSupport::isDarkMode()
 
 QColor Nedrysoft::Utils::ThemeSupport::getColor(const QRgb colourPair[]) {
     return QColor(colourPair[isDarkMode() ? 1 : 0]);
+}
+
+QColor Nedrysoft::Utils::ThemeSupport::getHighlightedBackground() {
+#if defined(Q_OS_MACOS)
+    CGColorRef a = [NSColor systemBlueColor].CGColor;
+
+    const CGFloat *color = CGColorGetComponents(a);
+
+    return QColor::fromRgbF(color[0], color[1], color[2]);
+#else
+    return qobject_cast<QApplication *>(QCoreApplication::instance())->style()->standardPalette().color(QPalette::Highlight);
+#endif
 }
