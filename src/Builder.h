@@ -31,8 +31,8 @@
 
 namespace Nedrysoft {
     /**
-     * @brief       The builder class provides the serialisation of the configuration to/from TOML files and also
-     *              uses the configuration to generate the DMG file
+     * @brief       The Builder class is capable of loading and saving configurations, it also provides the function
+     *              to create the DMG based on the current configuration.
      */
     class Builder :
         public QObject {
@@ -97,20 +97,20 @@ namespace Nedrysoft {
 
             public:
                 /**
-                 * @brief       Uses the dmgbuild python module + configuration file to being a DMG
+                 * @brief       Uses the dmgbuild python module + configuration file to being a DMG.
                  *
-                 * @param[in]   outputFilename is optionally the name of the file to create
+                 * @param[in]   outputFilename the output name of the file to create (or empty to use the value in the configuration).
                  *
-                 * @returns     true on success; otherwise false
+                 * @returns     true on success; otherwise false.
                  */
                 bool createDMG(QString outputFilename=QString());
 
                 /**
-                 * @brief       Loads a configuration from disk into the m_configuration member
+                 * @brief       Loads a configuration from a file.
                  *
-                 * @param[in]   filename is the name of the configuration to load
+                 * @param[in]   filename the name of the configuration to load.
                  *
-                 * @returns     true if the configuration loaded without error; otherwise false
+                 * @returns     true if loaded without error; otherwise false.
                  */
                 bool loadConfiguration(const QString& filename);
 

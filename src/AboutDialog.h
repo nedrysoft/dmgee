@@ -27,9 +27,7 @@
 
 namespace Nedrysoft {
     /**
-     * @brief               AboutDialog class
-     *
-     * @details             A dialog box that shows details about the application.
+     * @brief       The AboutDialog dialog provides information about the application.
      */
     class AboutDialog :
         public QDialog {
@@ -38,44 +36,45 @@ namespace Nedrysoft {
 
             public:
                 /**
-                 * @brief           Constructs an about dialog.
+                 * @brief       Constructs a new AboutDialog instance which is a child of the parent.
                  *
-                 * @param[in]       parent is the the owner of the dialog.
+                 * @param[in]   parent the owner widget.
                  */
                 explicit AboutDialog(QWidget *parent = nullptr);
 
                 /**
-                 * @brief           Destroys the dialog.
+                 * @brief       Destroys the AboutDialog.
                  */
                 ~AboutDialog() override = default;
 
             protected:
                 /**
-                 * @brief           Handles events for the dialog box.
+                 * @brief           Reimplements: QObject::event(QEvent *e).
                  *
                  * @details         To allow the dialog box to be dismissed easily, event processing at a more
                  *                  granular level needs to occur.
                  *
                  * @param[in]       event contains information about the event being processed.
+                 *
                  * @returns         true if the event was handled; otherwise, false.
                  */
                 bool event(QEvent *event) override;
 
                 /**
-                 * @brief           Handles focus out events.
+                 * @brief           Reimplements: QWidget::focusOutEvent(QFocusEvent *event).
                  *
-                 * @details         If the about dialog loses focus, this function is called to dismiss the dialog.
+                 * @details         If the AboutDialog loses focus this function is called to dismiss the dialog.
                  *
                  * @param[in]       event contains information about the focus event.
                  */
                 void focusOutEvent(QFocusEvent *event) override;
 
                 /**
-                 * @brief           Renders the dialog.
+                 * @brief       Reimplements: QWidget::paintEvent(QPaintEvent *event).
                  *
-                 * @details         Calls QDialog::paintEvent and then draws version information over the top in the correct place.
+                 * @details     Overrides the default paintEvent and draws version information over the top in the correct place.
                  *
-                 * @param[in]       event contains information about the paint event.
+                 * @param[in]   event contains information for painting this widget
                  */
                 void paintEvent(QPaintEvent *paintEvent) override;
 

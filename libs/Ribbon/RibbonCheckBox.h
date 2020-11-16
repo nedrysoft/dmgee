@@ -37,7 +37,7 @@ namespace Nedrysoft::Ribbon {
 
         public:
             /**
-             * @brief       Constructs a mew RibbonCheckBox instance which is a child of the parent.
+             * @brief       Constructs a new RibbonCheckBox instance which is a child of the parent.
              *
              * @param[in]   parent the owner widget.
              */

@@ -35,9 +35,7 @@ namespace Ui {
 
 namespace Nedrysoft {
     /**
-     * @brief               The MainWindow class
-     *
-     * @details             Provides the main window for the application.
+     * @brief       The MainWindow class is the main application window.
      */
     class MainWindow :
         public QMainWindow {
@@ -46,34 +44,39 @@ namespace Nedrysoft {
 
             private:
                 /**
-                 * @brief           Constructs the main window.
+                 * @brief       Constructs a new AboutDialog instance which is a child of the parent.
+                 *
+                 * @note        The constructor is private as MainWindow is a singleton class, to obtain the MainWindow
+                 *              use the getInstance() function.
                  */
                 explicit MainWindow();
 
                 /**
-                 * @brief           Destroys the main window.
+                 * @brief       Destroys the MainWindow.
                  */
                 ~MainWindow() override;
 
             public:
                 /**
-                 * @brief           Handles opening links via URL.
+                 * @brief           Opens the url.
                  *
-                 * @param[in]       url is the requested url.
+                 * @param[in]       url the url to open.
                  */
                 void handleOpenByUrl(const QUrl &url);
 
                 /**
-                 * @brief           Returns the last instance of the class
+                 * @brief           Returns the instance of the MainWindow class.
                  *
-                 * @returns         a pointer to the MainWindow instance.
+                 * @returns         the MainWindow instance.
                  */
                 static MainWindow *getInstance();
 
                 /**
-                 * @brief           Loads the given configuration
+                 * @brief           Loads the given configuration.
                  *
-                 * @param[in]       filename is the name of the TOML format configuration to load
+                 * @note            The configuration is stored in TOML format.å
+                 *
+                 * @param[in]       filename the name of configuration file.
                  *
                  * @returns         true if loaded ok; otherwise false.
                  */
@@ -81,28 +84,24 @@ namespace Nedrysoft {
 
             protected:
                 /**
-                 * @brief           Event handler for window close event
+                 * @brief           Reimplements: QWidget::closeEvent(QCloseEvent *event).
                  *
-                 * @param[in]       closeEvent contains the information about the event including accept/reject functions
+                 * @param[in]       closeEvent contains information about the close event.
                  */
                 void closeEvent(QCloseEvent *closeEvent) override;
 
                 /**
-                 * @brief           Event filter method
+                 * @brief       Reimplements: QObject::eventFilter(QObject *watched, QEvent *event).
                  *
-                 * @details         This event filter is using qApp as a target, this allows us to receive events from the
-                 *                  operating system such as opening registered file types or handling the regex101:// URL
-                 *                  scheme.
+                 * @param[in]   watched the object that caused the event.
+                 * @param[in]   event the event information.
                  *
-                 * @param[in]       obj is the object that has caused this event
-                 * @param[in]       event contains the details of the event, such as file name or the url path.
-                 *
-                 * @returns         true if the event is handled; otherwise false.
+                 * @returns     true if event was handled, otherwise false.
                  */
-                Q_SLOT bool eventFilter(QObject *obj, QEvent *event) override;
+                Q_SLOT bool eventFilter(QObject *watched, QEvent *event) override;
 
                 /**
-                 * @brief           Processes the DMG background image with open cv
+                 * @brief           Processes the DMG background image with opencv.
                  *
                  * @details         Attempts to locate points of interest in the image which should be considered
                  *                  as snap points.
@@ -110,7 +109,10 @@ namespace Nedrysoft {
                 void processBackground();
 
                 /**
-                 * @brief           Loads the pixmap from the configuration and sets the preview image & feature detection image
+                 * @brief           Loads the pixmap as specified in the configuration.
+                 *
+                 * @details         When the file is changed this function is called to re-load the image, after loading
+                 *                  it sets the preview image and runs the feature detection (if enabled).
                  */
                 void updatePixmap();
 
@@ -118,20 +120,20 @@ namespace Nedrysoft {
                  * @brief           Returns the named value from the configuration, if the key does not exist then the function
                  *                  will return the supplied default value.
                  *
-                 * @param[in]       valueName is the configuration key to retrieve the value for
-                 * @param[in]       defaultValue is the value to be returned if the key was not found
+                 * @param[in]       valueName the configuration key to retrieve the value for.
+                 * @param[in]       defaultValue the value to be returned if the key was not found.
                  *
-                 * @returns         A QVariant containing the value or default value of the key
+                 * @returns         A QVariant containing the value or default value of the key.
                  */
                 QVariant configValue(const QString& valueName, QVariant defaultValue);
 
                 /**
-                 * @brief           Sets a value in the configuration
+                 * @brief           Sets a value in the configuration.
                  *
-                 * @param[in]       valueName is the configuration key to set the value for
-                 * @param[in]       value is the value for the given key
+                 * @param[in]       valueName the configuration key to set the value for.
+                 * @param[in]       value the value for the given key,
                  *
-                 * @returns         true if successfully set; otherwise false
+                 * @returns         true if set; otherwise false.
                  */
                 bool setConfigValue(const QString& valueName, QVariant value);
 

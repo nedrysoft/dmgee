@@ -29,21 +29,23 @@
 
 namespace Nedrysoft {
     /**
-     * @brief       A pixmap graphics item that provides a function to allow a custom snapping function to be used
+     * @brief       The SnappedGraphicsPixmapItem graphics item provides a snappable pixmap object to the canvas.
+     *
+     * @details     A pixmap graphics item that provides a function to allow a custom snapping function to be used
      *              to snap the centre point to a point of interest (centroid of feature or grid point)
      */
     class SnappedGraphicsPixmapItem :
             public QGraphicsPixmapItem {
         public:
             /**
-             * @brief       Constructs a graphics item with the given snapping function
+             * @brief       Constructs a new SnappedGraphicsPixmapItem instance with a snap function.
              *
-             * @param[in]   snapFunction is the function to be used to snap the centre point to.
+             * @param[in]   snapFunction the function used to provide snapping.
              */
             SnappedGraphicsPixmapItem(std::function<QPoint (const QPoint &point)> snapFunction);
 
             /**
-             * @brief       Constructs a graphics item without a snapping function
+             * @brief       Constructs a new SnappedGraphicsPixmapItem instance without a snap function.
              */
             SnappedGraphicsPixmapItem();
 
@@ -52,16 +54,15 @@ namespace Nedrysoft {
              * @brief      Overloaded function called when the item is changed, currently used to track positional
              *             changes of the object to allow the supplied snapping function to be used.
              *
-             * @param[in]  change is the type of item change
-             * @param[in]  value is the value relating to the item change event
+             * @param[in]  change the type of item change
+             * @param[in]  value the value relating to the item change event
              *
-             * @returns    The modified value if changed; otherwise a copy of the original value
+             * @returns    the modified value if changed; otherwise a copy of the original value
              */
             virtual QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value) override;
 
             /**
-             * @brief       Called when the context menu is requested, displays a popup menu to allow the user to
-             *              perform an action
+             * @brief       Reimplements: QGraphicsItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event).
              *
              * @param[in]   event contains information about the context event.
              */
@@ -69,9 +70,9 @@ namespace Nedrysoft {
 
         public:
             /**
-             * @brief       Returns the user type of this graphics item
+             * @brief       Returns the user type of this graphics item.
              *
-             * @return      the type of the item
+             * @return      the type of the item.
              */
             virtual int type() const override;
 

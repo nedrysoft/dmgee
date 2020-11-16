@@ -30,89 +30,99 @@
 
 namespace Nedrysoft {
     /**
-     * @brief       Represents an image and provides multiple representations of it as cairo, opencv and ImGui texture
-     *              to access it.
+     * @brief       The Image class represents an image.
+     *
+     * @details     The loaded image is encapsulated in this class and the class provides different views of the image
+     *              that are used by different parts of the application, currently the class provides access to the
+     *              image as QImage, opencv::mat and a raw data image.
      */
     class Image {
         public:
             /**
-             * @brief       constructs an Image object
+             * @brief       Constructs a new Image instance.
              */
             explicit Image();
 
             /**
-             * @brief       constructs an Image object
+             * @brief       Constructs a new Image instance with the given parameters.
              *
-             * @param[in]   filename is the file to be loaded
-             * @param[in]   loadContent true if loading an actual image; otherwise false if getting the icon for the file
-             * @param[in]   height of the requested image if loadContent is false; otherwise ignored.
-             * @param[in]   width of the requested image if loadContent is false; otherwise ignored.
+             * @note        When requesting a thumbnail, the height and width paremeters are used as a hint as to
+             *              the size of the image that is needed.
              *
+             * @param[in]   filename the file to be loaded
+             * @param[in]   loadContent true if loading an actual image; otherwise false to query the OS to get a thumbnail of the file.
+             * @param[in]   height the requested image height if loadContent is false; otherwise ignored.
+             * @param[in]   width the requested image width if loadContent is false; otherwise ignored.
              */
             explicit Image(QString filename, bool loadContent=true, int width=0, int height=0);
 
             /**
-             * @brief       destroys the Image object
-             *
+             * @brief       Destroys the Image.
              */
             ~Image();
 
             /**
-             * @brief       returns the width of the Image
+             * @brief       Returns the width of the Image.
              *
              * @note        the width of the image may differ from the number of bytes per row, this may depend on the underlying
              *              type of image due to memory optimisations.
              *
-             * @return      the width of the image
+             * @returns     the width of the image.
              */
             float width() const;
 
             /**
-             * @brief       returns the height of the Image
+             * @brief       Returns the height of the Image.
              *
-             * @return      the height of the image
+             * @returns     the height of the image.
              */
             float height() const;
 
             /**
-             * @brief       returns the stride of the image (may differ from width*components for optimisation)
+             * @brief       Returns the stride of the image.
              *
-             * @return      the height of the image
+             * @note        The stride is the number of bytes per row, due to optimisations this may differ from what
+             *              is expected.  Do not assume that stride=width*components.
+             *
+             * @returns     the height of the image.
              */
             float stride() const;
 
             /**
-             * @brief       returns the stride of the image (may differ from width*components for optimisation)
+             * @brief       Returns a pointer to the raw image data.
              *
-             * @return      the height of the image
+             * @returns     the raw image pointer.
              */
             char *data();
 
             /**
-             * @brief       returns the image as a opencv image
+             * @brief       Returns the image as a opencv mat.
              *
-             * @return      the image mat
+             * @return      the opencv mat.
              */
             cv::Mat mat();
 
             /**
-             * @brief       returns a QImage of the image data
+             * @brief       Returns the image as a QImage.
              *
-             * @return      the image
+             * @returns     the image.
              */
-             QImage image();
+            QImage image();
 
             /**
-             * @brief       returns the raw image as a byte array
+             * @brief       Returns the raw image as QByteArray.
              *
-             * @return      the bytearray containing the pixel data
+             * @returns     the raw image data in a QByteArray.
              */
             QByteArray rawData();
 
             /**
-             * @brief       returns whether the image is valid
+             * @brief       Returns whether the image is valid.
              *
-             * @return      true if valid; otherwise false
+             * @note        After loading an image you should always check that the image is valid, reasons for it being
+             *              invalid are unsupported image formats or a corrupted file.
+             *
+             * @returns     true if valid; otherwise false.
              */
             bool isValid() const;
 

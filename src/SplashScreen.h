@@ -26,10 +26,8 @@
 
 namespace Nedrysoft {
     /**
-     * @brief               RegExSplashScreen class
-     *
-     * @details             A dialog box that provides a custom splash screen.
-     */
+    * @brief       The SplashScreen dialog for the application.
+    */
     class SplashScreen :
         public QSplashScreen {
             private:
@@ -37,41 +35,44 @@ namespace Nedrysoft {
 
             private:
                 /**
-                 * @brief           Constructs a splash screen dialog.
+                 * @brief       Constructs a new SplashScreen instance.
+                 *
+                 * @note        The constructor is private as SplashScreen is a singleton class, to obtain the SplashScreen
+                 *              use the getInstance() function.
                  */
                 SplashScreen();
 
                 /**
-                 * @brief           Destructor for the splash screen dialog.
+                 * @brief       Destroys the SplashScreen.
                  */
                 ~SplashScreen() override;
 
                 /**
-                 * @brief`          Delete the copy constructor
+                 * @brief       Delete the copy constructor
                  */
                 SplashScreen(const SplashScreen&) = delete;
 
                 /**
-                 * @brief`          Delete the copy constructor
+                 * @brief       Delete the copy constructor
                  */
                 SplashScreen& operator=(const SplashScreen&) = delete;
 
             public:
                 /**
-                 * @brief           Get the splash screen singleton
+                 * @brief           Returns the instance of the SplashScreen class.
                  *
-                 * @return          The splash screen instance
+                 * @returns         the SplashScreen instance.
                  */
                 static SplashScreen *getInstance();
 
             protected:
                 /**
-                 * @brief           Draw contents of splash screen
+                 * @brief           Draw the contents of splash screen
                  *
                  * @details         Draws the splash screen, uses the default implementation and then overlays version
-                 *                  information over the top
+                 *                  information over the top.
                  *
-                 * @param[in]       painter is the painter to draw to.
+                 * @param[in]       painter the painter to draw to.
                  */
                 void drawContents(QPainter *painter) override;
     };

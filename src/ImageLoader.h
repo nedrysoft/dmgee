@@ -26,13 +26,15 @@
 
  namespace Nedrysoft {
      /**
-      * @brief      Provides functions for loading images natively on macOS, it uses NSImage to load the image
-      *             or to obtain the image from a given filename or type (i.e the Applications folder image)
+      * @brief      The ImageLoader class is a macOS native image loader.
+      *
+      * @details    Provides functions for loading images natively on macOS, it uses NSImage to load the image
+      *             or to obtain the thumbnail image for a given filename or type (i.e the Applications folder image).
       */
      class ImageLoader {
          public:
              /**
-             * @brief       loads an image via NSImage and returns a TIFF
+             * @brief       Loads an image via NSImage and returns a TIFF
              *
              * @details     NSImage is able to load various image types, due to a bug in the DevIL library that causes it to
              *              crash when loading a .icns file, we use this class as a first stage image loader.
@@ -40,20 +42,20 @@
              *              If the image is loaded, then a tiff representation of the image is returned in the data parameter,
              *              ownership of the data is passed to the caller and they are responsible for freeing the allocated memory.
              *
-             * @param[in]   filename is the file to be loaded
-             * @param[out]  data is the binary data containing the TIFF image
-             * @param[out]  length is the size of the TIFF image in bytes
+             * @param[in]   filename the file to be loaded
+             * @param[out]  data the binary data containing the TIFF image
+             * @param[out]  length the size of the TIFF image in bytes
              *
              * @returns     true if the image was loaded successfully; otherwise false.
              */
              static bool load(QString &filename, char **data, unsigned int *length);
 
              /**
-             * @brief       returns a TIFF image of the files icon
+             * @brief       Returns a TIFF image of the files icon.
              *
-             * @param[in]   filename is the file whose icon is to be retrieved
-             * @param[out]  data is the binary data containing the TIFF image
-             * @param[out]  length is the size of the TIFF image in bytes
+             * @param[in]   filename the file whose icon is to be retrieved
+             * @param[out]  data the binary data containing the TIFF image
+             * @param[out]  length the size of the TIFF image in bytes
              * @param[in]   width the requested width of the image (images may have multiple sizes inside)
              * @param[in]   height the requested height of the image (images may have multiple sizes inside)
              *

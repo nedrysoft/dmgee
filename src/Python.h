@@ -33,7 +33,10 @@
 
 namespace Nedrysoft {
     /**
-     * @brief       Convenience class for executing python code using libpython
+     * @brief       The Python class provides a wrapper for loading and executing a python script.
+     *
+     * @details     The application embeds the complete python runtime so that the user is not dependant on having
+     *              the correct python version installed with the necessary modules.
      */
     class Python :
         public QObject {
@@ -48,7 +51,7 @@ namespace Nedrysoft {
 
             public:
                 /**
-                 * @brief       Constructs a python instance
+                 * @brief       Constructs a new Python instance.
                  *
                  * @note        The python instance is bound to the thread that constructed it, do not call any other functions
                  *              from a different thread as this will result in crash.
@@ -56,46 +59,43 @@ namespace Nedrysoft {
                 Python();
 
                 /**
-                 * @brief       Destroys a python instance
-                 *
-                 * @param[in]   argc is the argument count passed into main()
-                 * @param[in]   argv is the argument vector passed into main()
+                 * @brief       Destroys the Python.
                  */
                 ~Python();
 
                 /**
                  * @brief       Loads the script from disk and then executes it.
                  *
-                 * @note        Python script is executed in a separate thread as to not block the UI, the object will
+                 * @note        The python script is executed in a separate thread as to not block the UI, the object will
                  *              emit the finished signal with an error code once the script has finished.
                  *
-                 * @param[in]   filename is the path to the script to execute
+                 * @param[in]   filename is the path to the script to execute.
                  */
                 void run(QString &filename);
 
                 /**
                  * @brief       Runs the given script source
                  *
-                 * @note        Python script is executed in a separate thread as to not block the UI, the object will
+                 * @note        The python script is executed in a separate thread as to not block the UI, the object will
                  *              emit the finished signal with an error code once the script has finished.
                  *
-                 * @param[in]   script is the python script to execute.
-                 * @param[in]   locals is an object that contain local variables exposed to python
+                 * @param[in]   script the python script to execute.
+                 * @param[in]   locals the python object (Dict) that contains local variables that can be accessed from python.
                  */
                 void runScript(const QString &script, PyObject *locals);
 
                 /**
-                 * @brief       Inserts paths to local python modules to override system libraries
+                 * @brief       Inserts paths to local python modules to override system libraries.
                  *
-                 * @param[in]   modulePaths is a list of paths to insert
+                 * @param[in]   modulePaths the list of paths to insert.
                  */
                 void addModulePaths(QStringList modulePaths);
 
             public:
                 /**
-                 * @brief       Emitted when the thread has finished running
+                 * @brief       This signal is emitted when the python script has completed.
                  *
-                 * @param[in]   result is 0 if no error occurred; otherwise it indicates an error occured.
+                 * @param[in]   result zero if no error occurred; otherwise it indicates an error occured.
                  * @param[in]   pythonResult is the error code from python if applicable.
                  */
                 Q_SIGNAL void finished(int result, int pythonResult);

@@ -26,26 +26,26 @@
 
 namespace Nedrysoft {
     /**
-     * @brief       Provides methods to get the system font.
+     * @brief       The Font class provides access to the system font
      *
-     * @details     used by the application to determine the UI font in macOS so that text can be drawn over
-     *              the background image to show the filename on icons in the preview window
+     * @details     Font provides the the application with a means to determine the UI font in macOS.  This is required
+     *              so that text can be drawn over the background image to show the filename on icons in the preview window.
      */
     class Font {
         public:
             /**
-             * @brief       Gets the name of the font used in the GUI of macOS
+             * @brief       Returns the name of the font used in the GUI of macOS.
              *
-             * @return      The name of the system font.
+             * @returns     the name of the system font.
              */
             static QString systemFontName();
 
             /**
-             * @brief       For the given font, this method returns the path where the font is stored.
+             * @brief       Returns the path of the font specified by fontName.
              *
-             * @param[in]   fontName is the name of the font to find
+             * @param[in]   fontName is the name of the font to find.
              *
-             * @return      the path to the font if found; otherwise an empty string
+             * @returns     the path to the font if found; otherwise an empty string.
              */
             static QString getFilename(const QString &fontName);
     };

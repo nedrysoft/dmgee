@@ -38,7 +38,7 @@ class RibbonLineEditPlugin :
 
         public:
             /**
-             * @brief       Constructs a mew RibbonLineEditPlugin instance which is a child of the parent.
+             * @brief       Constructs a new RibbonLineEditPlugin instance which is a child of the parent.
              *
              * @param[in]   parent the owner object.
              */

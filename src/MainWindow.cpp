@@ -238,7 +238,7 @@ void Nedrysoft::MainWindow::handleOpenByUrl(const QUrl &url) {
     Q_UNUSED(url);
 }
 
-bool Nedrysoft::MainWindow::eventFilter(QObject *obj, QEvent *event) {
+bool Nedrysoft::MainWindow::eventFilter(QObject *watched, QEvent *event) {
     if (event->type()==QEvent::FileOpen) {
         auto fileOpenEvent = dynamic_cast<QFileOpenEvent *>(event);
 
@@ -251,7 +251,7 @@ bool Nedrysoft::MainWindow::eventFilter(QObject *obj, QEvent *event) {
         return false;
     }
 
-    return QObject::eventFilter(obj, event);
+    return QObject::eventFilter(watched, event);
 }
 
 void Nedrysoft::MainWindow::closeEvent(QCloseEvent *closeEvent) {

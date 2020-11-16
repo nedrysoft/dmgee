@@ -33,7 +33,8 @@
 
 namespace Nedrysoft {
     /**
-     * @brief       Widget that draws a preview of the DMG (including snap targets)
+     * @brief       The PreviewWidget class draws a preview of the DMG, it includes overlays such as the actual icons
+     *              of the application or shortcut and also detected feature locations and grid.
      */
     class PreviewWidget :
         public QWidget {
@@ -55,68 +56,68 @@ namespace Nedrysoft {
 
             public:
                 /**
-                 * @brief           Constructs a preview widget.
+                 * @brief       Constructs a new PreviewWidget instance which is a child of the parent.
                  *
-                 * @param[in]       parent is the the owner of the dialog.
+                 * @param[in]   parent the owner widget.
                  */
                 explicit PreviewWidget(QWidget *parent = nullptr);
 
                 /**
-                 * @brief           Sets the background pixmap to be used
+                 * @brief       Sets the background pixmap to be displayed.
                  *
-                 * @param[in]       pixmap is the pixmap to be used as the background image
+                 * @param[in]   pixmap the background image pixmap.
                  */
                 void setPixmap(QPixmap &pixmap);
 
                 /**
-                 * @brief           Sets the snapping centroid locations
+                 * @brief       Sets the snapping centroid locations.
                  *
-                 * @param[in]       centroids list of snap points
+                 * @param[in]   centroids the list of snap points.
                  */
                 void setCentroids(QList<QPointF> &centroids);
 
                 /**
-                 * @brief           Clears the list of centroids
+                 * @brief       Clears the list of centroids.
                  */
                 void clearCentroids();
 
                 /**
-                 * @brief           Sets the grid for the widget
+                 * @brief       Sets the grid for the widget.
                  *
-                 * @param[in]       size is the pitch of the grid
-                 * @param[in]       visible true if grid shown; otherwise false.
-                 * @paramin]        snap true if cursor should snap to grid; otherwise false.
+                 * @param[in]   size the pitch of the grid.
+                 * @param[in]   visible true if grid shown; otherwise false.
+                 * @param[in]   snap true if cursor should snap to grid; otherwise false.
                  */
                 void setGrid(QSize size, bool visible, bool snap);
 
                 /**
-                 * @brief           Adds an icon to the DMG
+                 * @brief       Adds an icon to the DMG.
                  *
-                 * @param[in]       image the image to be displayed
-                 * @param[in]       point the initial location of the icon
-                 * @param[in]       iconType the type of icon being inserted
-                 * @param[in]       updateFunction is a function called when the icon is moved
+                 * @param[in]   image the image to be displayed.
+                 * @param[in]   point the initial location of the icon.
+                 * @param[in]   iconType the type of icon being inserted.
+                 * @param[in]   updateFunction the function to be called when the icon is moved.
                  */
                 void addIcon(Nedrysoft::Image *image, const QPoint &point, IconType iconType, std::function<void(QPoint &point)> updateFunction);
 
                 /**
-                 * @brief           Sets whether the icons for the application/applications shortcut are shown
+                 * @brief       Sets whether the icons for the application/applications shortcut are shown.
                  *
-                 * @param[in]       isVisible true if visible; otherwise false
+                 * @param[in]   isVisible true if visible; otherwise false.
                  */
                 void setIconsVisible(bool isVisible);
 
                 /**
-                 * @brief           Sets the size of the icons as they should appear in the DMG
+                 * @brief       Sets the size of the icons as they should appear in the DMG.
                  *
-                 * @param[in]       size in pixels of the icon (square)
+                 * @param[in]   size the width/height in pixels of the icon (square).
                  */
                 void setIconSize(int size);
 
                 /**
-                 * @brief           Sets the size of the text on the DMG
+                 * @brief       Sets the size of the text as ot should appear in the DMG.
                  *
-                 * @param[in]       size in points of the text
+                 * @param[in]   size the size of the text in points.
                  */
                 void setTextSize(int textSize);
 

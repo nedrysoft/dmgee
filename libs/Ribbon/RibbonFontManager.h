@@ -36,7 +36,7 @@ namespace Nedrysoft::Ribbon {
     class NEDRYSOFT_RIBBON_WIDGET_EXPORT RibbonFontManager {
         private:
             /**
-             * @brief       Constructs a mew RibbonFontManager.
+             * @brief       Constructs a new RibbonFontManager.
              */
             RibbonFontManager();
 

@@ -38,7 +38,7 @@ class RibbonCheckBoxPlugin :
 
         public:
             /**
-             * @brief       Constructs a mew RibbonCheckBoxPlugin instance which is a child of the parent.
+             * @brief       Constructs a new RibbonCheckBoxPlugin instance which is a child of the parent.
              *
              * @param[in]   parent the owner object.
              */

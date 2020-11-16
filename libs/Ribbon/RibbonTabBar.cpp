@@ -56,8 +56,8 @@ Nedrysoft::Ribbon::RibbonTabBar::RibbonTabBar(QWidget *parent) :
 #endif
 }
 
-bool Nedrysoft::Ribbon::RibbonTabBar::eventFilter(QObject *obj, QEvent *event) {
-    Q_UNUSED(obj)
+bool Nedrysoft::Ribbon::RibbonTabBar::eventFilter(QObject *watched, QEvent *event) {
+    Q_UNUSED(watched)
 
     static auto lastTabIndex = -1;
 

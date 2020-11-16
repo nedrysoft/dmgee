@@ -27,7 +27,7 @@
 
 namespace Nedrysoft::Utils {
     /**
-     * @brief       Theme support helper class.
+     * @brief       The ThemeSupport class provides helpers for handling dark/light themes.
      *
      * @details     Provides OS level support for theming, currently only supports macOS but is able to
      *              to detect whether the OS is in light or dark mode and also signal when the
@@ -40,7 +40,7 @@ namespace Nedrysoft::Utils {
 
         public:
             /**
-             * @brief       Constructs a mew ThemeSupport instance.
+             * @brief       Constructs a new ThemeSupport instance.
              */
             explicit ThemeSupport();
 

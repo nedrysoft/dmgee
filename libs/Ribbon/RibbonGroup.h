@@ -50,7 +50,7 @@ namespace Nedrysoft::Ribbon {
 
             public:
                 /**
-                 * @brief       Constructs a mew RibbonGroup which is a child of the parent.
+                 * @brief       Constructs a new RibbonGroup which is a child of the parent.
                  *
                  * @param[in]   parent the owner widget.
                  */

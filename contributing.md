@@ -222,7 +222,7 @@ class NEDRYSOFT_RIBBON_WIDGET_EXPORT RibbonTabBar :
             
         public:³
             /**
-             * @brief       Constructs a mew RibbonTabBar instance which is a child of the parent.
+             * @brief       Constructs a new RibbonTabBar instance which is a child of the parent.
              *
              * @param[in]   parent the owner widget.
              */

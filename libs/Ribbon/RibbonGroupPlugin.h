@@ -23,7 +23,7 @@
 #include <QtUiPlugin/QDesignerCustomWidgetInterface>
 
 /**
- * @brief       Ribbon Bar Group
+ * @brief       Ribbon bar group Qt Designer plugin.
  *
  * @details     Provides a group section of a RibbonBar, operations and tools are grouped logically.
  */

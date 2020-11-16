@@ -38,7 +38,7 @@ class RibbonComboBoxPlugin :
 
         public:
             /**
-             * @brief       Constructs a mew RibbonComboBoxPlugin instance which is a child of the parent.
+             * @brief       Constructs a new RibbonComboBoxPlugin instance which is a child of the parent.
              *
              * @param[in]   parent the owner object.
              */
