@@ -2,6 +2,14 @@
 
 /diː ɛm ʤiː/
 
+---
+
+![Example DMG](https://user-images.githubusercontent.com/55795671/99201460-ef6cc400-27a2-11eb-950b-b70f21b172a6.png)
+
+___
+
+## What is it?
+
 dmge² is a utility that can be used to design and and create DMG files for macOS applications quickly and easily.  It uses python internally to generate the DMG which gives excellent flexibility.
 
 It utiliises opencv to analyse the background image to try to locate the centre points of objects where it believes that an icon (either the application or a symlink to a folder) can be placed, by providing a background image with suitable visual information in, it makes creating a configuration as simple as a couple of clicks.
