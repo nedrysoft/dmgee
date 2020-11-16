@@ -25,7 +25,7 @@
 #include <QtUiPlugin/QDesignerCustomWidgetCollectionInterface>
 
 /**
- * @brief       Designer Collection plugin, provides a list of widgets that this plugin exposes to designer
+ * @brief       Designer Collection plugin, provides a list of widgets that this plugin exposes to designer.
  */
 class RibbonWidgetsCollection :
     public QObject,

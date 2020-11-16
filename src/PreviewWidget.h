@@ -43,7 +43,7 @@ namespace Nedrysoft {
 
             public:
                 /**
-                 * @brief           The types of objets that can appear in the graphics scene
+                 * @brief       The types of objets that can appear in the graphics scene
                  */
                 enum IconType {
                     Background,

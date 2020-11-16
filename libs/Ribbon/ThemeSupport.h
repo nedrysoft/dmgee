@@ -70,7 +70,7 @@ namespace Nedrysoft::Utils {
              *
              * @note        The array consists of 2 QRgb entries, one entry is for dark and the other for light mode.
              *
-             * @returns     the colour
+             * @returns     the colour.
              */
             static QColor getColor(const QRgb PushButtonColor[]);
 
@@ -78,7 +78,7 @@ namespace Nedrysoft::Utils {
              * @brief       Returns the highlighted text background color
              *
              * @note        Qt does not return the correct color when using QPalette, this function directly queries
-             *              the OS to discover the real highlighed background color
+             *              the macOS to discover the real highlighed background color.
              *
              * @returns     the colour
              */

@@ -107,7 +107,7 @@ namespace Nedrysoft::Ribbon {
             /**
              * @brief       This signal is emitted when the either the main or drop-down button has been clicked.
              *
-             * @param[in]   dropdown true if the drop-down section was clicked; otherwise false (main button section was clicked)
+             * @param[in]   dropdown true if the drop-down section was clicked; otherwise false (main button section was clicked).
              */
             Q_SIGNAL void clicked(bool dropdown);
 

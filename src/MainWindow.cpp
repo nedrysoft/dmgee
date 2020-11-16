@@ -254,8 +254,8 @@ bool Nedrysoft::MainWindow::eventFilter(QObject *watched, QEvent *event) {
     return QObject::eventFilter(watched, event);
 }
 
-void Nedrysoft::MainWindow::closeEvent(QCloseEvent *closeEvent) {
-    closeEvent->accept();
+void Nedrysoft::MainWindow::closeEvent(QCloseEvent *event) {
+    event->accept();
 }
 
 void Nedrysoft::MainWindow::processBackground()

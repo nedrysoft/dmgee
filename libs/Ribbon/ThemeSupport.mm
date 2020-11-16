@@ -35,9 +35,18 @@ Nedrysoft::Utils::ThemeSupport::ThemeSupport() {
 
 bool Nedrysoft::Utils::ThemeSupport::isDarkMode()
 {
-    if (@available(macOS 10.14, *)) {
-        NSAppearance *appearance = NSAppearance.currentAppearance;
+    NSAppearance *appearance = nullptr;
 
+    if (@available(macOS 11, *)) {
+        appearance = NSAppearance.currentDrawingAppearance;
+    } else if (@available(macOS 10.14, *)) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        appearance = NSAppearance.currentAppearance;
+#pragma clang diagnostic pop
+    }
+
+    if (appearance) {
         NSAppearanceName basicAppearance = [appearance bestMatchFromAppearancesWithNames:@[
             NSAppearanceNameAqua,
             NSAppearanceNameDarkAqua

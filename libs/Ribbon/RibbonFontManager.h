@@ -28,7 +28,7 @@
 
 namespace Nedrysoft::Ribbon {
     /**
-     * @brief           Ribbon Font Manager
+     * @brief           The RibbonFont manager provides access to the system UI font.
      *
      * @details         Singleton responsible for loading and returning the fonts used
      *                  by the ribbon control.  This class cannot be instantiated directly

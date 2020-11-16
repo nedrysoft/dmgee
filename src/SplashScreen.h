@@ -48,12 +48,12 @@ namespace Nedrysoft {
                 ~SplashScreen() override;
 
                 /**
-                 * @brief       Delete the copy constructor
+                 * @brief       Delete the copy constructor.
                  */
                 SplashScreen(const SplashScreen&) = delete;
 
                 /**
-                 * @brief       Delete the copy constructor
+                 * @brief       Delete the copy constructor.
                  */
                 SplashScreen& operator=(const SplashScreen&) = delete;
 
@@ -67,7 +67,7 @@ namespace Nedrysoft {
 
             protected:
                 /**
-                 * @brief           Draw the contents of splash screen
+                 * @brief           Draw the contents of splash screen.
                  *
                  * @details         Draws the splash screen, uses the default implementation and then overlays version
                  *                  information over the top.

@@ -74,7 +74,7 @@ namespace Nedrysoft {
                 /**
                  * @brief           Loads the given configuration.
                  *
-                 * @note            The configuration is stored in TOML format.å
+                 * @note            The configuration is stored in TOML format.
                  *
                  * @param[in]       filename the name of configuration file.
                  *
@@ -86,9 +86,9 @@ namespace Nedrysoft {
                 /**
                  * @brief           Reimplements: QWidget::closeEvent(QCloseEvent *event).
                  *
-                 * @param[in]       closeEvent contains information about the close event.
+                 * @param[in]       event the event information.
                  */
-                void closeEvent(QCloseEvent *closeEvent) override;
+                void closeEvent(QCloseEvent *event) override;
 
                 /**
                  * @brief       Reimplements: QObject::eventFilter(QObject *watched, QEvent *event).
@@ -101,39 +101,39 @@ namespace Nedrysoft {
                 Q_SLOT bool eventFilter(QObject *watched, QEvent *event) override;
 
                 /**
-                 * @brief           Processes the DMG background image with opencv.
+                 * @brief       Processes the DMG background image with opencv.
                  *
-                 * @details         Attempts to locate points of interest in the image which should be considered
-                 *                  as snap points.
+                 * @details     Attempts to locate points of interest in the image which should be considered
+                 *              as snap points.
                  */
                 void processBackground();
 
                 /**
-                 * @brief           Loads the pixmap as specified in the configuration.
+                 * @brief       Loads the pixmap as specified in the configuration.
                  *
-                 * @details         When the file is changed this function is called to re-load the image, after loading
-                 *                  it sets the preview image and runs the feature detection (if enabled).
+                 * @details     When the file is changed this function is called to re-load the image, after loading
+                 *              it sets the preview image and runs the feature detection (if enabled).
                  */
                 void updatePixmap();
 
                 /**
-                 * @brief           Returns the named value from the configuration, if the key does not exist then the function
-                 *                  will return the supplied default value.
+                 * @brief       Returns the named value from the configuration, if the key does not exist then the function
+                 *              will return the supplied default value.
                  *
-                 * @param[in]       valueName the configuration key to retrieve the value for.
-                 * @param[in]       defaultValue the value to be returned if the key was not found.
+                 * @param[in]   valueName the configuration key to retrieve the value for.
+                 * @param[in]   defaultValue the value to be returned if the key was not found.
                  *
-                 * @returns         A QVariant containing the value or default value of the key.
+                 * @returns     A QVariant containing the value or default value of the key.
                  */
                 QVariant configValue(const QString& valueName, QVariant defaultValue);
 
                 /**
-                 * @brief           Sets a value in the configuration.
+                 * @brief       Sets a value in the configuration.
                  *
-                 * @param[in]       valueName the configuration key to set the value for.
-                 * @param[in]       value the value for the given key,
+                 * @param[in]   valueName the configuration key to set the value for.
+                 * @param[in]   value the value for the given key,
                  *
-                 * @returns         true if set; otherwise false.
+                 * @returns     true if set; otherwise false.
                  */
                 bool setConfigValue(const QString& valueName, QVariant value);
 

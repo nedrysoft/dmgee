@@ -89,7 +89,7 @@ namespace Nedrysoft::Ribbon {
     static constexpr int GroupDividerMargin = 2;                                //! Width of the group divider
 
     /**
-     * @brief       The RibbonWidget widget provides the main Ribbon container..
+     * @brief       The RibbonWidget widget provides the main Ribbon container.
      *
      * @details     A RibbonWidget is the top level Ribbon control, a RibbonWidget consists of multiple pages
      *              of functional blocks, each functional block is then sub divided into logical groups (RibbonGroup) and
@@ -115,7 +115,7 @@ namespace Nedrysoft::Ribbon {
                 /**
                  * @brief       Reimplements: QWidget::paintEvent(QPaintEvent *event).
                  *
-                 * @param[in]   event contains information for painting this widget
+                 * @param[in]   event the event information.
                  */
                 void paintEvent(QPaintEvent *event) override;
 

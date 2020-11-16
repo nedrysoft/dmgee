@@ -74,7 +74,7 @@ namespace Nedrysoft {
                 void run(QString &filename);
 
                 /**
-                 * @brief       Runs the given script source
+                 * @brief       Runs the given script source.
                  *
                  * @note        The python script is executed in a separate thread as to not block the UI, the object will
                  *              emit the finished signal with an error code once the script has finished.

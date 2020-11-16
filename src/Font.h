@@ -26,7 +26,7 @@
 
 namespace Nedrysoft {
     /**
-     * @brief       The Font class provides access to the system font
+     * @brief       The Font class provides access to the system font.
      *
      * @details     Font provides the the application with a means to determine the UI font in macOS.  This is required
      *              so that text can be drawn over the background image to show the filename on icons in the preview window.

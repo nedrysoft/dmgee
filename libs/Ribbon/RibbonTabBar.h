@@ -30,7 +30,7 @@
 
 namespace Nedrysoft::Ribbon {
     /**
-     * @brief       The RibbonTabBar widget provides a ribbon stylised tabbar.
+     * @brief       The RibbonTabBar widget provides a ribbon stylised tab bar.
      *
      * @details     A TabBar widget that is styled to match the RibbonBar, the TabBar on a QTabWidget is replaced
      *              with an instance of this class.
@@ -52,7 +52,7 @@ namespace Nedrysoft::Ribbon {
                 /**
                  * @brief       Reimplements: QWidget::paintEvent(QPaintEvent *event).
                  *
-                 * @param[in]   event contains information for painting this widget
+                 * @param[in]   event the event information.
                  */
                 void paintEvent(QPaintEvent *event) override;
 

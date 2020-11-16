@@ -32,7 +32,7 @@ namespace Nedrysoft {
      * @brief       The SnappedGraphicsPixmapItem graphics item provides a snappable pixmap object to the canvas.
      *
      * @details     A pixmap graphics item that provides a function to allow a custom snapping function to be used
-     *              to snap the centre point to a point of interest (centroid of feature or grid point)
+     *              to snap the centre point to a point of interest (centroid of feature or grid point).
      */
     class SnappedGraphicsPixmapItem :
             public QGraphicsPixmapItem {
@@ -54,10 +54,10 @@ namespace Nedrysoft {
              * @brief      Overloaded function called when the item is changed, currently used to track positional
              *             changes of the object to allow the supplied snapping function to be used.
              *
-             * @param[in]  change the type of item change
-             * @param[in]  value the value relating to the item change event
+             * @param[in]  change the type of item change.
+             * @param[in]  value the value relating to the item change event.
              *
-             * @returns    the modified value if changed; otherwise a copy of the original value
+             * @returns    the modified value if changed; otherwise a copy of the original value.
              */
             virtual QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value) override;
 

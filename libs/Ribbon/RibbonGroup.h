@@ -79,7 +79,7 @@ namespace Nedrysoft::Ribbon {
                 /**
                  * @brief       Reimplements: QWidget::paintEvent(QPaintEvent *event).
                  *
-                 * @param[in]   event contains information for painting this widget
+                 * @param[in]   event the event information.
                  */
                 virtual void paintEvent(QPaintEvent *event) override;
 

@@ -49,23 +49,23 @@ namespace Nedrysoft {
 
             protected:
                 /**
-                 * @brief           Reimplements: QObject::event(QEvent *e).
+                 * @brief       Reimplements: QObject::event(QEvent *e).
                  *
-                 * @details         To allow the dialog box to be dismissed easily, event processing at a more
-                 *                  granular level needs to occur.
+                 * @details     To allow the dialog box to be dismissed easily, event processing at a more
+                 *              granular level needs to occur.
                  *
-                 * @param[in]       event contains information about the event being processed.
+                 * @param[in]   event contains information about the event being processed.
                  *
-                 * @returns         true if the event was handled; otherwise, false.
+                 * @returns     true if the event was handled; otherwise, false.
                  */
                 bool event(QEvent *event) override;
 
                 /**
-                 * @brief           Reimplements: QWidget::focusOutEvent(QFocusEvent *event).
+                 * @brief       Reimplements: QWidget::focusOutEvent(QFocusEvent *event).
                  *
-                 * @details         If the AboutDialog loses focus this function is called to dismiss the dialog.
+                 * @details     If the AboutDialog loses focus this function is called to dismiss the dialog.
                  *
-                 * @param[in]       event contains information about the focus event.
+                 * @param[in]   event the event information.
                  */
                 void focusOutEvent(QFocusEvent *event) override;
 
@@ -74,7 +74,7 @@ namespace Nedrysoft {
                  *
                  * @details     Overrides the default paintEvent and draws version information over the top in the correct place.
                  *
-                 * @param[in]   event contains information for painting this widget
+                 * @param[in]   event the event information.
                  */
                 void paintEvent(QPaintEvent *paintEvent) override;
 
