@@ -213,7 +213,7 @@ Nedrysoft::MainWindow::MainWindow() :
 
     // build controls
 
-    connect(ui->buildButton, &Nedrysoft::Ribbon::RibbonButton::clicked, [this]() {
+    connect(ui->buildButton, &Nedrysoft::Ribbon::RibbonPushButton::clicked, [this]() {
         m_builder->createDMG("~/Desktop/test.dmg");
     });
 }

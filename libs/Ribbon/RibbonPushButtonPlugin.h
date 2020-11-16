@@ -19,18 +19,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef NEDRYSOFT_RIBBONBUTTONPLUGIN_H
-#define NEDRYSOFT_RIBBONBUTTONPLUGIN_H
+#ifndef NEDRYSOFT_RIBBONPUSHBUTTONPLUGIN_H
+#define NEDRYSOFT_RIBBONPUSHBUTTONPLUGIN_H
 
 #include <QtUiPlugin/QDesignerCustomWidgetInterface>
 
 /**
  * @brief       Ribbon push button with label Qt Designer plugin.
  *
- * @details     Exposes the RibbonButton widget to Qt Designer, this class is responsible for creating instances of
+ * @details     Exposes the RibbonPushButton widget to Qt Designer, this class is responsible for creating instances of
  *              the widget and exposing properties and functions required for design.
  */
-class RibbonButtonPlugin :
+class RibbonPushButtonPlugin :
     public QObject,
     public QDesignerCustomWidgetInterface {
         private:
@@ -40,11 +40,11 @@ class RibbonButtonPlugin :
 
         public:
             /**
-             * @brief       Constructs a new RibbonButtonPlugin instance which is a child of the parent.
+             * @brief       Constructs a new RibbonPushButtonPlugin instance which is a child of the parent.
              *
              * @param[in]   parent the owner object.
              */
-            explicit RibbonButtonPlugin(QObject *parent = nullptr);
+            explicit RibbonPushButtonPlugin(QObject *parent = nullptr);
 
             /**
              * @brief       Returns true if the widget is intended to be used as a container; otherwise returns false.
@@ -110,7 +110,7 @@ class RibbonButtonPlugin :
             QString whatsThis() const override;
 
             /**
-             * @brief       Returns a new instance of the RibbonButton class, with the given parent.
+             * @brief       Returns a new instance of the RibbonPushButton class, with the given parent.
              *
              * @returns     the widget instance.
              */
@@ -125,4 +125,4 @@ class RibbonButtonPlugin :
             bool m_initialized = false;                         //! holds whether designer has initialised the factory yet
 };
 
-#endif // NEDRYSOFT_RIBBONBUTTONPLUGIN_H
+#endif // NEDRYSOFT_RIBBONPUSHBUTTONPLUGIN_H

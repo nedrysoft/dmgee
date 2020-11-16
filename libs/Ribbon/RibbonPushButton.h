@@ -19,8 +19,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef NEDRYSOFT_RIBBONBUTTON_H
-#define NEDRYSOFT_RIBBONBUTTON_H
+#ifndef NEDRYSOFT_RIBBONPUSHBUTTON_H
+#define NEDRYSOFT_RIBBONPUSHBUTTON_H
 
 #include "RibbonSpec.h"
 #include "ThemeSupport.h"
@@ -31,16 +31,16 @@
 #include <QWidget>
 
 namespace Nedrysoft::Ribbon {
-    constexpr auto RibbonButtonDefaultIconWidth = 32;
-    constexpr auto RibbonButtonDefaultIconHeight = 48;
-    constexpr auto RibbonButtonDefaultFontSize = 10;
+    constexpr auto RibbonPushButtonDefaultIconWidth = 32;
+    constexpr auto RibbonPushButtonDefaultIconHeight = 48;
+    constexpr auto RibbonPushButtonDefaultFontSize = 10;
 
     /**
-     * @brief       The RibbonButton widget provides a ribbon stylised push button with icon and optional text.
+     * @brief       The RibbonPushButton widget provides a ribbon stylised push button with icon and optional text.
      *
      * @details     A PushButton widget that is styled to match the RibbonBar.
      */
-    class NEDRYSOFT_RIBBON_WIDGET_EXPORT RibbonButton :
+    class NEDRYSOFT_RIBBON_WIDGET_EXPORT RibbonPushButton :
         public QWidget {
             Q_OBJECT
 
@@ -50,16 +50,16 @@ namespace Nedrysoft::Ribbon {
 
         public:
             /**
-             * @brief       Constructs a new RibbonButton instance which is a child of the parent.
+             * @brief       Constructs a new RibbonPushButton instance which is a child of the parent.
              *
              * @param[in]   parent the owner widget.
              */
-            explicit RibbonButton(QWidget *parent=nullptr);
+            explicit RibbonPushButton(QWidget *parent=nullptr);
 
             /**
-             * @brief       Destroys the RibbonButton.
+             * @brief       Destroys the RibbonPushButton.
              */
-            ~RibbonButton() override;
+            ~RibbonPushButton() override;
 
             /**
              * @brief       Returns the icon that is currently assigned to the main button.
@@ -99,7 +99,7 @@ namespace Nedrysoft::Ribbon {
             /**
              * @brief       Sets the text that is displayed under the main button.
              *
-             * @note        If the text is empty, then the RibbonButton modifies the layout so that the space
+             * @note        If the text is empty, then the RibbonPushButton modifies the layout so that the space
              *              that would contain the text is removed.
              *
              * @param[in]   text the text that is displayed under the main button.
@@ -134,4 +134,4 @@ namespace Nedrysoft::Ribbon {
     };
 }
 
-#endif //NEDRYSOFT_RIBBONBUTTON_H
+#endif //NEDRYSOFT_RIBBONPUSHBUTTON_H

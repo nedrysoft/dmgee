@@ -31,7 +31,7 @@ constexpr auto ConfigurationXML = R"(
                 <rect>
                     <x>0</x>
                     <y>0</y>
-                    width>100</width>
+                    <width>100</width>
                     <height>100</height>
                 </rect>
             </property>

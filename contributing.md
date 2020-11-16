@@ -66,10 +66,10 @@ If a file needs to be included at a specific location (i.e either the first incl
 All include files should have an include guard to prevent the file being included more than once.
 
 ```c++
-#ifndef NEDRYSOFT_RIBBONBUTTON_H
-#define NEDRYSOFT_RIBBONBUTTON_H
+#ifndef NEDRYSOFT_RIBBONPUSHBUTTON_H
+#define NEDRYSOFT_RIBBONPUSHBUTTON_H
 ...
-#endif // NEDRYSOFT_RIBBONBUTTON_H
+#endif // NEDRYSOFT_RIBBONPUSHBUTTON_H
 ```
 
 The format of an include guard should be as follows:
@@ -117,17 +117,17 @@ For constant values it is preferred that ```constexpr``` is used rather than ```
 *Good*
 
 ```c++
-constexpr auto RibbonButtonDefaultIconWidth = 32;
-constexpr auto RibbonButtonDefaultIconHeight = 48;
-constexpr auto RibbonButtonDefaultFontSize = 10;
+constexpr auto RibbonPushButtonDefaultIconWidth = 32;
+constexpr auto RibbonPushButtonDefaultIconHeight = 48;
+constexpr auto RibbonPushButtonDefaultFontSize = 10;
 ```
 
 *Bad*
 
 ```c++
-#define RibbonButtonDefaultIconWidth 32
-#define RibbonButtonDefaultIconHeight = 48
-#define RibbonButtonDefaultFontSize = 10;
+#define RibbonPushButtonDefaultIconWidth 32
+#define RibbonPushButtonDefaultIconHeight = 48
+#define RibbonPushButtonDefaultFontSize = 10;
 ```
 
 ### Comments

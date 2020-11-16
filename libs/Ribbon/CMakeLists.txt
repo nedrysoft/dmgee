@@ -26,38 +26,30 @@ set(NEDRYSOFT_LIBRARY_RIBBON_EXPORT)
 ADD_DEFINITIONS(-DQT_NO_KEYWORDS)
 
 set(library_SOURCES
-    ThemeSupport.mm
-    ThemeSupport.h
+    RibbonCheckBox.cpp
+    RibbonCheckBox.h
+    RibbonComboBox.cpp
+    RibbonComboBox.h
+    RibbonDropButton.cpp
+    RibbonDropButton.h
     RibbonFontManager.cpp
     RibbonFontManager.h
-    RibbonResources.qrc
     RibbonGroup.cpp
     RibbonGroup.h
+    RibbonLineEdit.cpp
+    RibbonLineEdit.h
+    RibbonPushButton.cpp
+    RibbonPushButton.h
+    RibbonResources.qrc
+    RibbonSlider.cpp
+    RibbonSlider.h
+    RibbonSpec.h
     RibbonTabBar.cpp
     RibbonTabBar.h
     RibbonWidget.cpp
     RibbonWidget.h
-    RibbonDropButton.cpp
-    RibbonDropButton.h
-    RibbonButton.cpp
-    RibbonButton.h
-    RibbonLineEdit.cpp
-    RibbonLineEdit.h
-    RibbonLineEditPlugin.cpp
-    RibbonLineEditPlugin.h
-    RibbonComboBox.cpp
-    RibbonComboBox.h
-    RibbonComboBoxPlugin.cpp
-    RibbonComboBoxPlugin.h
-    RibbonCheckBox.cpp
-    RibbonCheckBox.h
-    RibbonCheckBoxPlugin.cpp
-    RibbonCheckBoxPlugin.h
-    RibbonSlider.cpp
-    RibbonSlider.h
-    RibbonSliderPlugin.cpp
-    RibbonSliderPlugin.h
-    RibbonSpec.h
+    ThemeSupport.h
+    ThemeSupport.mm
 )
 
 add_library(${LIBRARY_NAME} SHARED
@@ -86,18 +78,22 @@ if(Build_RibbonDesignerPlugin)
 
     add_library(${PROJECT_NAME} SHARED
         ${library_SOURCES}
-        RibbonWidgetPlugin.cpp
-        RibbonWidgetPlugin.h
-        RibbonGroupPlugin.cpp
-        RibbonGroupPlugin.h
-        RibbonWidgetsCollection.cpp
-        RibbonWidgetsCollection.h
-        RibbonDropButton.cpp
-        RibbonDropButton.h
+        RibbonCheckBoxPlugin.cpp
+        RibbonCheckBoxPlugin.h
+        RibbonComboBoxPlugin.cpp
+        RibbonComboBoxPlugin.h
         RibbonDropButtonPlugin.cpp
         RibbonDropButtonPlugin.h
-        RibbonButtonPlugin.cpp
-        RibbonButtonPlugin.h
+        RibbonGroupPlugin.cpp
+        RibbonGroupPlugin.h
+        RibbonLineEditPlugin.cpp
+        RibbonLineEditPlugin.h
+        RibbonPushButtonPlugin.cpp
+        RibbonPushButtonPlugin.h
+        RibbonWidgetsCollection.cpp
+        RibbonWidgetsCollection.h
+        RibbonWidgetPlugin.cpp
+        RibbonWidgetPlugin.h
     )
 
     if(APPLE)

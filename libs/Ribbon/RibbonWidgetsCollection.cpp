@@ -21,7 +21,7 @@
 
 #include "RibbonWidgetsCollection.h"
 
-#include "RibbonButtonPlugin.h"
+#include "RibbonPushButtonPlugin.h"
 #include "RibbonCheckBoxPlugin.h"
 #include "RibbonComboBoxPlugin.h"
 #include "RibbonDropButtonPlugin.h"
@@ -35,7 +35,7 @@ RibbonWidgetsCollection::RibbonWidgetsCollection(QObject *parent) :
     m_widgets.append(new RibbonGroupPlugin(this));
     m_widgets.append(new RibbonWidgetPlugin(this));
     m_widgets.append(new RibbonDropButtonPlugin(this));
-    m_widgets.append(new RibbonButtonPlugin(this));
+    m_widgets.append(new RibbonPushButtonPlugin(this));
     m_widgets.append(new RibbonLineEditPlugin(this));
     m_widgets.append(new RibbonComboBoxPlugin(this));
     m_widgets.append(new RibbonCheckBoxPlugin(this));

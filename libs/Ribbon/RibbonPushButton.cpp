@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "RibbonButton.h"
+#include "RibbonPushButton.h"
 
 #include "RibbonFontManager.h"
 #include "RibbonWidget.h"
@@ -40,9 +40,9 @@ constexpr auto ThemeStylesheet = R"(
     }
 )";
 
-Nedrysoft::Ribbon::RibbonButton::RibbonButton(QWidget *parent) :
+Nedrysoft::Ribbon::RibbonPushButton::RibbonPushButton(QWidget *parent) :
         QWidget(parent),
-        m_iconSize(QSize(RibbonButtonDefaultIconWidth, RibbonButtonDefaultIconHeight)),
+        m_iconSize(QSize(RibbonPushButtonDefaultIconWidth, RibbonPushButtonDefaultIconHeight)),
         m_themeSupport(new Nedrysoft::Utils::ThemeSupport) {
 
     m_layout = new QVBoxLayout;
@@ -53,7 +53,7 @@ Nedrysoft::Ribbon::RibbonButton::RibbonButton(QWidget *parent) :
 
     auto fontManager = RibbonFontManager::getInstance();
 
-    auto font = QFont(fontManager->normalFont(), RibbonButtonDefaultFontSize);
+    auto font = QFont(fontManager->normalFont(), RibbonPushButtonDefaultFontSize);
 
     m_mainButton->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     m_buttonLabel->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -84,47 +84,47 @@ Nedrysoft::Ribbon::RibbonButton::RibbonButton(QWidget *parent) :
     updateStyleSheets(Nedrysoft::Utils::ThemeSupport::isDarkMode());
 }
 
-Nedrysoft::Ribbon::RibbonButton::~RibbonButton() {
+Nedrysoft::Ribbon::RibbonPushButton::~RibbonPushButton() {
     m_mainButton->deleteLater();
     m_buttonLabel->deleteLater();
     m_layout->deleteLater();
 }
 
-QIcon Nedrysoft::Ribbon::RibbonButton::icon() {
+QIcon Nedrysoft::Ribbon::RibbonPushButton::icon() {
     return m_mainButton->icon();
 }
 
-void Nedrysoft::Ribbon::RibbonButton::setIcon(QIcon &icon) {
+void Nedrysoft::Ribbon::RibbonPushButton::setIcon(QIcon &icon) {
     m_mainButton->setIcon(icon);
 }
 
-QSize Nedrysoft::Ribbon::RibbonButton::iconSize() {
+QSize Nedrysoft::Ribbon::RibbonPushButton::iconSize() {
     return m_iconSize;
 }
 
-void Nedrysoft::Ribbon::RibbonButton::setIconSize(QSize iconSize)
+void Nedrysoft::Ribbon::RibbonPushButton::setIconSize(QSize iconSize)
 {
     m_iconSize = iconSize;
 
     updateSizes();
 }
 
-QString Nedrysoft::Ribbon::RibbonButton::text() {
+QString Nedrysoft::Ribbon::RibbonPushButton::text() {
     return m_buttonLabel->text();
 }
 
-void Nedrysoft::Ribbon::RibbonButton::setText(QString text) {
+void Nedrysoft::Ribbon::RibbonPushButton::setText(QString text) {
     m_buttonLabel->setText(text);
 
     m_buttonLabel->setVisible(!m_buttonLabel->text().isEmpty());
 }
 
-void Nedrysoft::Ribbon::RibbonButton::updateSizes() {
+void Nedrysoft::Ribbon::RibbonPushButton::updateSizes() {
     m_mainButton->setMinimumSize(m_iconSize);
     m_mainButton->setIconSize(m_iconSize);
 }
 
-void Nedrysoft::Ribbon::RibbonButton::updateStyleSheets(bool isDarkMode) {
+void Nedrysoft::Ribbon::RibbonPushButton::updateStyleSheets(bool isDarkMode) {
     QString styleSheet(ThemeStylesheet);
 
     styleSheet.replace("[background-colour]", Nedrysoft::Utils::ThemeSupport::getColor(Nedrysoft::Ribbon::PushButtonColor).name());
