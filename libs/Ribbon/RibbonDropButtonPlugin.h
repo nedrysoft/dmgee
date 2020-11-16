@@ -37,85 +37,84 @@ class RibbonDropButtonPlugin :
 
         public:
             /**
-             * @brief       Constructs a factory capable of creating RibbonGroup instances
+             * @brief       Constructs a new RibbonDropButtonPlugin instance which is a child of the parent.
              *
-             * @param[in]   parent is the owner of the factory
+             * @param[in]   parent the owner object.
              */
             explicit RibbonDropButtonPlugin(QObject *parent = nullptr);
 
             /**
-             * @brief       Returns whether this factory is a container of other widgets
+             * @brief       Returns true if the widget is intended to be used as a container; otherwise returns false.
              *
-             * @returns     true if it is a container; otherwise false
+             * @returns     true if it container; otherwise false.
              */
             bool isContainer() const override;
 
             /**
-             * @brief       Returns whether the plugin has been initialised
+             * @brief       Returns true if the widget has been initialized; otherwise returns false.
              *
-             * @returns     true if initialised; otherwise false
+             * @returns     true if initialised; otherwise false.
              */
             bool isInitialized() const override;
 
             /**
-             * @brief       Returns the icon to be used in designer for this widget
+             * @brief       Returns the icon used to represent the custom widget in Qt Designer's widget box.
              *
-             * @returns     a QIcon that depicts the widget
+             * @returns     the icon used to represent the custom widget in Qt Designer's widget box.
              */
             QIcon icon() const override;
 
             /**
-             * @brief       Returns the XML that is inserted into the form
+             * @brief       Returns the XML that is used to describe the custom widget's properties to Qt Designer.
              *
-             * @returns     a QString that contains the XML that will appear in the form description
+             * @returns     the XML describing the widgets properties.
              */
             QString domXml() const override;
 
             /**
-             * @brief       Returns the logical group name that this widget should appear under.
+             * @brief       Returns the name of the group to which the widget belongs.
              *
-             * @returns     the name of the group
+             * @returns     the name of the group.
              */
             QString group() const override;
 
             /**
-             * @brief       Returns the name of the include file that should be inserted into code to
-             *              allow the widget to be used in a form
+             * @brief       Returns the path to the include file that uic uses when creating code for the widget.
              *
-             * @returns     the name of the include file (just the filename)
+             * @returns     the path to the include file.
              */
             QString includeFile() const override;
 
             /**
-             * @brief       Returns the name of this wifget
+             * @brief       Returns the class name of the widget supplied by the interface.
              *
-             * @returns     the name of the widget
+             * @returns     the name of the widget.
              */
             QString name() const override;
 
-             /**
-             * @brief       Returns a QString to be used as the tool tip description of the widget
+            /**
+             * @brief       Returns a short description of the widget that can be used by Qt Designer in a tool tip.
              *
-             * @returns     the description
+             * @returns     the description.
              */
             QString toolTip() const override;
 
             /**
-             * @brief       Returns a QString containing help information when the user selects "whats this" from inside designer
+             * @brief       Returns a description of the widget that can be used by Qt Designer in "What's This?" help for the widget.
              *
-             * @returns     the description
+             * @returns     the description.
              */
             QString whatsThis() const override;
 
             /**
-             * @brief       Creates a new instance of the widget
+             * @brief       Returns a new instance of the RibbonDropButton class, with the given parent.
              *
-             * @returns     the widget
+             * @returns     the widget instance.
              */
             QWidget *createWidget(QWidget *parent) override;
 
             /**
-             * @brief       Called by designer to initialise the plugin
+             * @brief       Initializes the widget for use with the specified formEditor interface.
              */
             void initialize(QDesignerFormEditorInterface *core) override;
 

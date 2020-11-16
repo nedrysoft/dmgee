@@ -36,9 +36,10 @@ namespace Nedrysoft::Ribbon {
 #endif
 
     /**
-     * @brief       Ribbon Group Widget
+     * @brief       The RibbonGroup widget provides a ribbon stylised group container.
      *
-     * @details     Widget to enclose a group of controls
+     * @details     A RibbonGroup is a container for a logical grouping of controls, a RibbonWidget page will
+     *              contain multiple groups which in turn contain multiple controls.
      */
     class NEDRYSOFT_RIBBON_WIDGET_EXPORT RibbonGroup :
         public QWidget {
@@ -49,38 +50,34 @@ namespace Nedrysoft::Ribbon {
 
             public:
                 /**
-                 * @brief       Constructor
+                 * @brief       Constructs a mew RibbonGroup which is a child of the parent.
                  *
-                 * @param[in]   parent is the owner parent object
+                 * @param[in]   parent the owner widget.
                  */
                 explicit RibbonGroup(QWidget *parent = nullptr);
 
                 /**
-                 * @brief       Gets the name of the group
-                 *
-                 * @return      name of the group
+                 * @brief       Destroys the RibbonGroup.
                  */
                 QString groupName() const;
 
                 /**
-                 * @brief       Sets the name of the group
+                 * @brief       Sets the displayed name of the group.
                  *
-                 * @param[in]   name is the name of the group which is displayed at the bottom of the group
+                 * @param[in]   name the name of the group which is displayed at the bottom of the group.
                  */
                 void setGroupName(const QString &name);
 
                 /**
-                 * @brief       Updates the margins to account for the group bordere
+                 * @brief       Updates the margins to account for the group bordere.
                  */
                 void updateMargins();
 
             protected:
                 /**
-                 * @brief       Draws the RibbonGroup
+                 * @brief       Reimplements: QWidget::paintEvent(QPaintEvent *event).
                  *
-                 * @details     Overridden paintEvent for drawing widget
-                 *
-                 * @param[in]   event is the paint event information
+                 * @param[in]   event contains information for painting this widget
                  */
                 virtual void paintEvent(QPaintEvent *event) override;
 

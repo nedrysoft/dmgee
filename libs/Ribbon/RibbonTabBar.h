@@ -28,10 +28,10 @@
 
 namespace Nedrysoft::Ribbon {
     /**
-     * @brief       Ribbon Tab Bar Widget
+     * @brief       The RibbonTabBar widget provides a ribbon stylised tabbar.
      *
-     * @details     Subclass of QTabBar to create a lookalike of the Ribbon
-     *              bar tab control.
+     * @details     A TabBar widget that is styled to match the RibbonBar, the TabBar on a QTabWidget is replaced
+     *              with an instance of this class.
      */
     class NEDRYSOFT_RIBBON_WIDGET_EXPORT RibbonTabBar :
         public QTabBar {
@@ -40,50 +40,44 @@ namespace Nedrysoft::Ribbon {
 
             public:
                 /**
-                 * @brief       Constructor
+                 * @brief       Constructs a mew RibbonTabBar instance which is a child of the parent.
                  *
-                 * @param[in]   parent is the parent widget to take ownership
+                 * @param[in]   parent the owner widget.
                  */
                 explicit RibbonTabBar(QWidget *parent = nullptr);
 
             protected:
                 /**
-                 * @brief       paintEvent
+                 * @brief       Reimplements: QWidget::paintEvent(QPaintEvent *event).
                  *
-                 * @details     Overridden paintEvent for drawing widget
-                 *
-                 * @param[in]   event is the event information
+                 * @param[in]   event contains information for painting this widget
                  */
                 void paintEvent(QPaintEvent *event) override;
 
                 /**
-                 * @brief       tabSizeHint
+                 * @brief       Returns the size hint for the tab at position index.
                  *
-                 * @details     Overridden paintEvent for size widget
+                 * @param[in]   index the index of the page.
                  *
-                 * @param[in]   index is the index of the tab
-                 *
-                 * @return      the calculated size hint for the tab
+                 * @returns     the size hint for the tab at position index.
                  */
                 [[nodiscard]] QSize tabSizeHint(int index) const override;
 
                 /**
-                 * @brief       eventFilter
+                 * @brief       Reimplements: QObject::eventFilter(QObject *watched, QEvent *event).
                  *
-                 * @details     handles widget events passed from Qt
+                 * @param[in]   watched the object that caused the event.
+                 * @param[in]   event the event information.
                  *
-                 * @param[in]   obj is the object that caused the event
-                 * @param[in]   event contains the event information
-                 *
-                 * @return      true if event has handled, otherwise false
+                 * @return      true if event was handled, otherwise false.
                  */
-                bool eventFilter(QObject * obj, QEvent * event) override;
+                bool eventFilter(QObject *watched, QEvent *event) override;
 
             private:
                 /**
-                 * @brief       Sets the stylesheet for dark/light mode
+                 * @brief       Updates the widgets stylesheet when the operating system theme is changed.
                  *
-                 * @param[in]   isDarkMode true if dark mode; otherwise false
+                 * @param[in]   isDarkMode true if dark mode; otherwise false.
                  */
                 void updateStyleSheet(bool isDarkMode);
 

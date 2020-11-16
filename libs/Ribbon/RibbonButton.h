@@ -34,9 +34,9 @@ namespace Nedrysoft::Ribbon {
     constexpr auto RibbonButtonDefaultFontSize = 10;
 
     /**
-     * @brief       Ribbon Pushbutton with label
+     * @brief       The RibbonButton widget provides a ribbon stylised push button with icon and optional text.
      *
-     * @details     A widget that provides a bassic ribbon button
+     * @details     A PushButton widget that is styled to match the RibbonBar.
      */
     class NEDRYSOFT_RIBBON_WIDGET_EXPORT RibbonButton :
         public QWidget {
@@ -48,81 +48,85 @@ namespace Nedrysoft::Ribbon {
 
         public:
             /**
-             * @brief       Constructs a RibbonButton
+             * @brief       Constructs a mew RibbonButton instance which is a child of the parent.
              *
-             * @param[in]   parent is the owner widget
+             * @param[in]   parent the owner widget.
              */
             explicit RibbonButton(QWidget *parent=nullptr);
 
             /**
-             * @brief       Destructor
+             * @brief       Destroys the RibbonButton.
              */
             ~RibbonButton() override;
 
             /**
-             * @brief       Returns the current icon that is displayed on the main portion of the button
-             * @return
+             * @brief       Returns the icon that is currently assigned to the main button.
+             *
+             * @returns     the icon assigned to the main button.
              */
             QIcon icon();
 
             /**
-             * @brief       Sets the icon to be displayed on the main portion of hhe button
+             * @brief       Sets the icon to be displayed on the main button.
              *
-             * @param[in]   icon is the icon to be used
+             * @param[in]   icon the icon to be displayed on the main button.
              */
             void setIcon(QIcon &icon);
 
             /**
-             * @brief       Returns the current size of the icon
+             * @brief       Returns the current size of the icon.
              *
-             * @return      the size of the icon
+             * @returns     the current size of the icon.
              */
             QSize iconSize();
 
             /**
-             * @brief       Sets the size of the main icon
+             * @brief       Sets the current size of the icon.
              *
-             * @param[in]   iconSize is the size of the icon
+             * @param[in]   iconSize the new size of the icon to be used.
              */
             void setIconSize(QSize iconSize);
 
             /**
-             * @brief       Returns the text on the button
+             * @brief       Returns the text that is displayed under the main button.
              *
-             * @return      the text on the button
+             * @returns     the text that is displayed under the main button.
              */
             QString text();
 
             /**
-             * @brief       Sets the text on the button
+             * @brief       Sets the text that is displayed under the main button.
              *
-             * @param[in]   text is the text to display on the button
+             * @note        If the text is empty, then the RibbonButton modifies the layout so that the space
+             *              that would contain the text is removed.
+             *
+             * @param[in]   text the text that is displayed under the main button.
              */
             void setText(QString text);
 
         private:
             /**
-             * @brief       When the icon size is changed, this function is called to synchronise the widget sizes
+             * @brief       Updates the child widgets when the size of the icon is changed.
              */
             void updateSizes();
 
             /**
-             * @brief       Set the style sheet on sub-controls according to current light/dark mode
+             * @brief       Updates the child widgets stylesheets when the operating system theme is changed.
              *
-             * @param[in]   isDarkMode true if dark mode; otherwise false
+             * @param[in]   isDarkMode true if dark mode; otherwise false.
              */
             void updateStyleSheets(bool isDarkMode);
 
         public:
             /**
-             * @brief       Signal that is emitted when the button is pressed
+             * @brief       This signal is emitted when the main button has been clicked.
              */
             Q_SIGNAL void clicked();
 
         private:
             QVBoxLayout *m_layout;                              //! the layout for this widget
             QPushButton *m_mainButton;                          //! the main button
-            QLabel *m_buttonLabel;                              //! the drop down button
+            QLabel *m_buttonLabel;                              //! the main button label
             QSize m_iconSize;                                   //! the size of the icon
             Nedrysoft::Utils::ThemeSupport *m_themeSupport;     //! an instance of theme support
     };

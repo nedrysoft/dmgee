@@ -34,11 +34,11 @@ namespace Nedrysoft::Ribbon {
     constexpr auto RubbonDropButtonArrowWidth = 5;
     constexpr auto RubbonDropButtonArrowHeight = 5;
 
-
     /**
-     * @brief       Ribbon Pushbutton with Drop down
+     * @brief       The RibbonDropButton widget provides a ribbon stylised push button with a drop down action.
      *
-     * @details     A widget that provides a drop down menu for additional actions
+     * @details     A PushButton widget that is styled to match the RibbonBar, consists of a main push button which
+     *              is the primary action and a secondary drop down button which can provide further actions.
      */
     class NEDRYSOFT_RIBBON_WIDGET_EXPORT RibbonDropButton :
         public QWidget {
@@ -49,62 +49,63 @@ namespace Nedrysoft::Ribbon {
 
         public:
             /**
-             * @brief       Constructs a RibbonDropButton
+             * @brief       Constructs a mew RibbonDropButton which is a child of the parent.
              *
-             * @param[in]   parent is the owner widget
+             * @param[in]   parent the owner widget.
              */
             explicit RibbonDropButton(QWidget *parent=nullptr);
 
             /**
-             * @brief       Destructor
+             * @brief       Destroys the RibbonDropButton.
              */
             ~RibbonDropButton() override;
 
             /**
-             * @brief       Returns the current icon that is displayed on the main portion of the button
-             * @return
+             * @brief       Returns the icon that is currently assigned to the main button.
+             *
+             * @returns     the icon assigned to the main button.
              */
             QIcon icon();
 
             /**
-             * @brief       Sets the icon to be displayed on the main portion of hhe button
+             * @brief       Sets the icon to be displayed on the main button.
              *
-             * @param[in]   icon is the icon to be used
+             * @param[in]   icon the icon to be displayed on the main button.
              */
             void setIcon(QIcon &icon);
 
             /**
-             * @brief       Returns the current size of the icon
+             * @brief       Returns the current size of the icon.
              *
-             * @return      the size of the icon
+             * @returns     the current size of the icon.
              */
             QSize iconSize();
 
             /**
-             * @brief       Sets the size of the main icon
+             * @brief       Sets the current size of the icon.
              *
-             * @param[in]   iconSize is the size of the icon
+             * @param[in]   iconSize the new size of the icon to be used.
              */
             void setIconSize(QSize iconSize);
 
         private:
             /**
-             * @brief       When the icon size is changed, this function is called to synchronise the widget sizes
+             * @brief       Updates the child widgets when the size of the icon is changed.
              */
             void updateSizes();
 
             /**
-             * @brief       Set the style sheet on sub-controls according to current light/dark mode
-             *
-             * @param[in]   isDarkMode true if dark mode; otherwise false
-             */
+              * @brief       Updates the child widgets stylesheets when the operating system theme is changed.
+              *
+              * @param[in]   isDarkMode true if dark mode; otherwise false.
+              */
             void updateStyleSheets(bool isDarkMode);
 
         public:
             /**
-             * @brief       Signal that is emitted when the button is pressed
+             * @brief       This signal is emitted when the either the main or drop-down button has been clicked.
              *
-             * @param[in]   dropdown is true if the drop down button was clicked; otherwise false (main button was clicked)
+             * @param[in]   dropdown true if the drop-down section was clicked; otherwise false (main button section was clicked)
              */
             Q_SIGNAL void clicked(bool dropdown);
 

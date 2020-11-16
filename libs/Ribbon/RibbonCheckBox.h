@@ -27,9 +27,9 @@
 
 namespace Nedrysoft::Ribbon {
     /**
-     * @brief       Ribbon LineEdit
+     * @brief       The RibbonCheckBox widget provides a ribbon stylised check box.
      *
-     * @details     Flat style line edit subclass which is consitent with the ribbon style
+     * @details     A CheckBox widget that is styled to match the RibbonBar.
      */
     class NEDRYSOFT_RIBBON_WIDGET_EXPORT RibbonCheckBox :
         public QCheckBox {
@@ -37,22 +37,22 @@ namespace Nedrysoft::Ribbon {
 
         public:
             /**
-             * @brief       Constructs a Ribbon Combo Box
+             * @brief       Constructs a mew RibbonCheckBox instance which is a child of the parent.
              *
-             * @param[in]   parent is the owner widget
+             * @param[in]   parent the owner widget.
              */
             explicit RibbonCheckBox(QWidget *parent=nullptr);
 
             /**
-             * @brief       Destructor
+             * @brief       Destroys the RibbonCheckBox.
              */
             ~RibbonCheckBox() override;
 
         private:
             /**
-             * @brief       Sets the stylesheet for dark/light mode
+             * @brief       Updates the stylesheet when the operating system theme is changed.
              *
-             * @param[in]   isDarkMode true if dark mode; otherwise false
+             * @param[in]   isDarkMode true if dark mode; otherwise false.
              */
             void updateStyleSheet(bool isDarkMode);
 

@@ -40,7 +40,7 @@ constexpr auto ThemeStylesheet = R"(
 
 Nedrysoft::Ribbon::RibbonButton::RibbonButton(QWidget *parent) :
         QWidget(parent),
-        m_iconSize(QSize(RibbonButtonDefaultIconWidth,RibbonButtonDefaultIconHeight)),
+        m_iconSize(QSize(RibbonButtonDefaultIconWidth, RibbonButtonDefaultIconHeight)),
         m_themeSupport(new Nedrysoft::Utils::ThemeSupport) {
 
     m_layout = new QVBoxLayout;

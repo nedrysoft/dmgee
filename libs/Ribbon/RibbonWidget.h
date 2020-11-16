@@ -30,8 +30,8 @@ namespace Nedrysoft::Ribbon {
     class RibbonTabBar;
 
     enum ThemeMode {
-        Light = 0,                                                              //! Draw ribbon in light mode
-        Dark = 1                                                                //! Draw ribbon in dark mode
+        Light = 0,                                                              /**< Draw Ribbon in light mode. */
+        Dark = 1                                                                /**< Draw Ribbon in dark mode. */
     };
 
     static constexpr QRgb TextColor[] = {                                       //! Colour of text on the control
@@ -70,6 +70,11 @@ namespace Nedrysoft::Ribbon {
         qRgb(65, 65, 65)
     };
 
+    /**
+     * @note        Small tweaks are required on a OS level to ensure that the rendered RibbonBar looks correct
+     *              on each platform.
+     */
+
 #if defined(Q_OS_MACOS)
     static constexpr int TabBarHeight = 34;                                     //! Height of the tab bar portion of the control
     static constexpr int DefaultFontSize = 12;                                  //! Default text size for macOS
@@ -82,10 +87,11 @@ namespace Nedrysoft::Ribbon {
     static constexpr int GroupDividerMargin = 2;                                //! Width of the group divider
 
     /**
-     * @brief       Ribbon Bar Widget
+     * @brief       The RibbonWidget widget provides the main Ribbon container..
      *
-     * @details     Subclass of QTabWidget to create a lookalike of the Ribbon
-     *              bar control.
+     * @details     A RibbonWidget is the top level Ribbon control, a RibbonWidget consists of multiple pages
+     *              of functional blocks, each functional block is then sub divided into logical groups (RibbonGroup) and
+     *              finally each RibbonGroup acts as a container for Ribbon widgets.
      */
     class NEDRYSOFT_RIBBON_WIDGET_EXPORT RibbonWidget :
         public QTabWidget {
@@ -94,9 +100,9 @@ namespace Nedrysoft::Ribbon {
 
             public:
                 /**
-                 * @brief       Constructor
+                 * @brief       Constructs a mew RibbonWidget instance which is a child of the parent.
                  *
-                 * @param[in]   parent is the owner parent widget
+                 * @param[in]   parent the owner widget.
                  */
                 explicit RibbonWidget(QWidget *parent = nullptr);
 
@@ -105,9 +111,7 @@ namespace Nedrysoft::Ribbon {
 
             protected:
                 /**
-                 * @brief       paintEvent
-                 *
-                 * @details     Overridden paintEvent for drawing widget
+                 * @brief       Reimplements: QWidget::paintEvent(QPaintEvent *event).
                  *
                  * @param[in]   event contains information for painting this widget
                  */

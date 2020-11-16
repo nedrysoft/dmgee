@@ -37,16 +37,16 @@ class RibbonWidgetsCollection :
 
         public:
             /**
-             * @brief      Constructor
+             * @brief       Constructs a new RibbonWidgetsCollection instance which is a child of the parent.
              *
-             * @param[in]   parent is the owner object of the instance
+             * @param[in]   parent the owner object.
              */
             explicit RibbonWidgetsCollection(QObject *parent = 0);
 
             /**
-             * @brief       Provides a list of widgets that this designer plugin
+             * @brief       Provides a list of widgets that this designer plugin.
              *
-             * @returns     A list of widget factories
+             * @returns     the list of widget interfaces this plugin exposes.
              */
             [[nodiscard]] QList<QDesignerCustomWidgetInterface*> customWidgets() const override;
 

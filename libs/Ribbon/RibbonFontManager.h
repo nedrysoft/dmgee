@@ -36,29 +36,29 @@ namespace Nedrysoft::Ribbon {
     class NEDRYSOFT_RIBBON_WIDGET_EXPORT RibbonFontManager {
         private:
             /**
-             * @brief Constructor
+             * @brief       Constructs a mew RibbonFontManager.
              */
             RibbonFontManager();
 
         public:
             /**
-             * @brief       Returns the singleton instance
+             * @brief       Returns the singleton instance of the RibbonFontManager class.
              *
-             * @return      returns the instance of the class
+             * @returns     the instance of the class
              */
             static Nedrysoft::Ribbon::RibbonFontManager *getInstance();
 
             /**
              * @brief       Returns the normal font name
              *
-             * @return      the font family name
+             * @returns     the normal font family name
              */
             [[nodiscard]] QString normalFont() const;
 
             /**
              * @brief       Returns the bold font name
              *
-             * @return      the font family name
+             * @returns     the bold font family name
              */
             [[nodiscard]] QString boldFont() const;
 

@@ -27,9 +27,11 @@
 
 namespace Nedrysoft::Utils {
     /**
-     * @brief       theme support class
+     * @brief       Theme support helper class.
      *
-     * @details     used by the macOS to detect if the OS is in dark or light mode, all other platforms default off.
+     * @details     Provides OS level support for theming, currently only supports macOS but is able to
+     *              to detect whether the OS is in light or dark mode and also signal when the
+     *              current theme is changed.
      */
     class ThemeSupport :
             public QObject {
@@ -37,12 +39,15 @@ namespace Nedrysoft::Utils {
             Q_OBJECT
 
         public:
+            /**
+             * @brief       Constructs a mew ThemeSupport instance.
+             */
             explicit ThemeSupport();
 
             /**
-             * @brief       Check if dark mode is being used
+             * @brief       Returns the current OS theme mode.
              *
-             * @returns     true if dark mode, else false
+             * @returns     true if dark mode; otherwise false.
              */
 #if defined(Q_OS_MACOS)
             static bool isDarkMode();
@@ -52,26 +57,28 @@ namespace Nedrysoft::Utils {
             }
 #endif
             /**
-             * @brief       Emitted when the theme changes
+             * @brief       This signal is emitted when OS theme is changed.
              *
-             * @param[in]   isDarkMode true if dark mode; otherwise false
+             * @param[in]   isDarkMode true if dark mode; otherwise false.
              */
             Q_SIGNAL void themeChanged(bool isDarkMode);
 
             /**
-             * @brief       Get the Dark or Light colour for the given array
+             * @brief       Returns the Dark or Light colour for the given array.
              *
-             * @returns     the colour as a QColor
+             * @note        The array consists of 2 QRgb entries, one entry is for dark and the other for light mode.
+             *
+             * @returns     the colour
              */
             static QColor getColor(const QRgb PushButtonColor[]);
 
             /**
-             * @brief       Return the highlighted text background color
+             * @brief       Returns the highlighted text background color
              *
              * @note        Qt does not return the correct color when using QPalette, this function directly queries
              *              the OS to discover the real highlighed background color
              *
-             * @returns     the colour as a QColor
+             * @returns     the colour
              */
             static QColor getHighlightedBackground();
     };
