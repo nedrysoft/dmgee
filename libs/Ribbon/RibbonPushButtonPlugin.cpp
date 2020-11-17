@@ -29,13 +29,8 @@
 constexpr auto ConfigurationXML = R"(
     <ui language="c++" displayname="Ribbon Push Button">
         <widget class="Nedrysoft::Ribbon::RibbonPushButton" name="ribbonPushButton">
-            <property name="geometry">
-                <rect>
-                    <x>0</x>
-                    <y>0</y>
-                    <width>100</width>
-                    <height>100</height>
-                </rect>
+            <property name="text">
+                <string>Button</string>
             </property>
         </widget>
     </ui>

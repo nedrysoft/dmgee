@@ -27,14 +27,6 @@
 constexpr auto ConfigurationXML = R"(
     <ui language="c++" displayname="Ribbon Drop Button">
         <widget class="Nedrysoft::Ribbon::RibbonDropButton" name="ribbonDropButton">
-            <property name="geometry">
-                <rect>
-                    <x>0</x>
-                    <y>0</y>
-                    <width>100</width>
-                    <height>100</height>
-                </rect>
-            </property>
         </widget>
     </ui>
 )";

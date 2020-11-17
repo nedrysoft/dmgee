@@ -27,13 +27,11 @@
 constexpr auto ConfigurationXML = R"(
     <ui language="c++" displayname="Ribbon Check Box">
         <widget class="Nedrysoft::Ribbon::RibbonCheckBox" name="ribbonCheckBox">
-            <property name="geometry">
-                <rect>
-                    <x>0</x>
-                    <y>0</y>
-                    <width>100</width>
-                    <height>13</height>
-                </rect>
+            <property name="text">
+                <string>CheckBox</string>
+            </property>
+            <property name="checked">
+                <bool>true</bool>
             </property>
         </widget>
     </ui>

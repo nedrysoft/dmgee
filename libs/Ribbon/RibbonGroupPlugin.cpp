@@ -21,6 +21,7 @@
 
 #include "RibbonGroupPlugin.h"
 #include "RibbonGroup.h"
+#include "RibbonWidget.h"
 
 #include <QtPlugin>
 
@@ -35,8 +36,8 @@ constexpr auto ConfigurationXML = R"(
                 <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>100</width>
-                    <height>100</height>
+                    <width>[default-width]</width>
+                    <height>[default-height]</height>
                 </rect>
             </property>
         </widget>
@@ -91,7 +92,8 @@ bool RibbonGroupPlugin::isContainer() const {
 }
 
 QString RibbonGroupPlugin::domXml() const {
-    return ConfigurationXML;
+    return QString(ConfigurationXML).replace("[default-width]", QString::number(Nedrysoft::Ribbon::RibbonBarDefaultWidth))
+                                    .replace("[default-height]", QString::number(Nedrysoft::Ribbon::RibbonBarHeight));
 }
 
 QString RibbonGroupPlugin::includeFile() const {

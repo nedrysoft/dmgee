@@ -88,6 +88,8 @@ namespace Nedrysoft::Ribbon {
     static constexpr int TabHighlightHeight = 3;                                //! Height of the highlight mark on the selected page
     static constexpr int GroupDividerMargin = 2;                                //! Width of the group divider
 
+    static constexpr int RibbonBarDefaultWidth = 200;                           //! Default width of the control used by designer plugins
+
     /**
      * @brief       The RibbonWidget widget provides the main Ribbon container.
      *

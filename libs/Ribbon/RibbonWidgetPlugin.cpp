@@ -28,6 +28,14 @@
 constexpr auto ConfigurationXML = R"(
     <ui language="c++" displayname="Ribbon Widget">
         <widget class="Nedrysoft::Ribbon::RibbonWidget" name="ribbonWidget">
+            <property name="geometry">
+                <rect>
+                    <x>0</x>
+                    <y>0</y>
+                    <width>[default-width]</width>
+                    <height>[default-height]</height>
+                </rect>
+            </property>
         </widget>
     </ui>
 )";
@@ -81,7 +89,8 @@ bool RibbonWidgetPlugin::isContainer() const {
 }
 
 QString RibbonWidgetPlugin::domXml() const {
-    return ConfigurationXML;
+    return QString(ConfigurationXML).replace("[default-width]", QString::number(Nedrysoft::Ribbon::RibbonBarDefaultWidth))
+                                    .replace("[default-height]", QString::number(Nedrysoft::Ribbon::RibbonBarHeight));
 }
 
 QString RibbonWidgetPlugin::includeFile() const {
