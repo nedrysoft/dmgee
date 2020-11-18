@@ -31,7 +31,7 @@ constexpr auto ConfigurationXML = R"(
             <property name="groupName">
                 <string>Group</string>
             </property>
-
+        
             <property name="geometry">
                 <rect>
                     <x>0</x>

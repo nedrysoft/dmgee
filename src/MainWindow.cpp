@@ -29,8 +29,10 @@
 #include <QDebug>
 #include <QDesktopServices>
 #include <QFileInfo>
+#include <QJsonDocument>
 #include <QList>
 #include <QMenu>
+#include <QMessageBox>
 #include <QMimeData>
 #include <opencv2/opencv.hpp>
 #include <QPaintEvent>
@@ -210,6 +212,14 @@ Nedrysoft::MainWindow::MainWindow() :
     }
 
     ui->formatComboBox->setCurrentText("UDBZ");
+
+    // set builder callback
+
+    connect(m_builder, &Nedrysoft::Builder::progressUpdate, this, [=](QString updateData) {
+        auto updateMap = QJsonDocument::fromJson(updateData.toUtf8()).toVariant();
+
+        // TODO: handle it!
+    }, Qt::QueuedConnection);
 
     // build controls
 

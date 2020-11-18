@@ -29,6 +29,8 @@
 #include <QString>
 #include <fstream>
 
+#include <Python.h>
+
 namespace Nedrysoft {
     /**
      * @brief       The Builder class is capable of loading and saving configurations, it also provides the function
@@ -65,8 +67,8 @@ namespace Nedrysoft {
                  * @brief       Sets the text position relative to the icon
                  */
                 enum TextPosition {
-                    Bottom = 0,
-                    Right = 1
+                    Bottom = 0,                                     /**< Text is located below the icon. */
+                    Right = 1                                       /**< Text is located to the right of the icon. */
                 };
 
             private:
@@ -115,9 +117,51 @@ namespace Nedrysoft {
                 bool loadConfiguration(const QString& filename);
 
             private:
+                /**
+                 * @brief       Python function which allows transfer of a string to c
+                 *
+                 * @param[in]   self the python object
+                 * @param[in]   updateData string containing the data being transferred
+                 *
+                 * @returns     PyTrue if handled; other PyFalse
+                 */
+                static PyObject *update(PyObject *self, PyObject *updateData);
+
+            public:
+                /**
+                 * @brief       This signal is emitted when the python script progress is updated.
+                 *
+                 * @param[in]   progress the json progress update as a QString
+                 */
+                Q_SIGNAL void progressUpdate(QString progress);
+
+            private:
+                /**
+                 * @brief       Sets the list of symlinks to be added to the DMG.
+                 *
+                 * @param[in]   symlinks the list of symlinks.
+                 */
                 void setSymlinks(QList<Symlink *> symlinks);
+
+                /**
+                 * @brief       Returns the list of symlinks.
+                 *
+                 * @returns     the symlinks list.
+                 */
                 QList<Symlink *> symlinks();
+
+                /**
+                 * @brief       Sets the list of files to be added to the DMG.
+                 *
+                 * @param[in]   files the list of files.
+                 */
                 void setFiles(QList<File *> files);
+
+                /**
+                 * @brief       Returns the list of files.
+                 *
+                 * @returns     the file list.
+                 */
                 QList<File *> files();
 
             public:
@@ -141,6 +185,8 @@ namespace Nedrysoft {
 
             private:
                 Configuration m_configuration;                      //! the configuration for the DMG
+
+                static PyMethodDef m_moduleMethods[];               //! module method table for the dmgee module
     };
 }
 

@@ -38,6 +38,11 @@ constexpr auto BuildScript = R"(
 import sys
 import os
 import dmgbuild
+import dmgee
+import json
+
+def dmg_callback(data):
+    dmgee.update(json.dumps(data))
 
 dmgbuild.build_dmg(volume_name=parameters["volume_name"],
                    filename=parameters["filename"],
@@ -45,6 +50,11 @@ dmgbuild.build_dmg(volume_name=parameters["volume_name"],
                    lookForHiDPI=parameters["lookForHiDPI"],
                    detach_retries=parameters["detach_retries"])
 )";
+
+PyMethodDef Nedrysoft::Builder::m_moduleMethods[] = {
+        {"update", (PyCFunction) Nedrysoft::Builder::update, METH_O, PyDoc_STR("provides gui with updates from python")},
+        {NULL},
+};
 
 bool Nedrysoft::Builder::createDMG(QString outputFilename) {
     QList<QString> modulePaths;
@@ -200,6 +210,9 @@ bool Nedrysoft::Builder::createDMG(QString outputFilename) {
     modulePaths.push_back("python/packages");
 
     python->addModulePaths(modulePaths);
+    python->addModule("dmgee", m_moduleMethods);
+
+    python->setVariable("builderInstance", this);
 
     python->runScript(BuildScript, locals);
 
@@ -294,4 +307,22 @@ void Nedrysoft::Builder::setFiles(QList<Nedrysoft::Builder::File *> files) {
 
 QList<Nedrysoft::Builder::File *> Nedrysoft::Builder::files() {
     return m_configuration.m_files;
+}
+
+PyObject* Nedrysoft::Builder::update(PyObject *self, PyObject *updateData)
+{
+    auto unicodeString = PyUnicode_AsUCS4Copy(updateData);
+    auto builderInstance = static_cast<Nedrysoft::Builder *>(Python::variable("builderInstance"));
+
+    if (unicodeString) {
+        auto jsonString = QString::fromUcs4(unicodeString);
+
+        PyMem_Free(unicodeString);
+
+        Q_EMIT builderInstance->progressUpdate(jsonString);
+
+        return Py_True;
+    }
+
+    return Py_False;
 }

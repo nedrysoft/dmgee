@@ -98,7 +98,7 @@ namespace Nedrysoft {
             /**
              * @brief       Returns the image as a opencv mat.
              *
-             * @return      the opencv mat.
+             * @returns     the opencv mat.
              */
             cv::Mat mat();
 

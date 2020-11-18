@@ -42,12 +42,6 @@ Nedrysoft::Ribbon::RibbonGroup::RibbonGroup(QWidget *parent) :
 
     setGroupName(QString("Group"));
 
-    if (Nedrysoft::Utils::ThemeSupport::isDarkMode()) {
-        this->setStyleSheet(m_darkStyleSheet);
-    } else {
-        this->setStyleSheet(m_lightStyleSheet);
-    }
-
     connect(qobject_cast<QApplication *>(QCoreApplication::instance()), &QApplication::paletteChanged, [=] (const QPalette &) {
         // TODO: anything to do?
     });

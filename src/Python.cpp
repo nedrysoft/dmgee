@@ -42,6 +42,8 @@ Nedrysoft::Python::~Python() {
     Py_Finalize();
 }
 
+QMap<QString, Py_tss_t *> Nedrysoft::Python::m_variables = QMap<QString, Py_tss_t *>();
+
 void Nedrysoft::Python::run(QString &filename) {
     QFile pythonFile(filename);
 
@@ -95,14 +97,36 @@ void Nedrysoft::Python::runScript(const QString& script, PyObject *locals) {
 
         auto dict = PyDict_New();
 
-        PyRun_String(script.toLatin1().data(), Py_file_input, dict, locals);
+        QMapIterator<QString, PyMethodDef *> moduleIterator(m_modules);
+
+        while (moduleIterator.hasNext()) {
+            moduleIterator.next();
+
+            auto dmgeeModule = PyImport_AddModule(moduleIterator.key().toLatin1().constData());
+
+            PyModule_AddFunctions(dmgeeModule, moduleIterator.value());
+        }
+
+        QMapIterator<QString, void *> variableIterator(m_threadVariables);
+
+        while (variableIterator.hasNext()) {
+            variableIterator.next();
+
+            addVariable(variableIterator.key(), variableIterator.value());
+        }
+
+        auto result = PyRun_String(script.toLatin1().data(), Py_file_input, dict, locals);
 
         Py_DECREF(systemModule);
         Py_DECREF(systemPath);
 
         PyGILState_Release(gilState);
 
-        Q_EMIT finished(Ok, 0);
+        if (result) {
+            Q_EMIT finished(Ok, PyLong_AsLong(result));
+        } else {
+            Q_EMIT finished(Ok, -1);
+        }
 
         QMetaObject::invokeMethod(qobject_cast<QApplication *>(QCoreApplication::instance()), [threadState]() {
             PyEval_RestoreThread(threadState);
@@ -110,4 +134,40 @@ void Nedrysoft::Python::runScript(const QString& script, PyObject *locals) {
     });
 
     thread.detach();
+}
+
+void Nedrysoft::Python::addModule(const QString &moduleName, PyMethodDef moduleMethods[]) {
+    PythonModule module;
+
+    if (!m_modules.contains(moduleName)) {
+        m_modules[moduleName] = moduleMethods;
+    }
+}
+
+void Nedrysoft::Python::setVariable(const QString &key, void *value) {
+    m_threadVariables[key] = value;
+}
+
+void Nedrysoft::Python::addVariable(const QString &key, void *value) {
+    Py_tss_t *variable;
+
+    if (m_variables.contains(key)) {
+        variable = m_variables[key];
+    } else {
+        variable = PyThread_tss_alloc();
+
+        PyThread_tss_create(variable);
+
+        m_variables[key] = variable;
+    }
+
+    PyThread_tss_set(variable, value);
+}
+
+void *Nedrysoft::Python::variable(const QString &key) {
+    if (m_variables.contains(key)) {
+        return PyThread_tss_get(m_variables[key]);
+    }
+
+    return nullptr;
 }

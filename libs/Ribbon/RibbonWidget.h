@@ -31,43 +31,66 @@
 namespace Nedrysoft::Ribbon {
     class RibbonTabBar;
 
+    /**
+     * @brief       Represents the current theme that the application should use.
+     */
     enum ThemeMode {
         Light = 0,                                                              /**< Draw Ribbon in light mode. */
         Dark = 1                                                                /**< Draw Ribbon in dark mode. */
     };
 
-    static constexpr QRgb TextColor[] = {                                       //! Colour of text on the control
+    /**
+     * @brief       TextColour of text on the control
+     */
+    static constexpr QRgb TextColor[] = {
         qRgb(73, 69, 66),
         qRgb(0xDC, 0xDC, 0xDC)
     };
 
-
-    static constexpr QRgb TabBarBackgroundColor[] = {                           //! Background colour of the tab bar
+    /**
+     * @brief       Background colour of the tab bar
+     */
+    static constexpr QRgb TabBarBackgroundColor[] = {
         qRgb(0xf5, 0xf5, 0xf5),
         qRgb(0x2d, 0x2d, 0x2d)
     };
 
-    static constexpr QRgb TabHoverColor[] = {                                   //! Highlight colour of a tab when hovered over
+    /**
+     * @brief       Highlight colour of a tab when hovered over
+     */
+    static constexpr QRgb TabHoverColor[] = {
         qRgb(254, 251, 255),
         TabBarBackgroundColor[Dark]
     };
 
-    static constexpr QRgb TabSelectedColor[] = {                                //! Colour of a tab when the mouse is being held down
+    /**
+     * @brief       Colour of a tab when the mouse is being held down
+     */
+    static constexpr QRgb TabSelectedColor[] = {
         qRgb(51, 84, 151),
         qRgb(0xdf, 0xdf, 0xdf)
     };
 
-    static constexpr QRgb RibbonBorderColor[] = {                               //! Colour of the ribbon divider at the bottom of the control
+    /**
+     * @brief       Colour of the ribbon divider at the bottom of the control
+     */
+    static constexpr QRgb RibbonBorderColor[] = {
         qRgb(214, 211, 207),
         qRgb(0, 0, 0)
     };
 
-    static constexpr QRgb GroupDividerColor[] = {                               //! Colour of the group divider
+    /**
+     * @brief       Colour of the group divider
+     */
+    static constexpr QRgb GroupDividerColor[] = {
         qRgb(180, 178, 173),
         qRgb(0x57, 0x57, 0x57)
     };
 
-    static constexpr QRgb PushButtonColor[] = {                               //! Colour of the push button
+    /**
+     * @brief       Colour of the push button
+     */
+    static constexpr QRgb PushButtonColor[] = {
         qRgb(209, 198, 197),
         qRgb(65, 65, 65)
     };

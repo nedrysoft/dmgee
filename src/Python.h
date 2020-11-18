@@ -23,6 +23,7 @@
 #define NEDRYSOFT_PYTHON_H
 
 #include <QObject>
+#include <QMap>
 #include <QString>
 #include <QStringList>
 
@@ -43,10 +44,22 @@ namespace Nedrysoft {
             public:
                 Q_OBJECT
 
+                /**
+                 * @brief       Error codes returned via the finished signal
+                 */
                 enum ErrorCode {
-                    Ok,
-                    ScriptNotFound,
-                    ScriptInvalid
+                    Ok,                                                 /**< Script was sucessfully run. */
+                    ScriptNotFound,                                     /**< Script does not exist */
+                    ScriptInvalid                                       /**< The script could not be validated */
+                };
+
+            private:
+                /**
+                 * @brief       Structure that contains a list of methods for a built in module
+                 */
+                struct PythonModule {
+                    QString moduleName;                                 //! The name of the module (import <module name>)
+                    PyMethodDef methods[];                              //! Method table
                 };
 
             public:
@@ -91,6 +104,47 @@ namespace Nedrysoft {
                  */
                 void addModulePaths(QStringList modulePaths);
 
+                /**
+                 * @brief       Adds a C module to the python interpreter
+                 *
+                 * @param[in]   moduleName the name of the module exposed to python.
+                 * @param[in]   moduleMethods the methods of the module.
+                 */
+                void addModule(const QString &moduleName, PyMethodDef moduleMethods[]);
+
+                /**
+                 * @brief       Sets a variable for this instance
+                 *
+                 * @note        The python interpreter runs in a different thread.  This function just stores the variables
+                 *              in a map and these are then added just before the script is run.
+                 *
+                 * @param[in]   key the key name of the variable
+                 * @param[in]   balue the value of the variable
+                 */
+                void setVariable(const QString &key, void *value);
+
+                /**
+                 * @brief       Returns the variable value for the current thread
+                 *
+                 * @param[in]   key the key name of the variable
+                 *
+                 * @returns     the value of the variable. (or nullptr if it does not exist)
+                 */
+                static void *variable(const QString &key);
+
+            private:
+                /**
+                 * @brief       Adds the value of a variable to the python interpreters= thread.
+                 *
+                 * @note        The python interpreter runs in a different thread to the one that created the object.  This
+                 *              function is used internally to register and add values from the calling thread to the thread
+                 *              that the interpreter runs in.
+                 *
+                 * @param[in]   key the key name of the variable
+                 * @param[in]   value the value of the variable
+                 */
+                static void addVariable(const QString &key, void *value);
+
             public:
                 /**
                  * @brief       This signal is emitted when the python script has completed.
@@ -101,7 +155,13 @@ namespace Nedrysoft {
                 Q_SIGNAL void finished(int result, int pythonResult);
 
             private:
-                QStringList m_modulePaths;           //! list of extra paths to search for modules in
+                QStringList m_modulePaths;                          //! list of extra paths to search for modules in
+
+                QMap<QString, PyMethodDef *> m_modules;             //! list of c modules to be imported
+
+                QMap<QString, void *> m_threadVariables;            //! list of variable values for this instance.  These are added to the thread that the interpreter runs in.
+
+                static QMap<QString, Py_tss_t *> m_variables;       //! global list of thread variables
     };
 };
 

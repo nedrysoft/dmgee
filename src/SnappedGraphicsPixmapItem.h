@@ -72,7 +72,7 @@ namespace Nedrysoft {
             /**
              * @brief       Returns the user type of this graphics item.
              *
-             * @return      the type of the item.
+             * @returns     the type of the item.
              */
             virtual int type() const override;
 

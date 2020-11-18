@@ -88,9 +88,6 @@ namespace Nedrysoft::Ribbon {
                 QFont m_font;                                           //! Font used to draw the group name
                 QFontMetrics m_fontMetrics;                             //! The font metrics of the selected font
                 QRect m_textRect;                                       //! The rectangle of the group name in the selected font
-
-                QString m_lightStyleSheet;                              //! Light QSS style sheet
-                QString m_darkStyleSheet;                               //! Dark QSS style sheet
     };
 }
 

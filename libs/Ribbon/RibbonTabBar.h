@@ -71,7 +71,7 @@ namespace Nedrysoft::Ribbon {
                  * @param[in]   watched the object that caused the event.
                  * @param[in]   event the event information.
                  *
-                 * @return      true if event was handled, otherwise false.
+                 * @returns     true if event was handled, otherwise false.
                  */
                 bool eventFilter(QObject *watched, QEvent *event) override;
 

@@ -43,13 +43,13 @@ namespace Nedrysoft {
 
             public:
                 /**
-                 * @brief       The types of objets that can appear in the graphics scene
+                 * @brief       Types of user defined QGraphicItems
                  */
                 enum IconType {
-                    Background,
-                    Centroid,
-                    Icon,
-                    Shortcut
+                    Background,                         /**< User defined QGraphicsItem is a background. */
+                    Centroid,                           /**< User defined QGraphicsItem is a centroid. */
+                    Icon,                               /**< User defined QGraphicsItem is a icon. */
+                    Shortcut                            /**< User defined QGraphicsItem is a shortcut. */
                 };
 
                 Q_ENUM(IconType)
