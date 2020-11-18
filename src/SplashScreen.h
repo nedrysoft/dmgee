@@ -53,7 +53,7 @@ namespace Nedrysoft {
                 SplashScreen(const SplashScreen&) = delete;
 
                 /**
-                 * @brief       Delete the copy constructor.
+                 * @brief       Delete the assignment operator.
                  */
                 SplashScreen& operator=(const SplashScreen&) = delete;
 

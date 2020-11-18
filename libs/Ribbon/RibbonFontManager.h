@@ -31,16 +31,33 @@ namespace Nedrysoft::Ribbon {
      * @brief           The RibbonFont manager provides access to the system UI font.
      *
      * @details         Singleton responsible for loading and returning the fonts used
-     *                  by the ribbon control.  This class cannot be instantiated directly
-     *                  and the singleton instance can be retrieved using the static
-     *                  RibbonFontManager::getInstance function.
+     *                  by the ribbon control.  This class is a singleton and therefore cannot be instantiated directly
+     *                  the instace can be obtained using the getInstance() method.
      */
     class NEDRYSOFT_RIBBON_WIDGET_EXPORT RibbonFontManager {
         private:
             /**
              * @brief       Constructs a new RibbonFontManager.
+             *
+             * @note        Cannot be directly instantiated, this is a singleton class and the instance can be
+             *              accessed through the getInstance() method.
              */
-            RibbonFontManager();
+            explicit RibbonFontManager();
+
+            /**
+             * @brief       Destroys the MainWindow.
+             */
+            ~RibbonFontManager();
+
+            /**
+             * @brief       Delete the copy constructor.
+             */
+            RibbonFontManager(const RibbonFontManager&) = delete;
+
+            /**
+             * @brief       Delete the assignment operator.
+             */
+            RibbonFontManager& operator=(const RibbonFontManager&) = delete;
 
         public:
             /**

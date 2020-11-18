@@ -36,6 +36,8 @@ namespace Ui {
 namespace Nedrysoft {
     /**
      * @brief       The MainWindow class is the main application window.
+     *
+     * @note        This is a singleton class, to get the instance use the getInstance() method.
      */
     class MainWindow :
         public QMainWindow {
@@ -44,10 +46,10 @@ namespace Nedrysoft {
 
             private:
                 /**
-                 * @brief       Constructs a new AboutDialog instance which is a child of the parent.
+                 * @brief       Constructs a new MainWindow.
                  *
-                 * @note        The constructor is private as MainWindow is a singleton class, to obtain the MainWindow
-                 *              use the getInstance() function.
+                 * @note        Cannot be directly instantiated, this is a singleton class and the instance can be
+                 *              accessed through the getInstance() method.
                  */
                 explicit MainWindow();
 
@@ -56,37 +58,47 @@ namespace Nedrysoft {
                  */
                 ~MainWindow() override;
 
+                /**
+                 * @brief       Delete the copy constructor.
+                 */
+                MainWindow(const MainWindow&) = delete;
+
+                /**
+                 * @brief       Delete the assignment operator.
+                 */
+                MainWindow& operator=(const MainWindow&) = delete;
+
             public:
                 /**
-                 * @brief           Opens the url.
+                 * @brief       Opens the url.
                  *
-                 * @param[in]       url the url to open.
+                 * @param[in]   url the url to open.
                  */
                 void handleOpenByUrl(const QUrl &url);
 
                 /**
-                 * @brief           Returns the instance of the MainWindow class.
+                 * @brief       Returns the instance of the MainWindow class.
                  *
-                 * @returns         the MainWindow instance.
+                 * @returns     the MainWindow instance.
                  */
                 static MainWindow *getInstance();
 
                 /**
-                 * @brief           Loads the given configuration.
+                 * @brief       Loads the given configuration.
                  *
-                 * @note            The configuration is stored in TOML format.
+                 * @note        The configuration is stored in TOML format.
                  *
-                 * @param[in]       filename the name of configuration file.
+                 * @param[in]   filename the name of configuration file.
                  *
-                 * @returns         true if loaded ok; otherwise false.
+                 * @returns     true if loaded ok; otherwise false.
                  */
                 bool loadConfiguration(QString filename);
 
             protected:
                 /**
-                 * @brief           Reimplements: QWidget::closeEvent(QCloseEvent *event).
+                 * @brief       Reimplements: QWidget::closeEvent(QCloseEvent *event).
                  *
-                 * @param[in]       event the event information.
+                 * @param[in]   event the event information.
                  */
                 void closeEvent(QCloseEvent *event) override;
 
