@@ -24,6 +24,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 project(dmgee)
 
+set(CMAKE_PREFIX_PATH "/Users/adriancarpenter/Qt/5.15.1/clang_64")
+
 # set up some variables to describe the application
 
 set(APPLICATION_SHORT_NAME "dmgee")
@@ -94,6 +96,11 @@ list(APPEND app_SOURCES
     src/Builder.h
     src/SnappedGraphicsPixmapItem.cpp
     src/SnappedGraphicsPixmapItem.h
+    src/HTermWidget.cpp
+    src/HTermWidget.h
+    src/HTermApi.cpp
+    src/HTermApi.h
+    src/hterm.qrc
 
     src/app.qrc
     icons/dmgee.icns
@@ -192,6 +199,7 @@ set(APPLICATION_QT_LIBRARIES
     Core
     Gui
     Widgets
+    WebEngineWidgets
 )
 
 # Check that the Qt libraries are available

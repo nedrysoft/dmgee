@@ -24,7 +24,6 @@
 #include "Image.h"
 
 #include <QApplication>
-#include <QDebug>
 #include <QDir>
 #include <QFileInfo>
 #include <QPoint>

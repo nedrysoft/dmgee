@@ -24,7 +24,6 @@
 #include "Image.h"
 #include "SnappedGraphicsPixmapItem.h"
 
-#include <QDebug>
 #include <QDrag>
 #include <QGraphicsLineItem>
 #include <QGraphicsPixmapItem>
@@ -213,4 +212,8 @@ void Nedrysoft::PreviewWidget::clearCentroids() {
 
 void Nedrysoft::PreviewWidget::setTextSize(int textSize) {
     //! TODO:
+}
+
+void Nedrysoft::PreviewWidget::fitToView() {
+    m_graphicsView.fitInView(m_graphicsScene.sceneRect(), Qt::KeepAspectRatio);
 }

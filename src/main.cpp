@@ -30,7 +30,6 @@
 #include <QApplication>
 #include <QComboBox>
 #include <QDateTime>
-#include <QDebug>
 #include <QDirIterator>
 #include <QFontDatabase>
 #include <QMimeDatabase>
@@ -85,7 +84,7 @@ void qtMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
 }
 
 int main(int argc, char *argv[]) {
-    qInstallMessageHandler(qtMessageHandler);
+    //qInstallMessageHandler(qtMessageHandler);
     QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication application(argc, argv);
     QMimeDatabase mimeDatabase;
@@ -108,6 +107,7 @@ int main(int argc, char *argv[]) {
     auto outputOption = appCli.add_option("-o, --output", dmgFilename, "the filename of the created DMG. (overrides value in config file)");
     auto editOption = appCli.add_option("-e, --edit", nullptr, "Whether to open the editor (default false)");
     auto buildOption = appCli.add_option("-b, --build", nullptr, "Uses the given configuration to build the DMG");
+    auto webEngineOption = appCli.add_option("--remote-debugging-port", nullptr, "Uses the given configuration to build the DMG");
 
     buildOption->needs(configOption);
     buildOption->needs(outputOption);
@@ -121,7 +121,7 @@ int main(int argc, char *argv[]) {
     CLI11_PARSE(appCli, argc, argv);
 
     if (versionFlag->count()) {
-        qDebug() <<  QString::fromStdString(appCli.get_name()) << " " << versionString;
+        std::cout <<  appCli.get_name() << " " << versionString.toStdString();
 
         return 0;
     }
@@ -159,6 +159,8 @@ int main(int argc, char *argv[]) {
         mainWindow->loadConfiguration(QString::fromStdString(configFilename));
 
         returnValue = application.exec();
+
+        delete mainWindow;
     }
 
     return returnValue;

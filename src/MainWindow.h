@@ -54,11 +54,6 @@ namespace Nedrysoft {
                 explicit MainWindow();
 
                 /**
-                 * @brief       Destroys the MainWindow.
-                 */
-                ~MainWindow() override;
-
-                /**
                  * @brief       Delete the copy constructor.
                  */
                 MainWindow(const MainWindow&) = delete;
@@ -69,6 +64,11 @@ namespace Nedrysoft {
                 MainWindow& operator=(const MainWindow&) = delete;
 
             public:
+                /**
+                 * @brief       Destroys the MainWindow.
+                 */
+                ~MainWindow() override;
+
                 /**
                  * @brief       Opens the url.
                  *
@@ -148,6 +148,13 @@ namespace Nedrysoft {
                  * @returns     true if set; otherwise false.
                  */
                 bool setConfigValue(const QString& valueName, QVariant value);
+
+                /**
+                 * @brief       Reimplements: QWidget::resizeEvent(QResizeEvent *event).
+                 *
+                 * @param[in]   event the event information.
+                 */
+                void resizeEvent(QResizeEvent *event) override;
 
         private:
                 Ui::MainWindow *ui;                                     //! ui class for the main window

@@ -121,6 +121,11 @@ namespace Nedrysoft {
                  */
                 void setTextSize(int textSize);
 
+                /**
+                 * @brief       Scales the graphics view so that the scene fits inside the frame rectangle
+                 */
+                void fitToView();
+
         private:
                 QPixmap m_pixmap;                           //! the background image pixmap
                 QPixmap m_targetPixmap;                     //! target snap location image

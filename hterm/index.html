@@ -1,0 +1,184 @@
+<!--
+Copyright (C) 2020 Adrian Carpenter
+
+This file is part of dmgee
+
+Created by Adrian Carpenter on 18/11/2020.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Terminal</title>
+
+        <meta charset="utf-8" />
+        <script src="hterm_deps.js"></script>
+        <script src="hterm_resources.js"></script>
+        <script src="hterm.js"></script>
+        <script type="text/javascript" src="qwebchannel.js"></script>
+
+        <style>
+            html {
+                height: 100%;
+                background-color: black;
+            }
+
+            body {
+                position: absolute;
+                height: 100%;
+                width: 100%;
+                overflow: hidden;
+                margin: 0px;
+                padding: 0px;
+                background-color: black;
+            }
+
+            #terminal {
+                display: block;
+                position: relative;
+                height: 100%;
+                width: 100%;
+                margin: 0px;
+                padding: 0px;
+                background-color: black;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="terminal"></div>
+        <script>
+            window.term = null;
+            window.termio = null;
+            window.terminalApi = null;
+
+            /*window.webChannel = new QWebChannel(qt.webChannelTransport, function(channel) {
+                window.terminalApi = channel.objects.terminalApi;
+
+                window.terminalApi.terminalReady();
+            });*/
+
+            function initContent(io) {
+                const ver = lib.resource.getData("hterm/changelog/version");
+                const date = lib.resource.getData("hterm/changelog/date");
+                const pkg = `hterm ${ver} (${date})`;
+
+                io.println(
+                    "\r\n\
+                            .--~~~~~~~~~~~~~------.\r\n\
+                           /--===============------\\\r\n\
+                           | |```````````````|     |\r\n\
+                           | |               |     |\r\n\
+                           | |      >_<      |     |\r\n\
+                           | |               |     |\r\n\
+                           | |_______________|     |\r\n\
+                           |                   ::::|\r\n\
+                           '======================='\r\n\
+                           //-'-'-'-'-'-'-'-'-'-'-\\\\\r\n\
+                          //_'_'_'_'_'_'_'_'_'_'_'_\\\\\r\n\
+                          [-------------------------]\r\n\
+                          \\_________________________/\r\n\
+\r\n\
+                               Welcome to hterm!\r\n\
+                Press F11 to go fullscreen to use all shortcuts.\r\n\
+                       Running " +
+                    pkg +
+                    ".\r\n\
+"
+                );
+                /* eslint-enable quotes */
+            }
+
+            lib.registerInit("load messages", async() => {
+                const lang = "$1";
+
+                await hterm.messageManager.findAndLoadMessages(lib.f.getURL(`_locales/${lang}/messages.json`));
+            });
+
+            function appendString(string) {
+                window.termio.print(string);
+            }
+
+            function setupHterm() {
+                window.term = new hterm.Terminal();
+
+                window.term.onTerminalReady = function() {
+                    window.termio = this.io.push();
+
+                    function printPrompt() {
+                        window.termio.print("\x1b[38:2:51:105:232mh" + "\x1b[38:2:213:15:37mt" + "\x1b[38:2:238:178:17me" + "\x1b[38:2:51:105:232mr" + "\x1b[38:2:0:153:37mm" + "\x1b[38:2:213:15:37m>" + "\x1b[0m ");
+                    }
+
+                    window.termio.sendString = window.termio.print;
+
+                    initContent(window.termio);
+
+                    printPrompt();
+
+                    this.setScrollbarVisible(true);
+                    this.setCursorVisible(true);
+                    this.setCursorBlink(true);
+
+                    // start the web channel now that the terminal is initialised
+
+                    window.webChannel = new QWebChannel(qt.webChannelTransport, function(channel) {
+                        window.terminalApi = channel.objects.terminalApi;
+
+                        window.terminalApi.printlnSignal.connect(function(string) {
+                            window.termio.println(string);
+                        });
+
+                        window.terminalApi.printSignal.connect(function(string) {
+                            window.termio.print(string);
+                        });
+
+                        window.terminalApi.onTerminalReady();
+                    });
+                };
+
+                window.term.decorate(document.querySelector("#terminal"));
+
+                window.term.installKeyboard();
+
+                window.term.contextMenu.setItems([{
+                    name: "Terminal Reset",
+                    action: () => term.reset()
+                }, {
+                    name: "Terminal Clear",
+                    action: () => term.clear()
+                }, {
+                    name: hterm.ContextMenu.SEPARATOR
+                }, {
+                    name: "Homepage",
+                    action: function() {
+                        lib.f.openWindow("https://chromium.googlesource.com/apps/libapps/+/HEAD/hterm/README.md", "_blank");
+                    },
+                }, {
+                    name: "FAQ",
+                    action: function() {
+                        lib.f.openWindow("https://goo.gl/muppJj", "_blank");
+                    },
+                }, ]);
+            }
+
+            window.onload = async function() {
+                await lib.init();
+
+                setupHterm();
+            };
+        </script>
+    </body>
+</html>

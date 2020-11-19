@@ -26,7 +26,6 @@
 #include "ImageLoader.h"
 
 #include <QAction>
-#include <QDebug>
 #include <QDesktopServices>
 #include <QFileInfo>
 #include <QJsonDocument>
@@ -37,8 +36,12 @@
 #include <opencv2/opencv.hpp>
 #include <QPaintEvent>
 #include <QPainter>
+#include <QResizeEvent>
+#include <QStyleFactory>
 #include <QTemporaryDir>
 #include <QTimer>
+#include <QWebEngineProfile>
+#include <QWebEngineSettings>
 #include <QWindow>
 #include <utility>
 
@@ -226,22 +229,24 @@ Nedrysoft::MainWindow::MainWindow() :
     connect(ui->buildButton, &Nedrysoft::Ribbon::RibbonPushButton::clicked, [this]() {
         m_builder->createDMG("~/Desktop/test.dmg");
     });
+
+    connect(ui->terminalWidget, &Nedrysoft::HTermWidget::terminalReady, [this]() {
+        // TODO: terminal is ready and API calls can be made.
+    });
 }
 
 Nedrysoft::MainWindow::~MainWindow() {
     delete ui;
-
-    delete getInstance();
 }
 
 Nedrysoft::MainWindow *Nedrysoft::MainWindow::getInstance() {
     static Nedrysoft::MainWindow *instance = nullptr;
 
     if (!instance) {
-        instance = new Nedrysoft::MainWindow;
+        m_instance = instance = new Nedrysoft::MainWindow;
     }
 
-    return instance;
+    return m_instance;
 }
 
 void Nedrysoft::MainWindow::handleOpenByUrl(const QUrl &url) {
@@ -292,11 +297,6 @@ void Nedrysoft::MainWindow::processBackground()
         // find contours in image
 
         cv::findContours(image, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
-
-        /*
-        cv::namedWindow("Image");
-        cv::imshow("Image", image);
-         */
 
         // find centre of discovered objects in image
 
@@ -415,5 +415,10 @@ void Nedrysoft::MainWindow::updatePixmap() {
         ui->previewWidget->setPixmap(m_backgroundPixmap);
         ui->previewWidget->clearCentroids();
     }
+
+    ui->previewWidget->fitToView();
 }
 
+void Nedrysoft::MainWindow::resizeEvent(QResizeEvent *event) {
+    ui->previewWidget->fitToView();
+}
