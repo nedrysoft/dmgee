@@ -20,19 +20,36 @@
  */
 
 #include "HTermApi.h"
+#include <QDebug>
 
 void Nedrysoft::HTermApi::onTerminalReady() {
     Q_EMIT terminalReady();
 }
 
+void Nedrysoft::HTermApi::onContextMenu() {
+    Q_EMIT contextMenu();
+}
+
 void Nedrysoft::HTermApi::print(QString string) {
-    Q_EMIT printSignal(string);
+    Q_EMIT doPrint(string);
 }
 
 void Nedrysoft::HTermApi::println(QString string) {
-    Q_EMIT printlnSignal(string);
+    Q_EMIT doPrintln(string);
 }
 
 void Nedrysoft::HTermApi::urlClicked(QString url) {
     Q_EMIT openUrl(url);
+}
+
+void Nedrysoft::HTermApi::clear() {
+    Q_EMIT doClear();
+}
+
+void Nedrysoft::HTermApi::onTerminalBuffer(QString terminalBuffer) {
+    Q_EMIT Nedrysoft::HTermApi::terminalBuffer(terminalBuffer);
+}
+
+void Nedrysoft::HTermApi::getTerminalBuffer() {
+    Q_EMIT doGetTerminalBuffer();
 }

@@ -24,6 +24,8 @@
 #include "HTermApi.h"
 
 #include <QLabel>
+#include <QMenu>
+#include <QMouseEvent>
 #include <QMovie>
 #include <QWebChannel>
 #include <QWebEngineProfile>
@@ -87,7 +89,9 @@ Nedrysoft::HTermWidget::HTermWidget(QWidget *parent) :
         Q_EMIT terminalReady();
     });
 
+    connect(m_terminalApi, &Nedrysoft::HTermApi::contextMenu, this, &Nedrysoft::HTermWidget::contextMenu, Qt::QueuedConnection);
     connect(m_terminalApi, &Nedrysoft::HTermApi::openUrl, this, &Nedrysoft::HTermWidget::openUrl, Qt::QueuedConnection);
+    connect(m_terminalApi, &Nedrysoft::HTermApi::terminalBuffer, this, &Nedrysoft::HTermWidget::terminalBuffer, Qt::QueuedConnection);
 }
 
 Nedrysoft::HTermWidget::~HTermWidget() {
@@ -114,4 +118,16 @@ void Nedrysoft::HTermWidget::println(QString string) {
 
 bool Nedrysoft::HTermWidget::isReady() {
     return m_terminalReady;
+}
+
+void Nedrysoft::HTermWidget::clear() {
+    if (m_terminalReady) {
+        m_terminalApi->clear();
+    }
+}
+
+void Nedrysoft::HTermWidget::getTerminalBuffer() {
+    if (m_terminalReady) {
+        m_terminalApi->getTerminalBuffer();
+    }
 }

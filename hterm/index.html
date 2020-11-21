@@ -69,12 +69,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 await hterm.messageManager.findAndLoadMessages(lib.f.getURL(`_locales/${lang}/messages.json`));
             });
 
-            function appendString(string) {
-                window.termio.print(string);
-            }
+
 
             function setupHterm() {
-                // replace the openWindow function to that we get hyperlink clicks
+
+                // @note    replace the openWindow function to that we get hyperlink clicks
 
                 lib.f.openWindow = function(url, name = undefined, features = undefined) {
                     window.terminalApi.urlClicked(url);
@@ -87,6 +86,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 window.term.prefs_.set('user-css', 'hterm.css')
                 window.term.prefs_.set('background-color', '#000000')
                 window.term.prefs_.set('environment', 'truecolor')
+
+                // @note    in order to catch right click, mouse-right-click-paste must be enabled as we patch
+                //          in a hack which allows us to piggyback off this to show a real context menu
+                //          in C++
+
+                window.term.prefs_.set('mouse-right-click-paste', true)
 
                 window.term.onTerminalReady = function() {
                     window.termio = this.io.push();
@@ -104,12 +109,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     window.webChannel = new QWebChannel(qt.webChannelTransport, function(channel) {
                         window.terminalApi = channel.objects.terminalApi;
 
-                        window.terminalApi.printlnSignal.connect(function(string) {
+                        window.terminalApi.doPrintln.connect(function(string) {
                             window.termio.println(string);
                         });
 
-                        window.terminalApi.printSignal.connect(function(string) {
+                        window.terminalApi.doPrint.connect(function(string) {
                             window.termio.print(string);
+                        });
+
+                        window.terminalApi.doClear.connect(function() {
+                            window.term.clear();
+                        });
+
+                        window.terminalApi.doGetTerminalBuffer.connect(function() {
+                            window.terminalApi.onTerminalBuffer(term.getRowsText(0, term.getRowCount()));
                         });
 
                         window.terminalApi.onTerminalReady();
@@ -117,6 +130,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 };
 
                 window.term.decorate(document.querySelector("#terminal"));
+
+                // @note    replace the term.paste() function, this allows us to catch right clicks and send back to the
+                //          c++ backend.
+
+                window.term.paste = function() {
+                    window.terminalApi.onContextMenu();
+                    return true;
+                }
             }
 
             window.onload = async function() {

@@ -107,6 +107,8 @@ list(APPEND app_SOURCES
     src/FlatTabWidget.cpp
     src/AnsiEscape.cpp
     src/AnsiEscape.h
+    src/ThemeSupport.mm
+    src/ThemeSupport.h
 
     src/app.qrc
     icons/dmgee.icns

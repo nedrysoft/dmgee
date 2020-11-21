@@ -134,7 +134,15 @@ namespace Nedrysoft {
                  */
                 void addText(QPoint pos, QString text);
 
-        private:
+            protected:
+                /**
+                 * @brief       Reimplements: QWidget::paintEvent(QPaintEvent *event).
+                 *
+                 * @param[in]   event the event information.
+                 */
+                void paintEvent(QPaintEvent *event) override;
+
+            private:
                 QPixmap m_pixmap;                           //! the background image pixmap
                 QPixmap m_targetPixmap;                     //! target snap location image
                 QList<QPointF> m_centroids;                 //! centroid points

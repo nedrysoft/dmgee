@@ -2,5 +2,15 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/thirdparty/CLI11" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/thirdparty/CLI11/extern/googletest" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/thirdparty/CLI11/tests/mesonTest/subprojects/CLI11" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/thirdparty/tomlplusplus" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/thirdparty/tomlplusplus/extern/Catch2" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/thirdparty/tomlplusplus/extern/mcss" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/thirdparty/tomlplusplus/extern/tloptional" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/thirdparty/tomlplusplus/extern/tloptional/cmake/tl-cmake" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/thirdparty/tomlplusplus/extern/toml-spec-tests" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/thirdparty/tomlplusplus/extern/toml-test" vcs="Git" />
   </component>
 </project>

@@ -28,5 +28,10 @@
         <file>../images/spinner-dark.gif</file>
         <file>../images/spinner-light.gif</file>
         <file>../images/loading.gif</file>
+
+        <file>../icons/copy-dark@2x.png</file>
+        <file>../icons/copy-light@2x.png</file>
+        <file>../icons/trash-dark@2x.png</file>
+        <file>../icons/trash-light@2x.png</file>
     </qresource>
 </RCC>

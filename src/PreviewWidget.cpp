@@ -24,6 +24,7 @@
 #include "Image.h"
 #include "SnappedGraphicsPixmapItem.h"
 
+#include <QDebug>
 #include <QDrag>
 #include <QGraphicsLineItem>
 #include <QGraphicsPixmapItem>
@@ -233,4 +234,12 @@ void Nedrysoft::PreviewWidget::addText(QPoint pos, QString text) {
 
     textItem->setFlag(QGraphicsItem::ItemIsMovable, true);
     textItem->setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
+}
+
+void Nedrysoft::PreviewWidget::paintEvent(QPaintEvent *event) {
+    QWidget::paintEvent(event);
+
+    /*QPainter painter(this);
+
+    painter.fillRect(event->rect(), Qt::lightGray);*/
 }

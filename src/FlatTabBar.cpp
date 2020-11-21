@@ -21,6 +21,8 @@
 
 #include "FlatTabBar.h"
 
+#include "ThemeSupport.h"
+
 #include <QApplication>
 #include <QDebug>
 #include <QPaintEvent>
@@ -63,6 +65,7 @@ void Nedrysoft::FlatTabBar::paintEvent(QPaintEvent *event) {
             painter.restore();
         }
 
+        opt.palette.setColor(QPalette::WindowText, Qt::white);
         painter.drawControl(QStyle::CE_TabBarTabLabel, opt);
     }
 

@@ -25,8 +25,10 @@
 #include "AboutDialog.h"
 #include "AnsiEscape.h"
 #include "ImageLoader.h"
+#include "ThemeSupport.h"
 
 #include <QAction>
+#include <QClipboard>
 #include <QDesktopServices>
 #include <QElapsedTimer>
 #include <QFileInfo>
@@ -59,6 +61,8 @@
 using namespace std::chrono_literals;
 
 constexpr auto splashScreenDuration = 100ms;//3s;
+constexpr auto repositoryUrl = "https://github.com/fizzyade/dmgee";
+constexpr auto menuIconSize = 32;
 
 Nedrysoft::MainWindow *Nedrysoft::MainWindow::m_instance = nullptr;
 
@@ -73,18 +77,16 @@ Nedrysoft::MainWindow::MainWindow() :
 
     ui->setupUi(this);
 
-    m_loadingMovie = new QMovie;
+    m_themeSupport = new Nedrysoft::Utils::ThemeSupport;
 
-    ui->stackedWidget->setCurrentIndex(1);
+    /*auto p = ui->previewContainer->palette();
 
-    m_loadingMovie->setFileName(":/images/loading.gif");
+    p.setColor(QPalette::Base, Qt::red);
 
-    ui->loadingLabel->setMovie(m_loadingMovie);
+    ui->previewContainer->setBackgroundRole(QPalette::Base);
+    ui->previewContainer->setPalette(p);*/
 
-    QPixmap image(m_loadingMovie->fileName());
-
-    m_loadingMovie->setScaledSize(image.size()/2);
-    m_loadingMovie->start();
+    initialiseLoader();
 
     setupStatusBar();
 
@@ -102,149 +104,46 @@ Nedrysoft::MainWindow::MainWindow() :
 
     ui->gridVisibleCheckbox->setCheckState(configValue("gridVisible", false).toBool() ? Qt::Checked : Qt::Unchecked);
     ui->gridSnapCheckbox->setCheckState(configValue("gridShouldSnap", false).toBool() ? Qt::Checked : Qt::Unchecked);
-    ui->featureAutoDetectCheckbox->setCheckState(configValue("snapToFeatures", true).toBool() ? Qt::Checked : Qt::Unchecked);
-    ui->showIconsCheckBox->setCheckState(configValue("iconsVisible", true).toBool() ? Qt::Checked : Qt::Unchecked);
-
-    // icon size controls
-
-    ui->iconsSizeLineEdit->setValidator(new QIntValidator(16, 512));
-    ui->previewWidget->setIconSize(configValue("iconSize", 64).value<int>());
-
-    // grid controls
-
     ui->gridXLineEdit->setValidator(new QIntValidator(0, 100));
     ui->gridYLineEdit->setValidator(new QIntValidator(0, 100));
-
-    // text controls
-
-    ui->fontSizeLineEdit->setValidator(new QIntValidator(6, 72));
-
-    ui->positionComboBox->addItems(QStringList() << "Bottom" << "Right");
-    ui->positionComboBox->setCurrentIndex(configValue("textPosition", Nedrysoft::Builder::Bottom).value<Nedrysoft::Builder::TextPosition>());
-
     ui->previewWidget->setGrid(QSize(ui->gridXLineEdit->text().toInt(),ui->gridYLineEdit->text().toInt()),
                                ui->gridVisibleCheckbox->isChecked(),
                                ui->gridSnapCheckbox->isChecked());
 
+    ui->featureAutoDetectCheckbox->setCheckState(configValue("snapToFeatures", true).toBool() ? Qt::Checked : Qt::Unchecked);
     ui->featureAutoDetectCheckbox->setCheckState(Qt::Checked);
 
-    // process the background image (if there is one loaded) to detect
+    ui->showIconsCheckBox->setCheckState(configValue("iconsVisible", true).toBool() ? Qt::Checked : Qt::Unchecked);
+    ui->iconsSizeLineEdit->setValidator(new QIntValidator(16, 512));
+    ui->previewWidget->setIconSize(configValue("iconSize", 64).value<int>());
+
+    ui->fontSizeLineEdit->setValidator(new QIntValidator(6, 72));
+
+    ui->positionComboBox->addItems(QStringList() << tr("Bottom") << tr("Right"));
+    ui->positionComboBox->setCurrentIndex(configValue("textPosition", Nedrysoft::Builder::Bottom).value<Nedrysoft::Builder::TextPosition>());
 
     processBackground();
 
     setupDiskImageFormatCombo();
 
-    // font size changed
+    // connect signals
 
-    connect(ui->fontSizeLineEdit, &QLineEdit::textChanged, [this](const QString &text) {
-        bool ok = false;
-        int size = text.toInt(&ok);
-
-        if (( ok ) && ( size != 0 )) {
-            setConfigValue("textSize", size);
-            ui->previewWidget->setTextSize(text.toInt());
-        }
-    });
-
-    // icon size changed
-
-    connect(ui->iconsSizeLineEdit, &QLineEdit::textChanged, [this](const QString &text) {
-        bool ok = false;
-        int size = text.toInt(&ok);
-
-        if (( ok ) && ( size != 0 )) {
-            setConfigValue("iconSize", size);
-            ui->previewWidget->setIconSize(text.toInt());
-        }
-    });
-
-    // grid snapping
-
-    connect(ui->gridSnapCheckbox, &QCheckBox::clicked, [=](bool checked) {
-        setConfigValue("snapToGrid", checked);
-
-        ui->previewWidget->setGrid(QSize(ui->gridXLineEdit->text().toInt(),ui->gridYLineEdit->text().toInt()),
-                                   ui->gridVisibleCheckbox->isChecked(),
-                                   ui->gridSnapCheckbox->isChecked());
-    });
-
-    // grid visibility
-
-    connect(ui->gridVisibleCheckbox, &QCheckBox::clicked, [=](bool checked) {
-        setConfigValue("gridVisible", checked);
-
-        ui->previewWidget->setGrid(QSize(ui->gridXLineEdit->text().toInt(),ui->gridYLineEdit->text().toInt()),
-                                   ui->gridVisibleCheckbox->isChecked(),
-                                   ui->gridSnapCheckbox->isChecked());
-    });
-
-    // build DMG image
-
-    connect(ui->buildButton, &Nedrysoft::Ribbon::RibbonPushButton::clicked, [this]() {
-        ui->terminalWidget->println("");
-        m_builder->createDMG("~/Desktop/test.dmg");
-    });
-
-    // terminal is ready (html loaded and hterm initialised)
-
-    connect(ui->terminalWidget, &Nedrysoft::HTermWidget::terminalReady, [this]() {
-        auto versionText = QString("%1.%2.%3 %4 %5").arg(APPLICATION_GIT_YEAR).arg(APPLICATION_GIT_MONTH).arg(APPLICATION_GIT_DAY).arg(APPLICATION_GIT_BRANCH).arg(APPLICATION_GIT_HASH);
-
-        ui->stackedWidget->setCurrentIndex(0);
-
-        ui->terminalWidget->println(fore(Qt::lightGray)+"dmge² "+fore(Qt::white)+"("+fore(AnsiColour::LIGHTBLUE_EX)+versionText+fore(Qt::white)+")"+reset);
-        ui->terminalWidget->println("\r\n"+fore(Qt::lightGray)+"Ready."+reset);
-    });
-
-    connect(ui->terminalWidget, &Nedrysoft::HTermWidget::openUrl, [=](QString url) {
-        QDesktopServices::openUrl(url);
-    });
-
-    // quit
-
-    connect(ui->actionQuit, &QAction::triggered, [this](bool isChecked) {
-        close();
-    });
-
-    // about dialog
-
-    connect(ui->actionAbout, &QAction::triggered, [](bool isChecked) {
-        Nedrysoft::AboutDialog aboutDialog;
-
-        aboutDialog.exec();
-    });
-
-    // minimum feature slider (in pixels^2)
-
+    connect(ui->fontSizeLineEdit, &QLineEdit::textChanged, this, &MainWindow::onFontSizeChanged);
+    connect(ui->iconsSizeLineEdit, &QLineEdit::textChanged, this, &MainWindow::onIconSizeChanged);
+    connect(ui->gridSnapCheckbox, &QCheckBox::clicked, this, &MainWindow::onGridSnapChanged);
+    connect(ui->buildButton, &Nedrysoft::Ribbon::RibbonPushButton::clicked, this, &MainWindow::onCreateDMG);
+    connect(ui->actionAbout, &QAction::triggered, this, &Nedrysoft::MainWindow::onAboutDialogTriggered);
     connect(ui->minFeatureSlider, &QSlider::valueChanged, this, &Nedrysoft::MainWindow::onFeatureSliderMinimumValueChanged);
-
-    // grid visible checkbox
-
-    connect(ui->gridVisibleCheckbox, &QCheckBox::stateChanged, [this](int state) {
-        ui->previewWidget->setGrid(configValue("grid", QSize(20,20)).value<QSize>(), ( state == Qt::Checked ) ? true : false, true);
-    });
-
-    // icon visible checkbox
-
-    connect(ui->showIconsCheckBox, &QCheckBox::stateChanged, [this](int state) {
-        ui->previewWidget->setIconsVisible(( state == Qt::Checked ) ? true : false);
-    });
-
-    // feature detection checkbox
-
-    connect(ui->featureAutoDetectCheckbox, &QCheckBox::stateChanged, [this](int state) {
-        if (!state) {
-            ui->previewWidget->clearCentroids();
-        } else {
-            processBackground();
-        }
-    });
-
-    // design controls
-
+    connect(ui->gridVisibleCheckbox, &QCheckBox::stateChanged, this, &Nedrysoft::MainWindow::onGridVisibilityChanged);
+    connect(ui->showIconsCheckBox, &QCheckBox::stateChanged, this, &Nedrysoft::MainWindow::onIconsVisibilityChanged);
+    connect(ui->featureAutoDetectCheckbox, &QCheckBox::stateChanged, this, &Nedrysoft::MainWindow::onFeatureVisibilityChanged);
     connect(ui->designFilesAddButton, &Nedrysoft::Ribbon::RibbonDropButton::clicked, this, &Nedrysoft::MainWindow::onDesignFilesAddButtonClicked);
-
     connect(m_builder, &Nedrysoft::Builder::progressUpdate, this, &Nedrysoft::MainWindow::onProgressUpdate, Qt::QueuedConnection);
+    connect(ui->terminalWidget, &Nedrysoft::HTermWidget::terminalReady, this, &Nedrysoft::MainWindow::onTerminalReady);
+    connect(ui->terminalWidget, &Nedrysoft::HTermWidget::contextMenu, this, &Nedrysoft::MainWindow::onTerminalContextMenuTriggered);
+    connect(ui->terminalWidget, &Nedrysoft::HTermWidget::openUrl, this, &Nedrysoft::MainWindow::onTerminalUrlClicked);
+    connect(ui->actionQuit, &QAction::triggered, this, &Nedrysoft::MainWindow::close);
+    connect(ui->terminalWidget, &Nedrysoft::HTermWidget::terminalBuffer, this, &Nedrysoft::MainWindow::copyTerminalBufferToClipboard);
 }
 
 Nedrysoft::MainWindow::~MainWindow() {
@@ -439,10 +338,11 @@ void Nedrysoft::MainWindow::resizeEvent(QResizeEvent *event) {
 QString Nedrysoft::MainWindow::timespan(int milliseconds) {
     QString outputString;
     int seconds = milliseconds / 1000;
-    milliseconds = milliseconds % 1000;
     int minutes = seconds / 60;
-    seconds = seconds % 60;
     int hours = minutes / 60;
+
+    milliseconds = milliseconds % 1000;
+    seconds = seconds % 60;
     minutes  = minutes % 60;
 
     if (hours!=0) {
@@ -457,7 +357,7 @@ QString Nedrysoft::MainWindow::timespan(int milliseconds) {
         outputString.append(QString(tr("%1 %2 ").arg(seconds).arg("seconds")));
     }
 
-    return outputString;
+    return outputString.trimmed();
 }
 
 void Nedrysoft::MainWindow::onProgressUpdate(QString updateData) {
@@ -493,7 +393,7 @@ void Nedrysoft::MainWindow::onProgressUpdate(QString updateData) {
                     "\r\n"+
                     fore(AnsiColour::WHITE)+
                     style(AnsiStyle::BRIGHT)+
-                    tr("Build took %1.").arg(duration.trimmed());
+                    tr("Build took %1.").arg(duration);
             //TODO: this should actually return separate strings which can then
             //      be used by tr.  As it stands the duration string is a single string
             //      which means that it cannot be translated properly.
@@ -611,10 +511,20 @@ void Nedrysoft::MainWindow::setupStatusBar() {
 
     m_spinnerMovie = new QMovie;
 
-    //TODO: check theme and select correct gif (also capture the theme changed message and
-    //      change there as well)
+    if (Nedrysoft::Utils::ThemeSupport::isDarkMode()) {
+        m_spinnerMovie->setFileName(":/images/spinner-dark.gif");
+    } else {
+        m_spinnerMovie->setFileName(":/images/spinner-light.gif");
+    }
 
-    m_spinnerMovie->setFileName(":/images/spinner-dark.gif");
+    connect(m_themeSupport, &Nedrysoft::Utils::ThemeSupport::themeChanged, [=](bool isDarkMode) {
+        if (isDarkMode) {
+            m_spinnerMovie->setFileName(":/images/spinner-dark.gif");
+        } else {
+            m_spinnerMovie->setFileName(":/images/spinner-light.gif");
+        }
+    });
+
     m_spinnerMovie->setScaledSize(QSize(16,16));
     m_spinnerMovie->start();
 
@@ -668,6 +578,7 @@ void Nedrysoft::MainWindow::setupDiskImageFormatCombo() {
 void Nedrysoft::MainWindow::onDesignFilesAddButtonClicked(bool dropdown) {
     if (dropdown) {
         QMenu popupMenu;
+
         auto menuPos = ui->designFilesAddButton->mapToGlobal(ui->designFilesAddButton->rect().bottomLeft());
 
         popupMenu.addAction("Background Image...");
@@ -685,4 +596,129 @@ void Nedrysoft::MainWindow::onFeatureSliderMinimumValueChanged(int newValue) {
     if (ui->featureAutoDetectCheckbox->isChecked()) {
         processBackground();
     }
+}
+
+void Nedrysoft::MainWindow::onFontSizeChanged(const QString &text) {
+    bool ok = false;
+    int size = text.toInt(&ok);
+
+    if (( ok ) && ( size != 0 )) {
+        setConfigValue("textSize", size);
+
+        ui->previewWidget->setTextSize(text.toInt());
+    }
+}
+
+void Nedrysoft::MainWindow::onIconSizeChanged(const QString &text) {
+    bool ok = false;
+    int size = text.toInt(&ok);
+
+    if (( ok ) && ( size != 0 )) {
+        setConfigValue("iconSize", size);
+
+        ui->previewWidget->setIconSize(text.toInt());
+    }
+}
+
+void Nedrysoft::MainWindow::onAboutDialogTriggered(bool isChecked) {
+    Nedrysoft::AboutDialog aboutDialog;
+
+    aboutDialog.exec();
+}
+
+void Nedrysoft::MainWindow::onGridVisibilityChanged(int state) {
+    ui->previewWidget->setGrid(configValue("grid", QSize(20,20)).value<QSize>(), ( state == Qt::Checked ) ? true : false, true);
+}
+
+void Nedrysoft::MainWindow::onIconsVisibilityChanged(int state) {
+    ui->previewWidget->setIconsVisible(( state == Qt::Checked ) ? true : false);
+}
+
+void Nedrysoft::MainWindow::onFeatureVisibilityChanged(int state) {
+    if (!state) {
+        ui->previewWidget->clearCentroids();
+    } else {
+        processBackground();
+    }
+}
+
+void Nedrysoft::MainWindow::onGridSnapChanged(bool checked) {
+    setConfigValue("snapToGrid", checked);
+
+    ui->previewWidget->setGrid(QSize(ui->gridXLineEdit->text().toInt(),ui->gridYLineEdit->text().toInt()),
+            ui->gridVisibleCheckbox->isChecked(),
+            ui->gridSnapCheckbox->isChecked());
+}
+
+void Nedrysoft::MainWindow::onCreateDMG() {
+    ui->terminalWidget->println("");
+
+    m_builder->createDMG("~/Desktop/test.dmg");
+}
+
+void Nedrysoft::MainWindow::onTerminalReady() {
+    auto versionText = QString("%1.%2.%3 %4 %5").arg(APPLICATION_GIT_YEAR).arg(APPLICATION_GIT_MONTH).arg(APPLICATION_GIT_DAY).arg(APPLICATION_GIT_BRANCH).arg(APPLICATION_GIT_HASH);
+
+    ui->stackedWidget->setCurrentIndex(TerminalView::Terminal);
+
+    ui->terminalWidget->println(
+            fore(Qt::lightGray)+
+            hyperlink(repositoryUrl, "dmge²")+
+            fore(Qt::white)+" ("+fore("#3d96f3")+
+            hyperlink(QString("%1/commit/%2").arg(repositoryUrl).arg(APPLICATION_GIT_HASH), versionText)+
+            fore(Qt::white)+")"+
+            reset);
+
+    ui->terminalWidget->println("\r\n"+fore(Qt::lightGray)+"Ready."+reset);
+}
+
+void Nedrysoft::MainWindow::initialiseLoader() {
+    m_loadingMovie = new QMovie;
+
+    ui->stackedWidget->setCurrentIndex(TerminalView::Loader);
+
+    m_loadingMovie->setFileName(":/images/loading.gif");
+
+    ui->loadingLabel->setMovie(m_loadingMovie);
+
+    QPixmap image(m_loadingMovie->fileName());
+
+    m_loadingMovie->setScaledSize(image.size() / 2);
+    m_loadingMovie->start();
+}
+
+void Nedrysoft::MainWindow::onTerminalContextMenuTriggered() {
+    QMenu menu(this);
+    QIcon copyIcon, trashIcon;
+
+    if (Nedrysoft::Utils::ThemeSupport::isDarkMode()) {
+        copyIcon = QIcon(QPixmap(":/icons/copy-dark@2x.png").scaled(menuIconSize, menuIconSize));
+        trashIcon = QIcon(QPixmap(":/icons/trash-dark@2x.png").scaled(menuIconSize, menuIconSize));
+    } else {
+        copyIcon = QIcon(QPixmap(":/icons/copy-light@2x.png").scaled(menuIconSize, menuIconSize));
+        trashIcon = QIcon(QPixmap(":/icons/trash-light@2x.png").scaled(menuIconSize, menuIconSize));
+    }
+
+    auto clearTerminalAction = menu.addAction(trashIcon, tr("Clear"));
+    auto copyToClipboardAction = menu.addAction(copyIcon, tr("Copy to clipboard"));
+
+    auto selectedAction = menu.exec(QCursor::pos());
+
+    if (selectedAction) {
+        if (selectedAction == clearTerminalAction) {
+            ui->terminalWidget->clear();
+        } else if (selectedAction == copyToClipboardAction) {
+            ui->terminalWidget->getTerminalBuffer();
+        }
+    }
+}
+
+void Nedrysoft::MainWindow::onTerminalUrlClicked(QString url) {
+    QDesktopServices::openUrl(url);
+}
+
+void Nedrysoft::MainWindow::copyTerminalBufferToClipboard(QString terminalBuffer) {
+    auto clipboard = QGuiApplication::clipboard();
+
+    clipboard->setText(terminalBuffer);
 }

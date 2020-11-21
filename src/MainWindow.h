@@ -25,6 +25,7 @@
 #include "Builder.h"
 #include "Image.h"
 #include "SplashScreen.h"
+#include "ThemeSupport.h"
 
 #include <QFileOpenEvent>
 #include <QLabel>
@@ -46,6 +47,17 @@ namespace Nedrysoft {
         public QMainWindow {
             private:
                 Q_OBJECT
+
+            private:
+                /**
+                 * @brief       The terminal is contained in a stacked widget, the first page is a loading GIF animation
+                 *              and the second page is the terminal, we show the animation on start and once the terminal
+                 *              has fully initialised we switch to it.
+                 */
+                enum TerminalView {
+                    Terminal = 0,                                   /**< Display Terminal. */
+                    Loader                                          /**< Display Loader animation. */
+                };
 
             private:
                 /**
@@ -199,6 +211,87 @@ namespace Nedrysoft {
                  */
                 Q_SLOT void onFeatureSliderMinimumValueChanged(int newValue);
 
+                /**
+                 * @brief       Called when the user changes the font size.
+                 *
+                 * @param[in]   text the new value that the user entered.
+                 */
+                Q_SLOT void onFontSizeChanged(const QString &text);
+
+                /**
+                 * @brief       Called when the user changes the icon size.
+                 *
+                 * @param[in]   text the new value that the user entered.
+                 */
+                Q_SLOT void onIconSizeChanged(const QString &text);
+
+                /**
+                 * @brief       Called when the the about dialog action is triggered.
+                 *
+                 * @param[in]   isChecked if the action is checked.
+                 */
+                Q_SLOT void onAboutDialogTriggered(bool isChecked);
+
+                /**
+                 * @brief       Called when grid visible checkbox is changed.
+                 *
+                 * @param[in]   state true if checked; otherwise false.
+                 */
+                Q_SLOT void onGridVisibilityChanged(int state);
+
+                /**
+                 * @brief       Called when icons visible checkbox is changed.
+                 *
+                 * @param[in]   state true if checked; otherwise false.
+                 */
+                Q_SLOT void onIconsVisibilityChanged(int state);
+
+                /**
+                 * @brief       Called when feature visible checkbox is changed.
+                 *
+                 * @param[in]   state true if checked; otherwise false.
+                 */
+                Q_SLOT void onFeatureVisibilityChanged(int state);
+
+                /**
+                 * @brief       Called when grid snap checkbox is changed.
+                 *
+                 * @param[in]   checked true if checked; otherwise false.
+                 */
+                Q_SLOT void onGridSnapChanged(bool checked);
+
+                /**
+                 * @brief       Called when the build button is clicked.
+                 */
+                Q_SLOT void onCreateDMG();
+
+                /**
+                 * @brief       Called when the hterm terminal widget has fully initialsied.
+                 */
+                Q_SLOT void onTerminalReady();
+
+                /**
+                 * @brief       Initialises the stacked width and displays the loader animation.
+                 */
+                void initialiseLoader();
+
+                /**
+                 * @brief       Called when a right click occurs in the terminal.
+                 */
+                Q_SLOT void onTerminalContextMenuTriggered();
+
+                /**
+                 * @brief       Called when link is clicked in the terminal.
+                 */
+                Q_SLOT void onTerminalUrlClicked(QString url);
+
+                /**
+                 * @brief       Copies the passed in terminal buffer to the clipboard.
+                 *
+                 * @param[in]   terminalBuffer the contents of the terminal buffer.
+                 */
+                void copyTerminalBufferToClipboard(QString terminalBuffer);
+
         private:
                 Ui::MainWindow *ui;                                     //! ui class for the main window
                 static MainWindow *m_instance;                          //! instance of the main window
@@ -212,6 +305,7 @@ namespace Nedrysoft {
                 QLabel *m_progressSpinner;                              //! The spinner label that is embedded in the status bar
                 QLabel *m_stateLabel;                                   //! The current status of the application
                 QMovie *m_loadingMovie;                                 //! The loading spinner
+                Nedrysoft::Utils::ThemeSupport *m_themeSupport;         //! Theme support instance
 
                 QVariantMap m_config;                                   //! the configuration as a variant map
     };

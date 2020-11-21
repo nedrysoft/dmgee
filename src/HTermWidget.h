@@ -81,6 +81,18 @@ namespace Nedrysoft {
                 void println(QString string);
 
                 /**
+                 * @brief       Clears the terminal.
+                 */
+                void clear();
+
+                /**
+                 * @brief       Gets the terminal buffer.
+                 *
+                 * @note        Buffer is returned asynchronously via the terminalBuffer signal.
+                 */
+                void getTerminalBuffer();
+
+                /**
                  * @brief       Returns whether the terminal widget is fully initialised.
                  *
                  * @note        There are two stages to iniitalisation, the first is loading the HTML into the webview
@@ -91,6 +103,16 @@ namespace Nedrysoft {
                  * @returns     true if ready; otherwise false.
                  */
                 bool isReady();
+
+                /**
+                 * @brief       This signal is emitted when a context menu is to be displayed.
+                 */
+                Q_SIGNAL void contextMenu();
+
+                /**
+                 * @brief       This signal is emitted when the terminal sends the contents of its buffer.
+                 */
+                Q_SIGNAL void terminalBuffer(QString terminalBuffer);
 
             private:
                 QWebEngineView *m_webEngineView;                    //! the instance of the web engine
