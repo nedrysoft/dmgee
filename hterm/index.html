@@ -33,7 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <style>
             html {
                 height: 100%;
-                background-color: black;
+                background-color: #2d2d2d;
             }
 
             body {
@@ -43,7 +43,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 overflow: hidden;
                 margin: 0px;
                 padding: 0px;
-                background-color: black;
             }
 
             #terminal {
@@ -53,7 +52,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 width: 100%;
                 margin: 0px;
                 padding: 0px;
-                background-color: black;
             }
         </style>
     </head>
@@ -64,43 +62,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             window.term = null;
             window.termio = null;
             window.terminalApi = null;
-
-            /*window.webChannel = new QWebChannel(qt.webChannelTransport, function(channel) {
-                window.terminalApi = channel.objects.terminalApi;
-
-                window.terminalApi.terminalReady();
-            });*/
-
-            function initContent(io) {
-                const ver = lib.resource.getData("hterm/changelog/version");
-                const date = lib.resource.getData("hterm/changelog/date");
-                const pkg = `hterm ${ver} (${date})`;
-
-                io.println(
-                    "\r\n\
-                            .--~~~~~~~~~~~~~------.\r\n\
-                           /--===============------\\\r\n\
-                           | |```````````````|     |\r\n\
-                           | |               |     |\r\n\
-                           | |      >_<      |     |\r\n\
-                           | |               |     |\r\n\
-                           | |_______________|     |\r\n\
-                           |                   ::::|\r\n\
-                           '======================='\r\n\
-                           //-'-'-'-'-'-'-'-'-'-'-\\\\\r\n\
-                          //_'_'_'_'_'_'_'_'_'_'_'_\\\\\r\n\
-                          [-------------------------]\r\n\
-                          \\_________________________/\r\n\
-\r\n\
-                               Welcome to hterm!\r\n\
-                Press F11 to go fullscreen to use all shortcuts.\r\n\
-                       Running " +
-                    pkg +
-                    ".\r\n\
-"
-                );
-                /* eslint-enable quotes */
-            }
 
             lib.registerInit("load messages", async() => {
                 const lang = "$1";
@@ -113,22 +74,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             }
 
             function setupHterm() {
+                // replace the openWindow function to that we get hyperlink clicks
+
+                lib.f.openWindow = function(url, name = undefined, features = undefined) {
+                    window.terminalApi.urlClicked(url);
+
+                    return {focus:function(){}};
+                }
+
                 window.term = new hterm.Terminal();
+
+                window.term.prefs_.set('user-css', 'hterm.css')
+                window.term.prefs_.set('background-color', '#000000')
+                window.term.prefs_.set('environment', 'truecolor')
 
                 window.term.onTerminalReady = function() {
                     window.termio = this.io.push();
 
-                    function printPrompt() {
-                        window.termio.print("\x1b[38:2:51:105:232mh" + "\x1b[38:2:213:15:37mt" + "\x1b[38:2:238:178:17me" + "\x1b[38:2:51:105:232mr" + "\x1b[38:2:0:153:37mm" + "\x1b[38:2:213:15:37m>" + "\x1b[0m ");
-                    }
-
                     window.termio.sendString = window.termio.print;
 
-                    initContent(window.termio);
-
-                    printPrompt();
-
                     this.setScrollbarVisible(true);
+                    this.scrollEnd();
+                    this.scrollPort_.invalidate();
                     this.setCursorVisible(true);
                     this.setCursorBlink(true);
 
@@ -150,28 +117,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 };
 
                 window.term.decorate(document.querySelector("#terminal"));
-
-                window.term.installKeyboard();
-
-                window.term.contextMenu.setItems([{
-                    name: "Terminal Reset",
-                    action: () => term.reset()
-                }, {
-                    name: "Terminal Clear",
-                    action: () => term.clear()
-                }, {
-                    name: hterm.ContextMenu.SEPARATOR
-                }, {
-                    name: "Homepage",
-                    action: function() {
-                        lib.f.openWindow("https://chromium.googlesource.com/apps/libapps/+/HEAD/hterm/README.md", "_blank");
-                    },
-                }, {
-                    name: "FAQ",
-                    action: function() {
-                        lib.f.openWindow("https://goo.gl/muppJj", "_blank");
-                    },
-                }, ]);
             }
 
             window.onload = async function() {

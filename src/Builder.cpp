@@ -24,6 +24,7 @@
 #include "Image.h"
 
 #include <QApplication>
+#include <QDebug>
 #include <QDir>
 #include <QFileInfo>
 #include <QPoint>
@@ -37,17 +38,19 @@ constexpr auto BuildScript = R"(
 import sys
 import os
 import dmgbuild
-import dmgee
-import json
 
 def dmg_callback(data):
-    dmgee.update(json.dumps(data))
+    import dmgee
+    import simplejson
+
+    dmgee.update(simplejson.dumps(data))
 
 dmgbuild.build_dmg(volume_name=parameters["volume_name"],
-                   filename=parameters["filename"],
-                   settings=settings,
-                   lookForHiDPI=parameters["lookForHiDPI"],
-                   detach_retries=parameters["detach_retries"])
+                       filename=parameters["filename"],
+                       settings=settings,
+                       lookForHiDPI=parameters["lookForHiDPI"],
+                       detach_retries=parameters["detach_retries"],
+                       callback=dmg_callback)
 )";
 
 PyMethodDef Nedrysoft::Builder::m_moduleMethods[] = {
@@ -208,7 +211,7 @@ bool Nedrysoft::Builder::createDMG(QString outputFilename) {
 
     modulePaths.push_back("python/packages");
 
-    python->addModulePaths(modulePaths);
+    //python->addModulePaths(modulePaths);
     python->addModule("dmgee", m_moduleMethods);
 
     python->setVariable("builderInstance", this);
@@ -324,4 +327,12 @@ PyObject* Nedrysoft::Builder::update(PyObject *self, PyObject *updateData)
     }
 
     return Py_False;
+}
+
+int Nedrysoft::Builder::totalFiles() {
+    return m_configuration.m_files.length();
+}
+
+int Nedrysoft::Builder::totalSymlinks() {
+    return m_configuration.m_symlinks.length();
 }

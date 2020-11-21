@@ -3,7 +3,7 @@
  *
  * This file is part of dmgee
  *
- * Created by Adrian Carpenter on 18/11/2020.
+ * Created by Adrian Carpenter on 19/11/2020.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,20 +19,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "HTermApi.h"
+#ifndef NEDRYSOFT_FLATTABBAR_H
+#define NEDRYSOFT_FLATTABBAR_H
 
-void Nedrysoft::HTermApi::onTerminalReady() {
-    Q_EMIT terminalReady();
-}
+#include <QTabBar>
 
-void Nedrysoft::HTermApi::print(QString string) {
-    Q_EMIT printSignal(string);
-}
+namespace Nedrysoft {
+    /**
+     * @brief       The FlatTabBar class in a flat style tab bar that matches the application style.
+     */
+    class FlatTabBar :
+        public QTabBar {
+            private:
+                Q_OBJECT;
 
-void Nedrysoft::HTermApi::println(QString string) {
-    Q_EMIT printlnSignal(string);
-}
+            protected:
+                /**
+                 * @brief       Reimplements: QWidget::paintEvent(QPaintEvent *event).
+                 *
+                 * @param[in]   event the event information.
+                 */
+                void paintEvent(QPaintEvent *event) override;
+    };
+};
 
-void Nedrysoft::HTermApi::urlClicked(QString url) {
-    Q_EMIT openUrl(url);
-}
+#endif //NEDRYSOFT_FLATTABBAR_H

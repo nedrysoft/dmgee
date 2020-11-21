@@ -101,6 +101,12 @@ list(APPEND app_SOURCES
     src/HTermApi.cpp
     src/HTermApi.h
     src/hterm.qrc
+    src/FlatTabBar.cpp
+    src/FlatTabBar.h
+    src/FlatTabWidget.h
+    src/FlatTabWidget.cpp
+    src/AnsiEscape.cpp
+    src/AnsiEscape.h
 
     src/app.qrc
     icons/dmgee.icns
@@ -199,6 +205,7 @@ set(APPLICATION_QT_LIBRARIES
     Core
     Gui
     Widgets
+    QuickWidgets
     WebEngineWidgets
 )
 

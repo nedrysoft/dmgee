@@ -108,6 +108,7 @@ int main(int argc, char *argv[]) {
     auto editOption = appCli.add_option("-e, --edit", nullptr, "Whether to open the editor (default false)");
     auto buildOption = appCli.add_option("-b, --build", nullptr, "Uses the given configuration to build the DMG");
     auto webEngineOption = appCli.add_option("--remote-debugging-port", nullptr, "Uses the given configuration to build the DMG");
+    auto defineOption = appCli.add_option("-d, --define", nullptr, "add a define, used to set the value of a placeholder.");
 
     buildOption->needs(configOption);
     buildOption->needs(outputOption);

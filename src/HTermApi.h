@@ -52,6 +52,13 @@ namespace Nedrysoft {
                 Q_SIGNAL void terminalReady();
 
                 /**
+                 * @brief       This method is called by the javascript when a hyperlink has been clicked.
+                 *
+                 * @param[in]   url the url to be opened.
+                 */
+                Q_SLOT void urlClicked(QString url);
+
+                /**
                  * @brief       This method prints the given string in the terminal.
                  *
                  * @note        Does not append a new line, use @see println which does.
@@ -66,6 +73,13 @@ namespace Nedrysoft {
                  * @param[in]   string the string to be printed.
                  */
                 Q_INVOKABLE void println(QString string);
+
+                /**
+                 * @brief       This signal is emitted by the api to when a hyperlink has been clicked
+                 *
+                 * @param[in]   string the string to be printed.
+                 */
+                Q_SIGNAL void openUrl(QString url);
 
             private:
                 /**

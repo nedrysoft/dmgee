@@ -23,6 +23,8 @@
 
 #include "HTermApi.h"
 
+#include <QLabel>
+#include <QMovie>
 #include <QWebChannel>
 #include <QWebEngineProfile>
 #include <QWebEngineSettings>
@@ -30,17 +32,25 @@
 Nedrysoft::HTermWidget::HTermWidget(QWidget *parent) :
         m_terminalReady(false) {
 
-    m_webEngineView = new QWebEngineView;
+    QPalette newPalette = palette();
 
     m_layout = new QGridLayout;
-
-    m_layout->addWidget(m_webEngineView);
 
     m_layout->setMargin(0);
 
     setLayout(m_layout);
 
     setContentsMargins(0,0,0,0);
+
+    /*newPalette.setColor(QPalette::Window, Qt::black);
+    setAutoFillBackground(true);
+    setPalette(newPalette);*/
+
+    m_webEngineView = new QWebEngineView;
+
+    // we hide the web engine view as it displays the scrollbar in the wrong colour until the correct CSS has been loaded.
+
+    setBackgroundRole(QPalette::Window);
 
     m_profile = new QWebEngineProfile;
 
@@ -50,7 +60,9 @@ Nedrysoft::HTermWidget::HTermWidget(QWidget *parent) :
     m_profile->settings()->setAttribute(QWebEngineSettings::JavascriptEnabled, true);
     m_profile->settings()->setAttribute(QWebEngineSettings::JavascriptCanOpenWindows, true);
     m_profile->settings()->setAttribute(QWebEngineSettings::LocalStorageEnabled, true);
-    m_profile->settings()->setAttribute(QWebEngineSettings::ShowScrollBars, false);
+    m_profile->settings()->setAttribute(QWebEngineSettings::FocusOnNavigationEnabled, true);
+
+    m_profile->settings()->setUnknownUrlSchemePolicy(QWebEngineSettings::AllowAllUnknownUrlSchemes);
 
     m_page = new QWebEnginePage(m_profile);
 
@@ -63,15 +75,19 @@ Nedrysoft::HTermWidget::HTermWidget(QWidget *parent) :
 
     m_page->setWebChannel(m_apiChannel);
 
-    m_webEngineView->setPage(m_page);
-
     m_page->load(QUrl("qrc:/hterm/index.html"));
+
+    m_webEngineView->setPage(m_page);
 
     connect(m_terminalApi, &Nedrysoft::HTermApi::terminalReady, [=]() {
         m_terminalReady = true;
 
+        m_layout->addWidget(m_webEngineView);
+
         Q_EMIT terminalReady();
     });
+
+    connect(m_terminalApi, &Nedrysoft::HTermApi::openUrl, this, &Nedrysoft::HTermWidget::openUrl, Qt::QueuedConnection);
 }
 
 Nedrysoft::HTermWidget::~HTermWidget() {

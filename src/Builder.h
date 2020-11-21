@@ -116,6 +116,20 @@ namespace Nedrysoft {
                  */
                 bool loadConfiguration(const QString& filename);
 
+                /**
+                 * @brief       Returns the number of files that are in the configuration.
+                 *
+                 * @returns     the number of files.
+                 */
+                int totalFiles();
+
+                /**
+                 * @brief       Returns the number of symlinks that are in the configuration.
+                 *
+                 * @returns     the number of symlinks.
+                 */
+                int totalSymlinks();
+
             private:
                 /**
                  * @brief       Python function which allows transfer of a string to c

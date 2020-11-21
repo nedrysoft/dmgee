@@ -130,6 +130,21 @@ constexpr auto RibbonPushButtonDefaultFontSize = 10;
 #define RibbonPushButtonDefaultFontSize = 10;
 ```
 
+### Line Breaks
+
+Line breaks are permitted when the improve clarity.  A double indent must be used on the following lines.
+
+```c++
+QString filename =
+        fore(AnsiColour::WHITE)+
+        "\""+
+        fore(0xb0,0x85, 0xbe)+
+        fileInfo.fileName()+
+        fore(AnsiColour::WHITE)+
+        "\""+
+        fore(AnsiColour::YELLOW);
+```
+
 ### Comments
 
 Comments should be used where appropriate, code should use descriptive names which alleviates the need for large blocks of comments.  Comments should be used to describe operations that may not be obvious at first glance exactly what they do.

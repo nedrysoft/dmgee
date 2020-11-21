@@ -60,6 +60,13 @@ namespace Nedrysoft {
                 Q_SIGNAL void terminalReady();
 
                 /**
+                 * @brief       This signal is emitted when a link has been clicked in the terminal.
+                 *
+                 * @param[in]   url the url that has been requested.
+                 */
+                Q_SIGNAL void openUrl(QString url);
+
+                /**
                  * @brief       Prints the string to terminal without a new line.
                  *
                  * @param[in]   string the string to be printed,

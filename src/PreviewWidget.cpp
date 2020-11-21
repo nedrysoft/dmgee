@@ -217,3 +217,20 @@ void Nedrysoft::PreviewWidget::setTextSize(int textSize) {
 void Nedrysoft::PreviewWidget::fitToView() {
     m_graphicsView.fitInView(m_graphicsScene.sceneRect(), Qt::KeepAspectRatio);
 }
+
+void Nedrysoft::PreviewWidget::addText(QPoint pos, QString text) {
+    constexpr auto fontFamily = "Open Sans";
+    constexpr auto fontSize = 14;
+    auto font = QFont(fontFamily, fontSize, QFont::Weight::Normal);
+
+    auto textItem = m_graphicsScene.addText(text);
+
+    textItem->setPos(pos);
+    textItem->setFont(font);
+    textItem->setDefaultTextColor(Qt::white);
+
+    textItem->setZValue(1);
+
+    textItem->setFlag(QGraphicsItem::ItemIsMovable, true);
+    textItem->setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
+}

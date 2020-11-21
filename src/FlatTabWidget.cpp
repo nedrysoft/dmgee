@@ -3,7 +3,7 @@
  *
  * This file is part of dmgee
  *
- * Created by Adrian Carpenter on 18/11/2020.
+ * Created by Adrian Carpenter on 19/11/2020.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,20 +19,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "HTermApi.h"
+#include "FlatTabWidget.h"
 
-void Nedrysoft::HTermApi::onTerminalReady() {
-    Q_EMIT terminalReady();
-}
+#include "FlatTabBar.h"
 
-void Nedrysoft::HTermApi::print(QString string) {
-    Q_EMIT printSignal(string);
-}
+Nedrysoft::FlatTabWidget::FlatTabWidget(QWidget *parent) :
+    QTabWidget(parent) {
+    auto tabBar = new FlatTabBar;
 
-void Nedrysoft::HTermApi::println(QString string) {
-    Q_EMIT printlnSignal(string);
-}
-
-void Nedrysoft::HTermApi::urlClicked(QString url) {
-    Q_EMIT openUrl(url);
+    setTabBar(tabBar);
 }

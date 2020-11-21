@@ -126,6 +126,14 @@ namespace Nedrysoft {
                  */
                 void fitToView();
 
+                /**
+                 * @brief       Adds a text item to the preview.
+                 *
+                 * @param[in]   pos the position of the text
+                 * @param[in]   text the string to be displayed
+                 */
+                void addText(QPoint pos, QString text);
+
         private:
                 QPixmap m_pixmap;                           //! the background image pixmap
                 QPixmap m_targetPixmap;                     //! target snap location image

@@ -27,7 +27,10 @@
 #include "SplashScreen.h"
 
 #include <QFileOpenEvent>
+#include <QLabel>
 #include <QMainWindow>
+#include <QMovie>
+#include <QProgressBar>
 
 namespace Ui {
     class MainWindow;
@@ -156,6 +159,46 @@ namespace Nedrysoft {
                  */
                 void resizeEvent(QResizeEvent *event) override;
 
+            private:
+                /**
+                 * @brief       Returns a human readable string for an elapsed duration in milliseconds.
+                 *
+                 * @param[in]   milliseconds the duration.
+                 *
+                 * @returns     A human readable string for the elapsed duration.
+                 */
+                QString timespan(int milliseconds);
+
+                /**
+                 * @brief        Updates the GUI with the current progress.
+                 * @param[in]    updateData the JSON update as a string.
+                 */
+                void onProgressUpdate(QString updateData);
+
+                /**
+                 * @brief        Sets up the controls on the status bar.
+                 */
+                void setupStatusBar();
+
+                /**
+                 * @brief        Sets up the disk image formats combobox.
+                 */
+                void setupDiskImageFormatCombo();
+
+                /**
+                 * @brief       Handles a click on the add files to design button.
+                 *
+                 * @param[in]   dropdown true if drop down button clicked; otherwise false.
+                 */
+                Q_SLOT void onDesignFilesAddButtonClicked(bool dropdown);
+
+                /**
+                 * @brief       Executes the opencv feature algorithm with the new value.
+                 *
+                 * @param[in]   newValue the new minimum feature size.
+                 */
+                Q_SLOT void onFeatureSliderMinimumValueChanged(int newValue);
+
         private:
                 Ui::MainWindow *ui;                                     //! ui class for the main window
                 static MainWindow *m_instance;                          //! instance of the main window
@@ -163,8 +206,12 @@ namespace Nedrysoft {
                 Image m_backgroundImage;                                //! the background image in our intermediate format
                 QPixmap m_backgroundPixmap;                             //! the background image as a cached pixmap
                 QList<QPointF> m_centroids;                             //! list of centroids discovered from image
-
+                QProgressBar *m_progressBar;                            //! Progress bar when build is taking place
                 Builder *m_builder;                                     //! builder instance for generating DMG
+                QMovie *m_spinnerMovie;                                 //! The animated GIF used as a spinner
+                QLabel *m_progressSpinner;                              //! The spinner label that is embedded in the status bar
+                QLabel *m_stateLabel;                                   //! The current status of the application
+                QMovie *m_loadingMovie;                                 //! The loading spinner
 
                 QVariantMap m_config;                                   //! the configuration as a variant map
     };

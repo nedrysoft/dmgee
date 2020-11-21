@@ -5,6 +5,7 @@
         <file>../hterm/hterm_resources.js</file>
         <file>../hterm/index.html</file>
         <file>../hterm/qwebchannel.js</file>
+        <file>../hterm/hterm.css</file>
 
         <file>../hterm/_locales/lo/messages.json</file>
         <file>../hterm/_locales/id/messages.json</file>

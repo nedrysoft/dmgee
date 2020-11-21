@@ -24,5 +24,9 @@
         <file>../icons/add@2x.png</file>
         <file>../icons/build.png</file>
         <file>../icons/build@2x.png</file>
+
+        <file>../images/spinner-dark.gif</file>
+        <file>../images/spinner-light.gif</file>
+        <file>../images/loading.gif</file>
     </qresource>
 </RCC>

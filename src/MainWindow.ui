@@ -14,7 +14,7 @@
    <string>dmge²</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout_7">
+   <layout class="QGridLayout" name="gridLayout_6">
     <property name="leftMargin">
      <number>0</number>
     </property>
@@ -27,11 +27,8 @@
     <property name="bottomMargin">
      <number>0</number>
     </property>
-    <property name="horizontalSpacing">
-     <number>0</number>
-    </property>
-    <property name="verticalSpacing">
-     <number>1</number>
+    <property name="spacing">
+     <number>2</number>
     </property>
     <item row="0" column="0">
      <widget class="Nedrysoft::Ribbon::RibbonWidget" name="ribbonWidget">
@@ -966,25 +963,37 @@
      </widget>
     </item>
     <item row="1" column="0">
-     <widget class="QSplitter" name="mainSplitter">
+     <widget class="QSplitter" name="splitter">
+      <property name="styleSheet">
+       <string notr="true">background:black;</string>
+      </property>
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
-      <property name="handleWidth">
-       <number>3</number>
-      </property>
-      <property name="childrenCollapsible">
-       <bool>false</bool>
-      </property>
-      <widget class="Nedrysoft::PreviewWidget" name="previewWidget" native="true">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
+      <widget class="QWidget" name="gridLayoutWidget">
+       <layout class="QGridLayout" name="gridLayout_10">
+        <property name="topMargin">
+         <number>12</number>
+        </property>
+        <property name="bottomMargin">
+         <number>12</number>
+        </property>
+        <item row="0" column="0">
+         <widget class="Nedrysoft::PreviewWidget" name="previewWidget" native="true">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="autoFillBackground">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
-      <widget class="QTabWidget" name="tabWidget">
+      <widget class="Nedrysoft::FlatTabWidget" name="tabWidget">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
          <horstretch>0</horstretch>
@@ -996,6 +1005,9 @@
          <width>16777215</width>
          <height>150</height>
         </size>
+       </property>
+       <property name="autoFillBackground">
+        <bool>false</bool>
        </property>
        <property name="tabShape">
         <enum>QTabWidget::Rounded</enum>
@@ -1010,7 +1022,7 @@
         <attribute name="title">
          <string>Console</string>
         </attribute>
-        <layout class="QGridLayout" name="gridLayout_6">
+        <layout class="QGridLayout" name="gridLayout_11">
          <property name="leftMargin">
           <number>0</number>
          </property>
@@ -1024,7 +1036,104 @@
           <number>0</number>
          </property>
          <item row="0" column="0">
-          <widget class="Nedrysoft::HTermWidget" name="terminalWidget" native="true"/>
+          <widget class="QStackedWidget" name="stackedWidget">
+           <property name="currentIndex">
+            <number>1</number>
+           </property>
+           <widget class="QWidget" name="terminalPage">
+            <layout class="QGridLayout" name="gridLayout_7">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item row="0" column="0">
+              <widget class="Nedrysoft::HTermWidget" name="terminalWidget" native="true"/>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="loadingPage">
+            <layout class="QGridLayout" name="gridLayout_8">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item row="2" column="0">
+              <widget class="QLabel" name="iniitalisingLabel">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Initialising, please wait...</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignHCenter|Qt::AlignTop</set>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="loadingLabel">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignBottom|Qt::AlignHCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <spacer name="verticalSpacer">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="3" column="0">
+              <spacer name="verticalSpacer_3">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+          </widget>
          </item>
         </layout>
        </widget>
@@ -1122,6 +1231,12 @@
    <class>Nedrysoft::HTermWidget</class>
    <extends>QWidget</extends>
    <header>HTermWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Nedrysoft::FlatTabWidget</class>
+   <extends>QTabWidget</extends>
+   <header>FlatTabWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

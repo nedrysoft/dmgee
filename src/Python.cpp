@@ -115,18 +115,18 @@ void Nedrysoft::Python::runScript(const QString& script, PyObject *locals) {
             addVariable(variableIterator.key(), variableIterator.value());
         }
 
+        // TODO: this should actually be PyObject_CallObject as that will allow us to get a return value
+
         auto result = PyRun_String(script.toLatin1().data(), Py_file_input, dict, locals);
+
+        PyErr_Print();
 
         Py_DECREF(systemModule);
         Py_DECREF(systemPath);
 
         PyGILState_Release(gilState);
 
-        if (result) {
-            Q_EMIT finished(Ok, PyLong_AsLong(result));
-        } else {
-            Q_EMIT finished(Ok, -1);
-        }
+        Q_EMIT finished(Ok, 0);
 
         QMetaObject::invokeMethod(qobject_cast<QApplication *>(QCoreApplication::instance()), [threadState]() {
             PyEval_RestoreThread(threadState);
