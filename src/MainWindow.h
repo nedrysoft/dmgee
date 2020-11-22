@@ -174,13 +174,16 @@ namespace Nedrysoft {
 
             private:
                 /**
-                 * @brief       Returns a human readable string for an elapsed duration in milliseconds.
+                 * @brief       Returns a human readable string parts for an elapsed duration in milliseconds.
                  *
                  * @param[in]   milliseconds the duration.
+                 * @param[out]  hours the hours part of the duration.
+                 * @param[out]  minuttes the minutes part of the duration.
+                 * @param[out]  seconds the seconds part of the duration.
                  *
                  * @returns     A human readable string for the elapsed duration.
                  */
-                QString timespan(int milliseconds);
+                QString timespan(int milliseconds, QString &hours, QString &minutes, QString &seconds);
 
                 /**
                  * @brief        Updates the GUI with the current progress.

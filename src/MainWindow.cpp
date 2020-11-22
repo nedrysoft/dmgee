@@ -39,6 +39,7 @@
 #include <QMessageBox>
 #include <QMimeData>
 #include <opencv2/opencv.hpp>
+#include <QLocale>
 #include <QPaintEvent>
 #include <QPainter>
 #include <QResizeEvent>
@@ -361,29 +362,39 @@ void Nedrysoft::MainWindow::resizeEvent(QResizeEvent *event) {
 }
 
 
-QString Nedrysoft::MainWindow::timespan(int milliseconds) {
+QString Nedrysoft::MainWindow::timespan(int milliseconds, QString &hours, QString &minutes, QString &seconds) {
     QString outputString;
-    int seconds = milliseconds / 1000;
-    int minutes = seconds / 60;
-    int hours = minutes / 60;
+    int asSeconds = milliseconds / 1000;
+    int asMinutes = asSeconds / 60;
+    int asHours = asMinutes / 60;
 
     milliseconds = milliseconds % 1000;
-    seconds = seconds % 60;
-    minutes  = minutes % 60;
+    asSeconds = asSeconds % 60;
+    asMinutes = asMinutes % 60;
 
-    if (hours!=0) {
-        outputString.append(QString(tr("%1 %2 ").arg(hours).arg("hours")));
+    hours.clear();
+    minutes.clear();
+    seconds.clear();
+
+    if (asHours!=0) {
+        outputString.append(QString(tr("%1 %2 ").arg(asHours).arg("hours")));
+
+        hours = QString::number(asHours);
     }
 
-    if ((minutes!=0) || (!outputString.isEmpty())) {
-        outputString.append(QString(tr("%1 %2 ").arg(minutes).arg("minutes")));
+    if ((asMinutes!=0) || (!outputString.isEmpty())) {
+        outputString.append(QString(tr("%1 %2 ").arg(asMinutes).arg("minutes")));
+
+        minutes = QString::number(asMinutes);
     }
 
-    if ((seconds!=0) || (!outputString.isEmpty())) {
-        outputString.append(QString(tr("%1 %2 ").arg(seconds).arg("seconds")));
+    if ((asSeconds!=0) || (!outputString.isEmpty())) {
+        outputString.append(QString(tr("%1 %2 ").arg(asSeconds).arg("seconds")));
+
+        seconds = QString::number(asSeconds);
     }
 
-    return outputString.trimmed();
+    return outputString;
 }
 
 void Nedrysoft::MainWindow::onProgressUpdate(QString updateData) {
@@ -409,7 +420,23 @@ void Nedrysoft::MainWindow::onProgressUpdate(QString updateData) {
 
             m_stateLabel->setText(tr("Building Image..."));
         } else if (type[1]=="finished") {
-            QString duration = timespan(durationTimer.elapsed());
+            QString hours, minutes, seconds;
+            QString hoursMinutesSecondsString;
+            QString minutesSecondsString;
+            QString secondsString;
+            QString durationString;
+
+            timespan(durationTimer.elapsed(), hours, minutes, seconds);
+
+            if (!hours.isEmpty()) {
+                durationString = tr("%1 hours %2 minutes %3 seconds").arg(hours).arg(minutes).arg(seconds);
+            } else if (!minutes.isEmpty()) {
+                durationString = tr("%1 minutes %2 seconds").arg(minutes).arg(seconds);
+            } else if (!seconds.isEmpty()) {
+                durationString = tr("%1 seconds").arg(seconds);
+            } else {
+                durationString = tr("%1 millisconds").arg(durationTimer.elapsed());
+            }
 
             updateMessage =
                     fore(AnsiColour::BLUE)+
@@ -419,16 +446,24 @@ void Nedrysoft::MainWindow::onProgressUpdate(QString updateData) {
                     "\r\n"+
                     fore(AnsiColour::WHITE)+
                     style(AnsiStyle::BRIGHT)+
-                    tr("Build took %1.").arg(duration);
-            //TODO: this should actually return separate strings which can then
-            //      be used by tr.  As it stands the duration string is a single string
-            //      which means that it cannot be translated properly.
+                    tr("Build took %1.").arg(durationString);
 
-            m_stateLabel->setText(tr("Idle"));
+            auto outputFilename = QString("~/Desktop/test.dmg").replace(QRegularExpression("(^~)"), QDir::homePath());
+
+            QFileInfo fileInfo(outputFilename);
+
+            auto humanReadablefileSize = locale().formattedDataSize(fileInfo.size());
+
+            updateMessage +=
+                    "\r\n\r\n"+
+                    fore(AnsiColour::GREEN)+
+                    hyperlink(QUrl::fromLocalFile(fileInfo.absolutePath()).toString(), tr("%1 is %2, click here to reveal the DMG in finder.").arg(fileInfo.fileName()).arg(humanReadablefileSize))+
+                    reset;
         }
 
         m_progressSpinner->setVisible(showActivity);
         m_progressBar->setVisible(showActivity);
+        m_stateLabel->setText(tr("Idle"));
     } else if (type[0]=="operation") {
         if (type[1]=="start") {
             QStringList operation = updateMap["operation"].toString().split("::");
