@@ -25,6 +25,7 @@
 #include "Image.h"
 
 #include "Builder.h"
+#include "GridGraphicsScene.h"
 
 #include <QGraphicsItemGroup>
 #include <QGraphicsScene>
@@ -94,16 +95,6 @@ namespace Nedrysoft {
                 void clearCentroids();
 
                 /**
-                 * @brief       Adds an icon to the DMG.
-                 *
-                 * @param[in]   image the image to be displayed.
-                 * @param[in]   point the initial location of the icon.
-                 * @param[in]   iconType the type of icon being inserted.
-                 * @param[in]   updateFunction the function to be called when the icon is moved.
-                 */
-                void addIcon(Nedrysoft::Image *image, const QPoint &point, IconType iconType, std::function<void(QPoint &point)> updateFunction);
-
-                /**
                  * @brief       Sets whether the icons for the application/applications shortcut are shown.
                  *
                  * @param[in]   isVisible true if visible; otherwise false.
@@ -123,6 +114,13 @@ namespace Nedrysoft {
                  * @param[in]   size the size of the text in points.
                  */
                 void setTextSize(int textSize);
+
+                /**
+                 * @brief       Sets the grid size.
+                 *
+                 * @param[in]   size the size of the text in points.
+                 */
+                void setGridSize(QSize gridSize);
 
                 /**
                  * @brief       Scales the graphics view so that the scene fits inside the frame rectangle
@@ -145,22 +143,30 @@ namespace Nedrysoft {
                  */
                 void paintEvent(QPaintEvent *event) override;
 
+                /**
+                 * @brief       Adds an icon to the DMG.
+                 *
+                 * @param[in]   image the image to be displayed.
+                 * @param[in]   point the initial location of the icon.
+                 * @param[in]   iconType the type of icon being inserted.
+                 * @param[in]   updateFunction the function to be called when the icon is moved.
+                 */
+                void addIcon(Nedrysoft::Image *image, const QPoint &point, IconType iconType, std::function<void(QPoint &point)> updateFunction);
+
             private:
                 QPixmap m_pixmap;                           //! the background image pixmap
                 QPixmap m_targetPixmap;                     //! target snap location image
                 QList<QPointF> m_centroids;                 //! centroid points
 
                 QPointF m_iconPosition;                     //! holds position of icon for drag & drop
-                int m_iconSize;                             //! size of the icons on the DMG
-                QSize m_gridSize;                           //! grid size
 
-                QGraphicsScene m_graphicsScene;             //! the graphics scene
+                GridGraphicsScene m_graphicsScene;          //! the graphics scene
                 QGraphicsView m_graphicsView;               //! the rendered graphics scene
                 QGraphicsItemGroup m_grid;                  //! the grid group
 
                 QGridLayout m_layout;                       //! the layout to hold the widgets
 
-                Nedrysoft::Builder *m_builder;    //! the builder object that contains the current configuration.
+                Nedrysoft::Builder *m_builder;              //! the builder object that contains the current configuration.
     };
 }
 

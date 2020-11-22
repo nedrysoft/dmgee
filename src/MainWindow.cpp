@@ -73,7 +73,6 @@ Nedrysoft::MainWindow *Nedrysoft::MainWindow::m_instance = nullptr;
 Nedrysoft::MainWindow::MainWindow() :
         QMainWindow(nullptr),
         ui(new Ui::MainWindow),
-        m_minimumPixelArea(10000),
         m_backgroundImage(),
         m_builder(new Builder),
         m_settingsDialog(nullptr) {
@@ -105,7 +104,7 @@ Nedrysoft::MainWindow::MainWindow() :
 
     // set up gui controls
 
-    ui->previewWidget->setIconSize(configValue("iconSize", 64).value<int>());
+    ui->previewWidget->setIconSize(configValue("iconsize", 64).value<int>());
 
     ui->gridXLineEdit->setValidator(new QIntValidator(0, 100));
     ui->gridYLineEdit->setValidator(new QIntValidator(0, 100));
@@ -113,7 +112,7 @@ Nedrysoft::MainWindow::MainWindow() :
     ui->fontSizeLineEdit->setValidator(new QIntValidator(6, 72));
 
     ui->positionComboBox->addItems(QStringList() << tr("Bottom") << tr("Right"));
-    ui->positionComboBox->setCurrentIndex(configValue("textPosition", Nedrysoft::Builder::Bottom).value<Nedrysoft::Builder::TextPosition>());
+    ui->positionComboBox->setCurrentIndex(configValue("textposition", Nedrysoft::Builder::Bottom).value<Nedrysoft::Builder::TextPosition>());
 
     processBackground();
 
@@ -138,10 +137,14 @@ Nedrysoft::MainWindow::MainWindow() :
     connect(ui->actionQuit, &QAction::triggered, this, &Nedrysoft::MainWindow::close);
     connect(ui->terminalWidget, &Nedrysoft::HTermWidget::terminalBuffer, this, &Nedrysoft::MainWindow::copyTerminalBufferToClipboard);
     connect(ui->actionPreferences, &QAction::triggered, this, &Nedrysoft::MainWindow::onPreferencesTriggered);
+    connect(ui->gridXLineEdit, &QLineEdit::textChanged, this, &Nedrysoft::MainWindow::onGridSizeChanged);
+    connect(ui->gridYLineEdit, &QLineEdit::textChanged, this, &Nedrysoft::MainWindow::onGridSizeChanged);
 
     ui->previewWidget->setBuilder(m_builder);
 
     loadConfiguration("/Users/adriancarpenter/Documents/Development/dmgee/dmgee.dmgee");
+
+    ui->previewWidget->fitToView();
 }
 
 Nedrysoft::MainWindow::~MainWindow() {
@@ -231,7 +234,7 @@ void Nedrysoft::MainWindow::processBackground()
 
             auto area = cv::contourArea(contour);
 
-            if (area > configValue("featureSize", 10000).toInt()) {
+            if (area > configValue("featuresize", 10000).toInt()) {
                 m_centroids.append(centroid);
             }
         }
@@ -261,54 +264,22 @@ QVariant Nedrysoft::MainWindow::configValue(const QString& valueName, QVariant d
 bool Nedrysoft::MainWindow::loadConfiguration(QString filename) {
     m_builder->loadConfiguration(std::move(filename));
 
-    ui->gridSnapCheckbox->setCheckState(configValue("snapToGrid", false).toBool() ? Qt::Checked : Qt::Unchecked);
-    ui->gridVisibleCheckbox->setCheckState(configValue("gridVisible", false).toBool() ? Qt::Checked : Qt::Unchecked);
+    ui->gridSnapCheckbox->setCheckState(configValue("snaptogrid", false).toBool() ? Qt::Checked : Qt::Unchecked);
+    ui->gridVisibleCheckbox->setCheckState(configValue("gridvisible", false).toBool() ? Qt::Checked : Qt::Unchecked);
 
-    ui->gridXLineEdit->setText(QString("%1").arg(configValue("gridSize", 20).toPoint().x()));
-    ui->gridYLineEdit->setText(QString("%1").arg(configValue("gridSize", 20).toPoint().y()));
+    ui->gridXLineEdit->setText(QString("%1").arg(configValue("gridsize", 20).toSize().width()));
+    ui->gridYLineEdit->setText(QString("%1").arg(configValue("gridsize", 20).toSize().height()));
 
-    ui->iconsSizeLineEdit->setText(QString("%1").arg(configValue("iconSize", 128).toInt()));
-    ui->showIconsCheckBox->setCheckState(configValue("iconsVisible", true).toBool() ? Qt::Checked : Qt::Unchecked);
+    ui->iconsSizeLineEdit->setText(QString("%1").arg(configValue("iconsize", 128).toInt()));
+    ui->showIconsCheckBox->setCheckState(configValue("iconsvisible", true).toBool() ? Qt::Checked : Qt::Unchecked);
 
-    ui->fontSizeLineEdit->setText(QString("%1").arg(configValue("textSize", 12).toInt()));
+    ui->fontSizeLineEdit->setText(QString("%1").arg(configValue("textsize", 12).toInt()));
 
-    ui->featureAutoDetectCheckbox->setCheckState(configValue("detectFeatures", true).toBool() ? Qt::Checked : Qt::Unchecked);
-    ui->minFeatureSlider->setValue(configValue("featureSize", 10000).toInt());
+    ui->featureAutoDetectCheckbox->setCheckState(configValue("detectfeatures", true).toBool() ? Qt::Checked : Qt::Unchecked);
+    ui->minFeatureSlider->setValue(configValue("featuresize", 10000).toInt());
     //ui->featureSnapCheckbox->setCheckState(configValue("snapToFeatures", true).toBool() ? Qt::Checked : Qt::Unchecked);
 
     // add the icons from the configuration to the preview window.
-
-    auto iconSize = configValue("iconSize", 128).toInt();
-
-    auto files = m_builder->property("files").value<QList<Nedrysoft::Builder::File *>>();
-
-    for (auto file : files) {
-        auto applicationIcon = new Nedrysoft::Image(file->file, false, iconSize, iconSize);
-
-        ui->previewWidget->addIcon(applicationIcon, QPoint(file->x, file->y), PreviewWidget::Icon, [=](QPoint& point){
-            file->x = point.x();
-            file->y = point.y();
-        });
-    }
-
-    auto symlinks = m_builder->property("symlinks").value<QList<Nedrysoft::Builder::Symlink *>>();
-
-    for (auto symlink : symlinks) {
-        QTemporaryDir temporaryDir;
-
-        if (temporaryDir.isValid()) {
-            auto temporaryName = temporaryDir.path() + symlink->shortcut;
-
-            if (QFile::link(symlink->shortcut, temporaryName)) {
-                auto applicationsShortcutImage = new Nedrysoft::Image(temporaryName, false, iconSize, iconSize);
-
-                ui->previewWidget->addIcon(applicationsShortcutImage, QPoint(symlink->x, symlink->y), PreviewWidget::Shortcut, [=](QPoint& point){
-                    symlink->x = point.x();
-                    symlink->y = point.y();
-                });
-            }
-        }
-    }
 
     updatePixmap();
 
@@ -341,7 +312,6 @@ void Nedrysoft::MainWindow::updatePixmap() {
 void Nedrysoft::MainWindow::resizeEvent(QResizeEvent *event) {
     ui->previewWidget->fitToView();
 }
-
 
 QString Nedrysoft::MainWindow::timespan(int milliseconds, QString &hours, QString &minutes, QString &seconds) {
     QString outputString;
@@ -487,9 +457,7 @@ void Nedrysoft::MainWindow::onDesignFilesAddButtonClicked(bool dropdown) {
 }
 
 void Nedrysoft::MainWindow::onFeatureSliderMinimumValueChanged(int newValue) {
-    m_minimumPixelArea = newValue;
-
-    setConfigValue("featureSize", newValue);
+    setConfigValue("featuresize", newValue);
 
     if (ui->featureAutoDetectCheckbox->isChecked()) {
         processBackground();
@@ -502,8 +470,6 @@ void Nedrysoft::MainWindow::onFontSizeChanged(const QString &text) {
 
     if (( ok ) && ( size != 0 )) {
         setConfigValue("textSize", size);
-
-        ui->previewWidget->setTextSize(size);
     }
 }
 
@@ -512,9 +478,7 @@ void Nedrysoft::MainWindow::onIconSizeChanged(const QString &text) {
     int size = text.toInt(&ok);
 
     if (( ok ) && ( size != 0 )) {
-        setConfigValue("iconSize", size);
-
-        //ui->previewWidget->setIconSize(text.toInt());
+        setConfigValue("iconsize", size);
     }
 }
 
@@ -525,12 +489,11 @@ void Nedrysoft::MainWindow::onAboutDialogTriggered(bool isChecked) {
 }
 
 void Nedrysoft::MainWindow::onGridVisibilityChanged(int state) {
-    //ui->previewWidget->setGrid(configValue("grid", QSize(20,20)).value<QSize>(), ( state == Qt::Checked ) ? true : false, true);
+    setConfigValue("gridvisible", state);
 }
 
 void Nedrysoft::MainWindow::onIconsVisibilityChanged(int state) {
-    m_builder->setProperty("iconsVisible", state);
-    //ui->previewWidget->setIconsVisible(( state == Qt::Checked ) ? true : false);
+    m_builder->setProperty("iconsvisible", state);
 }
 
 void Nedrysoft::MainWindow::onFeatureVisibilityChanged(int state) {
@@ -542,11 +505,7 @@ void Nedrysoft::MainWindow::onFeatureVisibilityChanged(int state) {
 }
 
 void Nedrysoft::MainWindow::onGridSnapChanged(bool checked) {
-    setConfigValue("snapToGrid", checked);
-
-/*    ui->previewWidget->setGrid(QSize(ui->gridXLineEdit->text().toInt(),ui->gridYLineEdit->text().toInt()),
-            ui->gridVisibleCheckbox->isChecked(),
-            ui->gridSnapCheckbox->isChecked());*/
+    setConfigValue("snaptogrid", checked);
 }
 
 void Nedrysoft::MainWindow::onCreateDMG() {
@@ -797,4 +756,16 @@ void Nedrysoft::MainWindow::onPreferencesTriggered() {
 
         m_settingsDialog = nullptr;
     });
+}
+
+void Nedrysoft::MainWindow::onGridSizeChanged(QString text) {
+    bool xOk = false;
+    bool yOk = false;
+
+    auto x = text.toInt(&xOk);
+    auto y = text.toInt(&yOk);
+
+    if ((xOk) && (yOk)) {
+        setConfigValue("gridsize", QSize(x,y));
+    }
 }

@@ -259,6 +259,13 @@ namespace Nedrysoft {
                 Q_SLOT void onGridVisibilityChanged(int state);
 
                 /**
+                 * @brief       Called when either grid width or height is changed.
+                 *
+                 * @param[in]   text the text.
+                 */
+                Q_SLOT void onGridSizeChanged(QString text);
+
+                /**
                  * @brief       Called when icons visible checkbox is changed.
                  *
                  * @param[in]   state true if checked; otherwise false.
@@ -319,7 +326,6 @@ namespace Nedrysoft {
         private:
                 Ui::MainWindow *ui;                                     //! ui class for the main window
                 static MainWindow *m_instance;                          //! instance of the main window
-                int m_minimumPixelArea;                                 //! minimum pixel area for a feature
                 Image m_backgroundImage;                                //! the background image in our intermediate format
                 QPixmap m_backgroundPixmap;                             //! the background image as a cached pixmap
                 QList<QPointF> m_centroids;                             //! list of centroids discovered from image

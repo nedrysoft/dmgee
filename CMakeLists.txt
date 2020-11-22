@@ -121,6 +121,8 @@ list(APPEND app_SOURCES
     src/GeneralSettingsPage.cpp
     src/GeneralSettingsPage.h
     src/GeneralSettingsPage.ui
+    src/GridGraphicsScene.cpp
+    src/GridGraphicsScene.h
 
     src/app.qrc
     icons/dmgee.icns

@@ -186,25 +186,28 @@ namespace Nedrysoft {
                 Q_SIGNAL void featureSnapChanged(bool snapToFeatures);
                 Q_SIGNAL void textSizeChanged(bool textSize);
                 Q_SIGNAL void gridSizeChanged(QSize gridSize);
+                Q_SIGNAL void filesChanged(QList<Nedrysoft::Builder::File *> files);
+                Q_SIGNAL void symlinksChanged(QList<Nedrysoft::Builder::Symlink *> symlinks);
+                Q_SIGNAL void formatChanged(QString format);
 
             public:
                 Q_PROPERTY(QString background MEMBER (m_configuration.m_background));
                 Q_PROPERTY(QString icon MEMBER (m_configuration.m_icon));
                 Q_PROPERTY(QString filename MEMBER (m_configuration.m_filename));
-                Q_PROPERTY(QString volumeName MEMBER (m_configuration.m_volumename));
-                Q_PROPERTY(QString format MEMBER (m_configuration.m_format));
-                Q_PROPERTY(int iconSize MEMBER (m_configuration.m_iconsize) NOTIFY iconSizeChanged);
-                Q_PROPERTY(QSize gridSize MEMBER (m_configuration.m_gridSize) NOTIFY gridSizeChanged);
-                Q_PROPERTY(bool snapToGrid MEMBER (m_configuration.m_snapToGrid) NOTIFY gridSnapChanged);
-                Q_PROPERTY(bool snapToFeatures MEMBER (m_configuration.m_snapToFeatures) NOTIFY featureSnapChanged);
-                Q_PROPERTY(bool gridVisible MEMBER (m_configuration.m_gridVisible) NOTIFY gridVisibilityChanged);
-                Q_PROPERTY(bool iconsVisible MEMBER (m_configuration.m_iconsVisible) NOTIFY iconVisibilityChanged);
-                Q_PROPERTY(int featureSize MEMBER (m_configuration.m_featureSize));
-                Q_PROPERTY(bool detectFeatures MEMBER (m_configuration.m_detectFeatures));
-                Q_PROPERTY(QList<Nedrysoft::Builder::Symlink *> symlinks READ symlinks WRITE setSymlinks);
-                Q_PROPERTY(QList<Nedrysoft::Builder::File *> files READ files WRITE setFiles);
-                Q_PROPERTY(int textSize MEMBER (m_configuration.m_textSize) NOTIFY textSizeChanged);
-                Q_PROPERTY(Nedrysoft::Builder::TextPosition textPosition MEMBER (m_configuration.m_textPosition));
+                Q_PROPERTY(QString volumename MEMBER (m_configuration.m_volumename));
+                Q_PROPERTY(QString format MEMBER (m_configuration.m_format) NOTIFY formatChanged);
+                Q_PROPERTY(int iconsize MEMBER (m_configuration.m_iconsize) NOTIFY iconSizeChanged);
+                Q_PROPERTY(QSize gridsize MEMBER (m_configuration.m_gridSize) NOTIFY gridSizeChanged);
+                Q_PROPERTY(bool snaptogrid MEMBER (m_configuration.m_snapToGrid) NOTIFY gridSnapChanged);
+                Q_PROPERTY(bool snaptofeatures MEMBER (m_configuration.m_snapToFeatures) NOTIFY featureSnapChanged);
+                Q_PROPERTY(bool gridvisible MEMBER (m_configuration.m_gridVisible) NOTIFY gridVisibilityChanged);
+                Q_PROPERTY(bool iconsvisible MEMBER (m_configuration.m_iconsVisible) NOTIFY iconVisibilityChanged);
+                Q_PROPERTY(int featuresize MEMBER (m_configuration.m_featureSize));
+                Q_PROPERTY(bool detectfeatures MEMBER (m_configuration.m_detectFeatures));
+                Q_PROPERTY(QList<Nedrysoft::Builder::Symlink *> symlinks MEMBER (m_configuration.m_symlinks) NOTIFY symlinksChanged);
+                Q_PROPERTY(QList<Nedrysoft::Builder::File *> files MEMBER (m_configuration.m_files) NOTIFY filesChanged);
+                Q_PROPERTY(int textsize MEMBER (m_configuration.m_textSize) NOTIFY textSizeChanged);
+                Q_PROPERTY(Nedrysoft::Builder::TextPosition textposition MEMBER (m_configuration.m_textPosition));
 
             private:
                 Configuration m_configuration;                      //! the configuration for the DMG

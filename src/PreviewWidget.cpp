@@ -33,12 +33,12 @@
 #include <QPaintEvent>
 #include <QPainter>
 #include <QPainterPath>
+#include <QTemporaryDir>
 #include <memory>
 
 Nedrysoft::PreviewWidget::PreviewWidget(QWidget *parent) :
         QWidget(parent),
 
-        m_gridSize(20,20),
         m_iconPosition(),
         m_builder(nullptr) {
 
@@ -53,6 +53,9 @@ Nedrysoft::PreviewWidget::PreviewWidget(QWidget *parent) :
     m_layout.addWidget(&m_graphicsView);
 
     setLayout(&m_layout);
+
+    m_graphicsView.setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_graphicsView.setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
 /*
     for (auto i = 0; i < width / m_gridSize.width(); i++) {
@@ -94,7 +97,65 @@ void Nedrysoft::PreviewWidget::setBuilder(Nedrysoft::Builder *builder) {
     });
 
     connect(builder, &Nedrysoft::Builder::gridSizeChanged, [=](QSize gridSize) {
-        //setGridSize(gridSize);
+        if (m_builder->property("gridvisible").toBool()) {
+            setGridSize(gridSize);
+        } else {
+            setGridSize(QSize());
+        }
+    });
+
+    connect(builder, &Nedrysoft::Builder::gridVisibilityChanged, [=](bool isVisible) {
+        if (m_builder->property("gridvisible").toBool()) {
+            setGridSize(m_builder->property("gridsize").toSize());
+        } else {
+            setGridSize(QSize());
+        }
+    });
+
+    connect(builder, &Nedrysoft::Builder::filesChanged, [=](QList<Nedrysoft::Builder::File *> files) {
+        for (auto item : m_graphicsScene.items()) {
+            if ((item->data(Qt::UserRole).isValid()) && (item->data(Qt::UserRole)==Icon)) {
+                m_graphicsScene.removeItem(item);
+            }
+        }
+
+        auto iconSize = m_builder->property("iconsize").toFloat();
+
+        for (auto file : files) {
+            auto applicationIcon = new Nedrysoft::Image(file->file, false, iconSize, iconSize);
+
+            addIcon(applicationIcon, QPoint(file->x, file->y), PreviewWidget::Icon, [=](QPoint& point){
+                file->x = point.x();
+                file->y = point.y();
+            });
+        }
+    });
+
+    connect(builder, &Nedrysoft::Builder::symlinksChanged, [=](QList<Nedrysoft::Builder::Symlink *> symlinks) {
+        for (auto item : m_graphicsScene.items()) {
+            if ((item->data(Qt::UserRole).isValid()) && (item->data(Qt::UserRole)==Shortcut)) {
+                m_graphicsScene.removeItem(item);
+            }
+        }
+
+        auto iconSize = m_builder->property("iconsize").toFloat();
+
+        for (auto symlink : symlinks) {
+            QTemporaryDir temporaryDir;
+
+            if (temporaryDir.isValid()) {
+                auto temporaryName = temporaryDir.path() + symlink->shortcut;
+
+                if (QFile::link(symlink->shortcut, temporaryName)) {
+                    auto applicationsShortcutImage = new Nedrysoft::Image(temporaryName, false, iconSize, iconSize);
+
+                    addIcon(applicationsShortcutImage, QPoint(symlink->x, symlink->y), PreviewWidget::Shortcut, [=](QPoint& point){
+                        symlink->x = point.x();
+                        symlink->y = point.y();
+                    });
+                }
+            }
+        }
     });
 }
 
@@ -146,12 +207,12 @@ void Nedrysoft::PreviewWidget::addIcon(Nedrysoft::Image *image, const QPoint &po
 
     auto snappedIcon = new SnappedGraphicsPixmapItem([pixmap, this, updateFunction](const QPoint &point) {
         QPoint snapPoint = point;
-        auto iconSize = m_builder->property("iconSize").toFloat();
+        auto iconSize = m_builder->property("iconsize").toFloat();
         auto scale = static_cast<float>(iconSize)/static_cast<float>(pixmap.width());
         auto width = static_cast<float>(pixmap.width())*scale;
         auto height = static_cast<float>(pixmap.height())*scale;
 
-        if (m_builder->property("snapToFeatures").toBool()) {
+        if (m_builder->property("snaptofeatures").toBool()) {
             float closestDistance = MAXFLOAT;
 
             for (auto const centroid : m_centroids) {
@@ -168,12 +229,21 @@ void Nedrysoft::PreviewWidget::addIcon(Nedrysoft::Image *image, const QPoint &po
             }
         }
 
+        if (m_builder->property("snaptogrid").toBool()) {
+            auto gridSize = m_builder->property("gridsize").toSize();
+
+            auto x = (point.x()/gridSize.width())*gridSize.width();
+            auto y = (point.y()/gridSize.height())*gridSize.height();
+
+            snapPoint = QPoint(x, y);
+        }
+
         updateFunction(snapPoint);
 
         return snapPoint;
     });
 
-    float iconSize = m_builder->property("iconSize").toFloat();
+    float iconSize = m_builder->property("iconsize").toFloat();
 
     snappedIcon->setPixmap(pixmap);
     snappedIcon->setPos(point);
@@ -182,6 +252,7 @@ void Nedrysoft::PreviewWidget::addIcon(Nedrysoft::Image *image, const QPoint &po
     snappedIcon->setData(Qt::UserRole, iconType);
     snappedIcon->setZValue(1);
     snappedIcon->setTransformationMode(Qt::SmoothTransformation);
+    snappedIcon->setVisible(m_builder->property("iconsvisible").toBool());
 
     m_graphicsScene.addItem(snappedIcon);
 }
@@ -193,8 +264,6 @@ void Nedrysoft::PreviewWidget::setIconsVisible(bool isVisible) {
                 case Icon:
                 case Shortcut: {
                     item->setVisible(isVisible);
-
-                    qDebug() << item->type() << item->isVisible() << item->scale();
                     break;
                 }
             }
@@ -207,7 +276,7 @@ void Nedrysoft::PreviewWidget::setIconSize(int size) {
         return;
     }
 
-    float iconSize = m_builder->property("iconSize").toFloat();
+    float iconSize = m_builder->property("iconsize").toFloat();
 
     for (auto item : m_graphicsScene.items()) {
         if (item->data(Qt::UserRole).isValid()) {
@@ -265,4 +334,10 @@ void Nedrysoft::PreviewWidget::paintEvent(QPaintEvent *event) {
     /*QPainter painter(this);
 
     painter.fillRect(event->rect(), Qt::lightGray);*/
+}
+
+void Nedrysoft::PreviewWidget::setGridSize(QSize gridSize) {
+    m_graphicsScene.setGrid(gridSize);
+
+    update();
 }

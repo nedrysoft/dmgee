@@ -24,9 +24,14 @@ icon = "./icons/dmgee.icns"
 filename = "dmgee"
 volumename = "dmgee"
 iconsize = 92
+iconsvisible = true
+detectfeatures = true
+snaptofeatures = true
 textsize = 12
 gridsize = [20,20]
+gridvisible = true
 featuresize = 10000
+snaptogrid = false
 format = "UDBZ"
 
 [[file]]

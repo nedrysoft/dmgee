@@ -157,8 +157,6 @@ int main(int argc, char *argv[]) {
 
         mainWindow->show();
 
-        mainWindow->loadConfiguration(QString::fromStdString(configFilename));
-
         returnValue = application.exec();
 
         delete mainWindow;

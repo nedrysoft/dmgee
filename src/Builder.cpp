@@ -226,8 +226,7 @@ bool Nedrysoft::Builder::loadConfiguration(const QString& filename) {
     auto fileInfo = QFileInfo(filename);
     auto dir = QDir(fileInfo.path());
 
-    m_configuration.m_symlinks.clear();
-    m_configuration.m_files.clear();
+    QList<Symlink *> symlinks;
 
     for (toml::node &elem : *configuration["symlink"].as_array()) {
         auto symlink = new Symlink;
@@ -245,8 +244,10 @@ bool Nedrysoft::Builder::loadConfiguration(const QString& filename) {
         symlink->name = QString::fromStdString(*entry["name"].value<std::string>());
         symlink->shortcut =  filePath;;
 
-        m_configuration.m_symlinks.push_back(symlink);
+        symlinks.push_back(symlink);
     }
+
+    QList<File *> files;
 
     for (toml::node &elem : *configuration["file"].as_array()) {
         auto file = new File;
@@ -263,16 +264,20 @@ bool Nedrysoft::Builder::loadConfiguration(const QString& filename) {
         file->y = *entry["y"].value<int>();
         file->file = filePath;
 
-        m_configuration.m_files.push_back(file);
+        files.push_back(file);
     }
 
-    m_configuration.m_format = QString::fromStdString(*configuration["format"].value<std::string>());
+    setProperty("files", QVariant::fromValue<QList<Nedrysoft::Builder::File *>>(files));
+    setProperty("symlinks", QVariant::fromValue<QList<Nedrysoft::Builder::Symlink *>>(symlinks));
+    setProperty("format", QString::fromStdString(*configuration["format"].value<std::string>()));
+    setProperty("iconsize", *configuration["iconsize"].value<int>());
+    setProperty("textsize", *configuration["textsize"].value<int>());
+
+    //m_configuration.m_format = QString::fromStdString(*configuration["format"].value<std::string>());
     m_configuration.m_background = QString::fromStdString(*configuration["background"].value<std::string>()).replace(QRegularExpression("(^~)"), QDir::homePath());;
     m_configuration.m_icon = QString::fromStdString(*configuration["icon"].value<std::string>());
     m_configuration.m_filename = QString::fromStdString(*configuration["filename"].value<std::string>()).replace(QRegularExpression("(^~)"), QDir::homePath());;
     m_configuration.m_volumename = QString::fromStdString(*configuration["volumename"].value<std::string>());
-    m_configuration.m_iconsize = *configuration["iconsize"].value<int>();
-    m_configuration.m_textSize = *configuration["textsize"].value<int>();
 
     auto textPosition = QString::fromStdString(*configuration["textPosition"].value<std::string>());
 
@@ -284,13 +289,16 @@ bool Nedrysoft::Builder::loadConfiguration(const QString& filename) {
         // TODO: some error handling
     }
 
-    auto gridSize = *configuration["gridsize"].as_array();
+    auto gridSizeList = *configuration["gridsize"].as_array();
 
-    if (gridSize.size()==2) {
-        m_configuration.m_gridSize = QSize(*gridSize[0].value<int>(), *gridSize[1].value<int>());
+    auto gridSize = QSize();
+
+    if (gridSizeList.size()==2) {
+        gridSize = QSize(*gridSizeList[0].value<int>(), *gridSizeList[1].value<int>());
     }
 
-    m_configuration.m_featureSize = *configuration["featuresize"].value<int>();
+    setProperty("gridsize", gridSize);
+    setProperty("featuresize", *configuration["featuresize"].value<int>());
 
     return true;
 }
