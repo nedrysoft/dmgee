@@ -105,21 +105,11 @@ Nedrysoft::MainWindow::MainWindow() :
 
     // set up gui controls
 
-    ui->gridVisibleCheckbox->setCheckState(configValue("gridVisible", false).toBool() ? Qt::Checked : Qt::Unchecked);
-    ui->gridSnapCheckbox->setCheckState(configValue("gridShouldSnap", false).toBool() ? Qt::Checked : Qt::Unchecked);
-    ui->gridXLineEdit->setValidator(new QIntValidator(0, 100));
-    ui->gridYLineEdit->setValidator(new QIntValidator(0, 100));
-    ui->previewWidget->setGrid(QSize(ui->gridXLineEdit->text().toInt(),ui->gridYLineEdit->text().toInt()),
-                               ui->gridVisibleCheckbox->isChecked(),
-                               ui->gridSnapCheckbox->isChecked());
-
-    ui->featureAutoDetectCheckbox->setCheckState(configValue("snapToFeatures", true).toBool() ? Qt::Checked : Qt::Unchecked);
-    ui->featureAutoDetectCheckbox->setCheckState(Qt::Checked);
-
-    ui->showIconsCheckBox->setCheckState(configValue("iconsVisible", true).toBool() ? Qt::Checked : Qt::Unchecked);
-    ui->iconsSizeLineEdit->setValidator(new QIntValidator(16, 512));
     ui->previewWidget->setIconSize(configValue("iconSize", 64).value<int>());
 
+    ui->gridXLineEdit->setValidator(new QIntValidator(0, 100));
+    ui->gridYLineEdit->setValidator(new QIntValidator(0, 100));
+    ui->iconsSizeLineEdit->setValidator(new QIntValidator(16, 512));
     ui->fontSizeLineEdit->setValidator(new QIntValidator(6, 72));
 
     ui->positionComboBox->addItems(QStringList() << tr("Bottom") << tr("Right"));
@@ -147,24 +137,11 @@ Nedrysoft::MainWindow::MainWindow() :
     connect(ui->terminalWidget, &Nedrysoft::HTermWidget::openUrl, this, &Nedrysoft::MainWindow::onTerminalUrlClicked);
     connect(ui->actionQuit, &QAction::triggered, this, &Nedrysoft::MainWindow::close);
     connect(ui->terminalWidget, &Nedrysoft::HTermWidget::terminalBuffer, this, &Nedrysoft::MainWindow::copyTerminalBufferToClipboard);
+    connect(ui->actionPreferences, &QAction::triggered, this, &Nedrysoft::MainWindow::onPreferencesTriggered);
 
-    connect(ui->actionPreferences, &QAction::triggered, [=]() {
-        if (m_settingsDialog) {
-            m_settingsDialog->raise();
+    ui->previewWidget->setBuilder(m_builder);
 
-            return;
-        }
-
-        m_settingsDialog = new SettingsDialog(this);
-
-        m_settingsDialog->show();
-
-        connect(m_settingsDialog, &SettingsDialog::closed, [=](){
-            m_settingsDialog->deleteLater();
-
-            m_settingsDialog = nullptr;
-        });
-    });
+    loadConfiguration("/Users/adriancarpenter/Documents/Development/dmgee/dmgee.dmgee");
 }
 
 Nedrysoft::MainWindow::~MainWindow() {
@@ -254,7 +231,7 @@ void Nedrysoft::MainWindow::processBackground()
 
             auto area = cv::contourArea(contour);
 
-            if (area > m_minimumPixelArea) {
+            if (area > configValue("featureSize", 10000).toInt()) {
                 m_centroids.append(centroid);
             }
         }
@@ -282,54 +259,58 @@ QVariant Nedrysoft::MainWindow::configValue(const QString& valueName, QVariant d
 }
 
 bool Nedrysoft::MainWindow::loadConfiguration(QString filename) {
-    if (m_builder->loadConfiguration(std::move(filename))) {
-        ui->gridSnapCheckbox->setCheckState(configValue("snapToGrid", false).toBool() ? Qt::Checked : Qt::Unchecked);
-        ui->gridVisibleCheckbox->setCheckState(configValue("gridVisible", false).toBool() ? Qt::Checked : Qt::Unchecked);
+    m_builder->loadConfiguration(std::move(filename));
 
-        ui->gridXLineEdit->setText(QString("%1").arg(configValue("gridSize", 20).toPoint().x()));
-        ui->gridYLineEdit->setText(QString("%1").arg(configValue("gridSize", 20).toPoint().y()));
+    ui->gridSnapCheckbox->setCheckState(configValue("snapToGrid", false).toBool() ? Qt::Checked : Qt::Unchecked);
+    ui->gridVisibleCheckbox->setCheckState(configValue("gridVisible", false).toBool() ? Qt::Checked : Qt::Unchecked);
 
-        ui->iconsSizeLineEdit->setText(QString("%1").arg(configValue("iconSize", 128).toInt()));
-        ui->minFeatureSlider->setValue(configValue("featureSize", 10000).toInt());
-        ui->fontSizeLineEdit->setText(QString("%1").arg(configValue("textSize", 12).toInt()));
+    ui->gridXLineEdit->setText(QString("%1").arg(configValue("gridSize", 20).toPoint().x()));
+    ui->gridYLineEdit->setText(QString("%1").arg(configValue("gridSize", 20).toPoint().y()));
 
-        ui->featureAutoDetectCheckbox->setCheckState(configValue("detectFeatures", true).toBool() ? Qt::Checked : Qt::Unchecked);
+    ui->iconsSizeLineEdit->setText(QString("%1").arg(configValue("iconSize", 128).toInt()));
+    ui->showIconsCheckBox->setCheckState(configValue("iconsVisible", true).toBool() ? Qt::Checked : Qt::Unchecked);
 
-        // add the icons from the configuration to the preview window.
+    ui->fontSizeLineEdit->setText(QString("%1").arg(configValue("textSize", 12).toInt()));
 
-        auto iconSize = configValue("iconSize", 128).toInt();
-        auto files = m_builder->property("files").value<QList<Nedrysoft::Builder::File *>>();
+    ui->featureAutoDetectCheckbox->setCheckState(configValue("detectFeatures", true).toBool() ? Qt::Checked : Qt::Unchecked);
+    ui->minFeatureSlider->setValue(configValue("featureSize", 10000).toInt());
+    //ui->featureSnapCheckbox->setCheckState(configValue("snapToFeatures", true).toBool() ? Qt::Checked : Qt::Unchecked);
 
-        for (auto file : files) {
-            auto applicationIcon = new Nedrysoft::Image(file->file, false, iconSize, iconSize);
+    // add the icons from the configuration to the preview window.
 
-            ui->previewWidget->addIcon(applicationIcon, QPoint(file->x, file->y), PreviewWidget::Icon, [=](QPoint& point){
-                file->x = point.x();
-                file->y = point.y();
-            });
-        }
+    auto iconSize = configValue("iconSize", 128).toInt();
 
-        auto symlinks = m_builder->property("symlinks").value<QList<Nedrysoft::Builder::Symlink *>>();
+    auto files = m_builder->property("files").value<QList<Nedrysoft::Builder::File *>>();
 
-        for (auto symlink : symlinks) {
-            QTemporaryDir temporaryDir;
+    for (auto file : files) {
+        auto applicationIcon = new Nedrysoft::Image(file->file, false, iconSize, iconSize);
 
-            if (temporaryDir.isValid()) {
-                auto temporaryName = temporaryDir.path() + symlink->shortcut;
+        ui->previewWidget->addIcon(applicationIcon, QPoint(file->x, file->y), PreviewWidget::Icon, [=](QPoint& point){
+            file->x = point.x();
+            file->y = point.y();
+        });
+    }
 
-                if (QFile::link(symlink->shortcut, temporaryName)) {
-                    auto applicationsShortcutImage = new Nedrysoft::Image(temporaryName, false, iconSize, iconSize);
+    auto symlinks = m_builder->property("symlinks").value<QList<Nedrysoft::Builder::Symlink *>>();
 
-                    ui->previewWidget->addIcon(applicationsShortcutImage, QPoint(symlink->x, symlink->y), PreviewWidget::Shortcut, [=](QPoint& point){
-                        symlink->x = point.x();
-                        symlink->y = point.y();
-                    });
-                }
+    for (auto symlink : symlinks) {
+        QTemporaryDir temporaryDir;
+
+        if (temporaryDir.isValid()) {
+            auto temporaryName = temporaryDir.path() + symlink->shortcut;
+
+            if (QFile::link(symlink->shortcut, temporaryName)) {
+                auto applicationsShortcutImage = new Nedrysoft::Image(temporaryName, false, iconSize, iconSize);
+
+                ui->previewWidget->addIcon(applicationsShortcutImage, QPoint(symlink->x, symlink->y), PreviewWidget::Shortcut, [=](QPoint& point){
+                    symlink->x = point.x();
+                    symlink->y = point.y();
+                });
             }
         }
-
-        updatePixmap();
     }
+
+    updatePixmap();
 
     return true;
 }
@@ -401,157 +382,11 @@ void Nedrysoft::MainWindow::onProgressUpdate(QString updateData) {
     auto updateMap = QJsonDocument::fromJson(updateData.toUtf8()).toVariant().toMap();
     QString updateMessage;
     QStringList type = updateMap["type"].toString().split("::");
-    auto normalColour = fore(QColor("#A8C023"));
 
     if (type[0]=="build") {
-        static QElapsedTimer durationTimer;
-        bool showActivity = false;
-
-        if (type[1]=="started") {
-            durationTimer.restart();
-
-            updateMessage =
-                    fore(AnsiColour::BLUE)+
-                    style(AnsiStyle::BRIGHT)+
-                    tr("Build Started at %1.").arg(QDateTime::currentDateTime().toString())+
-                    reset;
-
-            showActivity = true;
-
-            m_stateLabel->setText(tr("Building Image..."));
-        } else if (type[1]=="finished") {
-            QString hours, minutes, seconds;
-            QString hoursMinutesSecondsString;
-            QString minutesSecondsString;
-            QString secondsString;
-            QString durationString;
-
-            timespan(durationTimer.elapsed(), hours, minutes, seconds);
-
-            if (!hours.isEmpty()) {
-                durationString = tr("%1 hours %2 minutes %3 seconds").arg(hours).arg(minutes).arg(seconds);
-            } else if (!minutes.isEmpty()) {
-                durationString = tr("%1 minutes %2 seconds").arg(minutes).arg(seconds);
-            } else if (!seconds.isEmpty()) {
-                durationString = tr("%1 seconds").arg(seconds);
-            } else {
-                durationString = tr("%1 millisconds").arg(durationTimer.elapsed());
-            }
-
-            updateMessage =
-                    fore(AnsiColour::BLUE)+
-                    style(AnsiStyle::BRIGHT)+
-                    tr("Build Finished at %1.\r\n").arg(QDateTime::currentDateTime().toString())+
-                    reset+
-                    "\r\n"+
-                    fore(AnsiColour::WHITE)+
-                    style(AnsiStyle::BRIGHT)+
-                    tr("Build took %1.").arg(durationString);
-
-            auto outputFilename = QString("~/Desktop/test.dmg").replace(QRegularExpression("(^~)"), QDir::homePath());
-
-            QFileInfo fileInfo(outputFilename);
-
-            auto humanReadablefileSize = locale().formattedDataSize(fileInfo.size());
-
-            updateMessage +=
-                    "\r\n\r\n"+
-                    fore(AnsiColour::GREEN)+
-                    hyperlink(QUrl::fromLocalFile(fileInfo.absolutePath()).toString(), tr("%1 is %2, click here to reveal the DMG in finder.").arg(fileInfo.fileName()).arg(humanReadablefileSize))+
-                    reset;
-        }
-
-        m_progressSpinner->setVisible(showActivity);
-        m_progressBar->setVisible(showActivity);
-        m_stateLabel->setText(tr("Idle"));
+        updateMessage = handleBuildProgress(updateMap);
     } else if (type[0]=="operation") {
-        if (type[1]=="start") {
-            QStringList operation = updateMap["operation"].toString().split("::");
-
-            updateMessage.clear();
-
-            if (operation[0]=="settings") {
-                if (operation[1] == "load") {
-                    updateMessage = normalColour+tr("Loading settings...")+reset;
-                }
-            } else if (operation[0]=="size") {
-                if (operation[1] == "calculate") {
-                    updateMessage = normalColour+tr("Calculating DMG size...")+reset;
-                }
-            } else if (operation[0]=="dmg") {
-                if (operation[1]=="create") {
-                    updateMessage = normalColour+tr("Creating DMG...")+reset;
-                } else if (operation[1]=="shrink") {
-                    updateMessage = normalColour+tr("Shrinking DMG...")+reset;
-                }
-            } else if (operation[0]=="background") {
-                if (operation[1]=="create") {
-                    updateMessage = normalColour+tr("Creating Background Image...")+reset;
-                }
-            } else if (operation[0]=="files") {
-                if (operation[1]=="add") {
-                    updateMessage = normalColour+tr("Adding files to DMG...")+reset;
-                }
-            } else if (operation[0]=="file") {
-                if (operation[1]=="add") {
-                    QFileInfo fileInfo(updateMap["file"].toString());
-
-                    QString filename =
-                            fore(AnsiColour::WHITE)+
-                            "\""+
-                            fore(0xb0,0x85, 0xbe)+
-                            underline(true)+
-                            hyperlink(QUrl::fromLocalFile(fileInfo.filePath()).toString(), fileInfo.fileName())+
-                            underline(false)+
-                            fore(AnsiColour::WHITE)+
-                            "\""+
-                            normalColour;
-
-                    updateMessage =
-                            normalColour+QString(tr("Adding file %1...")).arg(filename)+
-                            normalColour+
-                            reset;
-                }
-            } else if (operation[0]=="symlinks") {
-                if (operation[1]=="add") {
-                    updateMessage = normalColour+tr("Creating symlinks in DMG...")+reset;
-                }
-            } else if (operation[0]=="symlink") {
-                if (operation[1]=="add") {
-                    QString filename =
-                            fore(AnsiColour::WHITE)+
-                            "\""+
-                            fore(0xb0,0x85, 0xbe)+
-                            underline(true)+
-                            hyperlink(QUrl::fromLocalFile(updateMap["target"].toString()).toString(), updateMap["target"].toString())+
-                            underline(false)+
-                            fore(AnsiColour::WHITE)+
-                            "\""+
-                            normalColour;
-
-                    updateMessage =
-                            normalColour+QString(tr("Adding symlink %1...")).arg(filename)+
-                            normalColour+
-                            reset;
-                }
-            } else if (operation[0]=="extensions") {
-                if (operation[1] == "hide") {
-                    updateMessage = normalColour + tr("Hiding files...") + reset;
-                }
-            } else if (operation[0]=="dsstore") {
-                if (operation[1]=="create") {
-                    updateMessage = normalColour+tr("Creating DS_Store...")+reset;
-                }
-            }  else if (operation[0]=="dsstore") {
-                if (operation[1] == "addlicense") {
-                    updateMessage = normalColour + tr("Adding license...") + reset;
-                }
-            } else {
-                // unknown operation
-            }
-        } else if (type[1]=="finished") {
-            // TODO: anything else?
-        }
+        updateMessage = handleOperationProgress(updateMap);
     }
 
     if (!updateMessage.isEmpty()) {
@@ -654,6 +489,8 @@ void Nedrysoft::MainWindow::onDesignFilesAddButtonClicked(bool dropdown) {
 void Nedrysoft::MainWindow::onFeatureSliderMinimumValueChanged(int newValue) {
     m_minimumPixelArea = newValue;
 
+    setConfigValue("featureSize", newValue);
+
     if (ui->featureAutoDetectCheckbox->isChecked()) {
         processBackground();
     }
@@ -666,7 +503,7 @@ void Nedrysoft::MainWindow::onFontSizeChanged(const QString &text) {
     if (( ok ) && ( size != 0 )) {
         setConfigValue("textSize", size);
 
-        ui->previewWidget->setTextSize(text.toInt());
+        ui->previewWidget->setTextSize(size);
     }
 }
 
@@ -677,7 +514,7 @@ void Nedrysoft::MainWindow::onIconSizeChanged(const QString &text) {
     if (( ok ) && ( size != 0 )) {
         setConfigValue("iconSize", size);
 
-        ui->previewWidget->setIconSize(text.toInt());
+        //ui->previewWidget->setIconSize(text.toInt());
     }
 }
 
@@ -688,11 +525,12 @@ void Nedrysoft::MainWindow::onAboutDialogTriggered(bool isChecked) {
 }
 
 void Nedrysoft::MainWindow::onGridVisibilityChanged(int state) {
-    ui->previewWidget->setGrid(configValue("grid", QSize(20,20)).value<QSize>(), ( state == Qt::Checked ) ? true : false, true);
+    //ui->previewWidget->setGrid(configValue("grid", QSize(20,20)).value<QSize>(), ( state == Qt::Checked ) ? true : false, true);
 }
 
 void Nedrysoft::MainWindow::onIconsVisibilityChanged(int state) {
-    ui->previewWidget->setIconsVisible(( state == Qt::Checked ) ? true : false);
+    m_builder->setProperty("iconsVisible", state);
+    //ui->previewWidget->setIconsVisible(( state == Qt::Checked ) ? true : false);
 }
 
 void Nedrysoft::MainWindow::onFeatureVisibilityChanged(int state) {
@@ -706,9 +544,9 @@ void Nedrysoft::MainWindow::onFeatureVisibilityChanged(int state) {
 void Nedrysoft::MainWindow::onGridSnapChanged(bool checked) {
     setConfigValue("snapToGrid", checked);
 
-    ui->previewWidget->setGrid(QSize(ui->gridXLineEdit->text().toInt(),ui->gridYLineEdit->text().toInt()),
+/*    ui->previewWidget->setGrid(QSize(ui->gridXLineEdit->text().toInt(),ui->gridYLineEdit->text().toInt()),
             ui->gridVisibleCheckbox->isChecked(),
-            ui->gridSnapCheckbox->isChecked());
+            ui->gridSnapCheckbox->isChecked());*/
 }
 
 void Nedrysoft::MainWindow::onCreateDMG() {
@@ -782,4 +620,181 @@ void Nedrysoft::MainWindow::copyTerminalBufferToClipboard(QString terminalBuffer
     auto clipboard = QGuiApplication::clipboard();
 
     clipboard->setText(terminalBuffer);
+}
+
+QString Nedrysoft::MainWindow::handleBuildProgress(QVariantMap buildMap) {
+    static QElapsedTimer durationTimer;
+    bool showActivity = false;
+    QStringList type = buildMap["type"].toString().split("::");
+    QString updateMessage;
+
+    if (type[1]=="started") {
+        durationTimer.restart();
+
+        updateMessage =
+                fore(AnsiColour::BLUE)+
+                style(AnsiStyle::BRIGHT)+
+                tr("Build Started at %1.").arg(QDateTime::currentDateTime().toString())+
+                reset;
+
+        showActivity = true;
+
+        m_stateLabel->setText(tr("Building Image..."));
+        m_progressSpinner->setVisible(true);
+        m_progressBar->setVisible(true);
+    } else if (type[1]=="finished") {
+        QString hours, minutes, seconds;
+        QString hoursMinutesSecondsString;
+        QString minutesSecondsString;
+        QString secondsString;
+        QString durationString;
+
+        timespan(durationTimer.elapsed(), hours, minutes, seconds);
+
+        if (!hours.isEmpty()) {
+            durationString = tr("%1 hours %2 minutes %3 seconds").arg(hours).arg(minutes).arg(seconds);
+        } else if (!minutes.isEmpty()) {
+            durationString = tr("%1 minutes %2 seconds").arg(minutes).arg(seconds);
+        } else if (!seconds.isEmpty()) {
+            durationString = tr("%1 seconds").arg(seconds);
+        } else {
+            durationString = tr("%1 millisconds").arg(durationTimer.elapsed());
+        }
+
+        updateMessage =
+                fore(AnsiColour::BLUE)+
+                style(AnsiStyle::BRIGHT)+
+                tr("Build Finished at %1.\r\n").arg(QDateTime::currentDateTime().toString())+
+                reset+
+                "\r\n"+
+                fore(AnsiColour::WHITE)+
+                style(AnsiStyle::BRIGHT)+
+                tr("Build took %1.").arg(durationString);
+
+        auto outputFilename = QString("~/Desktop/test.dmg").replace(QRegularExpression("(^~)"), QDir::homePath());
+
+        QFileInfo fileInfo(outputFilename);
+
+        auto humanReadablefileSize = locale().formattedDataSize(fileInfo.size());
+
+        updateMessage +=
+                "\r\n\r\n"+
+                fore(AnsiColour::GREEN)+
+                hyperlink(QUrl::fromLocalFile(fileInfo.absolutePath()).toString(), tr("%1 is %2, click here to reveal the DMG in finder.").arg(fileInfo.fileName()).arg(humanReadablefileSize))+
+                reset;
+
+        m_progressSpinner->setVisible(false);
+        m_progressBar->setVisible(false);
+        m_stateLabel->setText(tr("Idle"));
+    }
+
+    return updateMessage;
+}
+
+QString Nedrysoft::MainWindow::handleOperationProgress(QVariantMap operationMap) {
+    QStringList type = operationMap["type"].toString().split("::");
+    auto normalColour = fore(QColor("#A8C023"));
+    QString updateMessage;
+
+    if (type[1] == "start") {
+        QStringList operation = operationMap["operation"].toString().split("::");
+
+        updateMessage.clear();
+
+        if (operation[0] == "settings") {
+            if (operation[1] == "load") {
+                updateMessage = normalColour + tr("Loading settings...") + reset;
+            }
+        } else if (operation[0] == "size") {
+            if (operation[1] == "calculate") {
+                updateMessage = normalColour + tr("Calculating DMG size...") + reset;
+            }
+        } else if (operation[0] == "dmg") {
+            if (operation[1] == "create") {
+                updateMessage = normalColour + tr("Creating DMG...") + reset;
+            } else if (operation[1] == "shrink") {
+                updateMessage = normalColour + tr("Shrinking DMG...") + reset;
+            } else if (operation[1] == "addlicense") {
+                updateMessage = normalColour + tr("Adding license...") + reset;
+            }
+        } else if (operation[0] == "background") {
+            if (operation[1] == "create") {
+                updateMessage = normalColour + tr("Creating Background Image...") + reset;
+            }
+        } else if (operation[0] == "files") {
+            if (operation[1] == "add") {
+                updateMessage = normalColour + tr("Adding files to DMG...") + reset;
+            }
+        } else if (operation[0] == "file") {
+            if (operation[1] == "add") {
+                QFileInfo fileInfo(operationMap["file"].toString());
+
+                QString filename =
+                        fore(AnsiColour::WHITE) +
+                        "\"" +
+                        fore(0xb0, 0x85, 0xbe) +
+                        underline(true) +
+                        hyperlink(QUrl::fromLocalFile(fileInfo.filePath()).toString(), fileInfo.fileName()) +
+                        underline(false) +
+                        fore(AnsiColour::WHITE) +
+                        "\"" +
+                        normalColour;
+
+                updateMessage =
+                        normalColour + QString(tr("Adding file %1...")).arg(filename) +
+                        normalColour +
+                        reset;
+            }
+        } else if (operation[0] == "symlinks") {
+            if (operation[1] == "add") {
+                updateMessage = normalColour + tr("Creating symlinks in DMG...") + reset;
+            }
+        } else if (operation[0] == "symlink") {
+            if (operation[1] == "add") {
+                QString filename =
+                        fore(AnsiColour::WHITE) +
+                        "\"" +
+                        fore(0xb0, 0x85, 0xbe) +
+                        underline(true) +
+                        hyperlink(QUrl::fromLocalFile(operationMap["target"].toString()).toString(), operationMap["target"].toString()) +
+                        underline(false) +
+                        fore(AnsiColour::WHITE) +
+                        "\"" +
+                        normalColour;
+
+                updateMessage =
+                        normalColour + QString(tr("Adding symlink %1...")).arg(filename) +
+                        normalColour +
+                        reset;
+            }
+        } else if (operation[0] == "extensions") {
+            if (operation[1] == "hide") {
+                updateMessage = normalColour + tr("Hiding files...") + reset;
+            }
+        } else if (operation[0] == "dsstore") {
+            if (operation[1] == "create") {
+                updateMessage = normalColour + tr("Creating DS_Store...") + reset;
+            }
+        }
+    }
+
+    return updateMessage;
+}
+
+void Nedrysoft::MainWindow::onPreferencesTriggered() {
+    if (m_settingsDialog) {
+        m_settingsDialog->raise();
+
+        return;
+    }
+
+    m_settingsDialog = new SettingsDialog(this);
+
+    m_settingsDialog->show();
+
+    connect(m_settingsDialog, &SettingsDialog::closed, [=](){
+        m_settingsDialog->deleteLater();
+
+        m_settingsDialog = nullptr;
+    });
 }

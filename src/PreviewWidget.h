@@ -24,10 +24,13 @@
 
 #include "Image.h"
 
+#include "Builder.h"
+
 #include <QGraphicsItemGroup>
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QGridLayout>
+#include <memory>
 #include <QPixmap>
 #include <QWidget>
 
@@ -63,6 +66,15 @@ namespace Nedrysoft {
                 explicit PreviewWidget(QWidget *parent = nullptr);
 
                 /**
+                 * @brief       Sets the builder object for the preview.
+                 *
+                 * @note        The builder object contains the current configuration.
+                 *
+                 * @param[in]   builder the Builder configuration
+                 */
+                void setBuilder(Nedrysoft::Builder *builder);
+
+                /**
                  * @brief       Sets the background pixmap to be displayed.
                  *
                  * @param[in]   pixmap the background image pixmap.
@@ -80,15 +92,6 @@ namespace Nedrysoft {
                  * @brief       Clears the list of centroids.
                  */
                 void clearCentroids();
-
-                /**
-                 * @brief       Sets the grid for the widget.
-                 *
-                 * @param[in]   size the pitch of the grid.
-                 * @param[in]   visible true if grid shown; otherwise false.
-                 * @param[in]   snap true if cursor should snap to grid; otherwise false.
-                 */
-                void setGrid(QSize size, bool visible, bool snap);
 
                 /**
                  * @brief       Adds an icon to the DMG.
@@ -150,15 +153,14 @@ namespace Nedrysoft {
                 QPointF m_iconPosition;                     //! holds position of icon for drag & drop
                 int m_iconSize;                             //! size of the icons on the DMG
                 QSize m_gridSize;                           //! grid size
-                bool m_gridIsVisible;                       //! whether the grid is drawn
-                bool m_gridShouldSNap;                      //! whether the cursor should snap to the grid
-                bool m_snapToFeatures;                      //! whether the cursor should snap to the detected features
 
                 QGraphicsScene m_graphicsScene;             //! the graphics scene
                 QGraphicsView m_graphicsView;               //! the rendered graphics scene
                 QGraphicsItemGroup m_grid;                  //! the grid group
 
                 QGridLayout m_layout;                       //! the layout to hold the widgets
+
+                Nedrysoft::Builder *m_builder;    //! the builder object that contains the current configuration.
     };
 }
 

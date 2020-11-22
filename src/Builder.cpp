@@ -287,7 +287,7 @@ bool Nedrysoft::Builder::loadConfiguration(const QString& filename) {
     auto gridSize = *configuration["gridsize"].as_array();
 
     if (gridSize.size()==2) {
-        m_configuration.m_gridSize = QPoint(*gridSize[0].value<int>(), *gridSize[1].value<int>());
+        m_configuration.m_gridSize = QSize(*gridSize[0].value<int>(), *gridSize[1].value<int>());
     }
 
     m_configuration.m_featureSize = *configuration["featuresize"].value<int>();

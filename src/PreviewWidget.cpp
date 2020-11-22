@@ -21,6 +21,7 @@
 
 #include "PreviewWidget.h"
 
+#include "Builder.h"
 #include "Image.h"
 #include "SnappedGraphicsPixmapItem.h"
 
@@ -32,15 +33,14 @@
 #include <QPaintEvent>
 #include <QPainter>
 #include <QPainterPath>
+#include <memory>
 
 Nedrysoft::PreviewWidget::PreviewWidget(QWidget *parent) :
         QWidget(parent),
+
         m_gridSize(20,20),
-        m_iconSize(160),
-        m_gridIsVisible(true),
-        m_gridShouldSNap(false),
-        m_snapToFeatures(true),
-        m_iconPosition() {
+        m_iconPosition(),
+        m_builder(nullptr) {
 
     m_targetPixmap = QPixmap(":/icons/target.png");
 
@@ -76,6 +76,26 @@ Nedrysoft::PreviewWidget::PreviewWidget(QWidget *parent) :
 
     painter.drawPath(gridPath);
 */
+}
+
+void Nedrysoft::PreviewWidget::setBuilder(Nedrysoft::Builder *builder) {
+    m_builder = builder;
+
+    connect(builder, &Nedrysoft::Builder::iconSizeChanged, [=](int iconSize) {
+        setIconSize(iconSize);
+    });
+
+    connect(builder, &Nedrysoft::Builder::iconVisibilityChanged, [=](bool isVisible) {
+        setIconsVisible(isVisible);
+    });
+
+    connect(builder, &Nedrysoft::Builder::textSizeChanged, [=](bool textSize) {
+        setTextSize(textSize);
+    });
+
+    connect(builder, &Nedrysoft::Builder::gridSizeChanged, [=](QSize gridSize) {
+        //setGridSize(gridSize);
+    });
 }
 
 void Nedrysoft::PreviewWidget::setPixmap(QPixmap &pixmap) {
@@ -121,22 +141,17 @@ void Nedrysoft::PreviewWidget::setCentroids(QList<QPointF> &centroids) {
     }
 }
 
-void Nedrysoft::PreviewWidget::setGrid(QSize size, bool visible, bool snap) {
-    m_gridSize = size;
-    m_gridIsVisible = visible;
-    m_gridShouldSNap = snap;
-}
-
 void Nedrysoft::PreviewWidget::addIcon(Nedrysoft::Image *image, const QPoint &point, IconType iconType, std::function<void(QPoint &point)> updateFunction) {
     auto pixmap = QPixmap::fromImage(image->image());
 
     auto snappedIcon = new SnappedGraphicsPixmapItem([pixmap, this, updateFunction](const QPoint &point) {
         QPoint snapPoint = point;
-        float scale = static_cast<float>(m_iconSize)/static_cast<float>(pixmap.width());
-        float width = static_cast<float>(pixmap.width())*scale;
-        float height = static_cast<float>(pixmap.height())*scale;
+        auto iconSize = m_builder->property("iconSize").toFloat();
+        auto scale = static_cast<float>(iconSize)/static_cast<float>(pixmap.width());
+        auto width = static_cast<float>(pixmap.width())*scale;
+        auto height = static_cast<float>(pixmap.height())*scale;
 
-        if (m_snapToFeatures) {
+        if (m_builder->property("snapToFeatures").toBool()) {
             float closestDistance = MAXFLOAT;
 
             for (auto const centroid : m_centroids) {
@@ -158,10 +173,12 @@ void Nedrysoft::PreviewWidget::addIcon(Nedrysoft::Image *image, const QPoint &po
         return snapPoint;
     });
 
+    float iconSize = m_builder->property("iconSize").toFloat();
+
     snappedIcon->setPixmap(pixmap);
     snappedIcon->setPos(point);
     snappedIcon->setOffset(-(static_cast<float>(pixmap.width())/2.0), -(static_cast<float>(pixmap.height())/2.0));
-    snappedIcon->setScale(static_cast<float>(m_iconSize)/static_cast<float>(pixmap.width()));
+    snappedIcon->setScale(static_cast<float>(iconSize)/static_cast<float>(pixmap.width()));
     snappedIcon->setData(Qt::UserRole, iconType);
     snappedIcon->setZValue(1);
     snappedIcon->setTransformationMode(Qt::SmoothTransformation);
@@ -176,6 +193,8 @@ void Nedrysoft::PreviewWidget::setIconsVisible(bool isVisible) {
                 case Icon:
                 case Shortcut: {
                     item->setVisible(isVisible);
+
+                    qDebug() << item->type() << item->isVisible() << item->scale();
                     break;
                 }
             }
@@ -184,7 +203,11 @@ void Nedrysoft::PreviewWidget::setIconsVisible(bool isVisible) {
 }
 
 void Nedrysoft::PreviewWidget::setIconSize(int size) {
-    m_iconSize = size;
+    if (!m_builder) {
+        return;
+    }
+
+    float iconSize = m_builder->property("iconSize").toFloat();
 
     for (auto item : m_graphicsScene.items()) {
         if (item->data(Qt::UserRole).isValid()) {
@@ -193,7 +216,7 @@ void Nedrysoft::PreviewWidget::setIconSize(int size) {
                 case Shortcut: {
                     auto pixmapItem = dynamic_cast<SnappedGraphicsPixmapItem *>(item);
 
-                    pixmapItem->setScale(static_cast<float>(m_iconSize)/static_cast<float>(pixmapItem->pixmap().width()));
+                    pixmapItem->setScale(static_cast<float>(iconSize)/static_cast<float>(pixmapItem->pixmap().width()));
                     break;
                 }
             }

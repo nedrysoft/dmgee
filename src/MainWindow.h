@@ -178,26 +178,41 @@ namespace Nedrysoft {
                  *
                  * @param[in]   milliseconds the duration.
                  * @param[out]  hours the hours part of the duration.
-                 * @param[out]  minuttes the minutes part of the duration.
+                 * @param[out]  minutes the minutes part of the duration.
                  * @param[out]  seconds the seconds part of the duration.
                  *
                  * @returns     A human readable string for the elapsed duration.
                  */
+
                 QString timespan(int milliseconds, QString &hours, QString &minutes, QString &seconds);
 
                 /**
-                 * @brief        Updates the GUI with the current progress.
-                 * @param[in]    updateData the JSON update as a string.
+                 * @brief       Updates the GUI with the current progress.
+                 * @param[in]   updateData the JSON update as a string.
                  */
                 void onProgressUpdate(QString updateData);
 
                 /**
-                 * @brief        Sets up the controls on the status bar.
+                 * @brief       Handles "build::" progress updates.
+                 * @param[in]   buildMap the QVariantMap map that  containing all parameters.
+                 *
+                 * @returns     the ANSI escape formatted progress update.
+                 */
+                QString handleBuildProgress(QVariantMap buildMap);
+
+                /**
+                 * @brief       Handles "operation::" progress updates.
+                 * @param[in]   buildMap the QVariantMap map that  containing all parameters.
+                 */
+                QString handleOperationProgress(QVariantMap buildMap);
+
+                /**
+                 * @brief       Sets up the controls on the status bar.
                  */
                 void setupStatusBar();
 
                 /**
-                 * @brief        Sets up the disk image formats combobox.
+                 * @brief       Sets up the disk image formats combobox.
                  */
                 void setupDiskImageFormatCombo();
 
@@ -295,6 +310,11 @@ namespace Nedrysoft {
                  * @param[in]   terminalBuffer the contents of the terminal buffer.
                  */
                 void copyTerminalBufferToClipboard(QString terminalBuffer);
+
+                /**
+                 * @brief       Called when the preferences action is triggered.
+                 */
+                Q_SLOT void onPreferencesTriggered();
 
         private:
                 Ui::MainWindow *ui;                                     //! ui class for the main window

@@ -25,7 +25,7 @@
 #include "tomlplusplus/toml.hpp"
 #include <QList>
 #include <QMetaProperty>
-#include <QPoint>
+#include <QSize>
 #include <QString>
 #include <fstream>
 
@@ -82,7 +82,7 @@ namespace Nedrysoft {
                     QString m_filename;                             //! output filename for the DMG
                     QString m_volumename;                           //! the name of the volume when mounted
                     int m_iconsize;                                 //! the size of the icons to be shown
-                    QPoint m_gridSize;                              //! the grid spacing
+                    QSize m_gridSize;                               //! the grid spacing
                     bool m_snapToGrid;                              //! whether to snap points to grid
                     bool m_gridVisible;                             //! whether the grid is visible
                     bool m_snapToFeatures;                          //! whether to snap to features
@@ -179,22 +179,31 @@ namespace Nedrysoft {
                 QList<File *> files();
 
             public:
+                Q_SIGNAL void iconSizeChanged(int iconSize);
+                Q_SIGNAL void iconVisibilityChanged(bool isVisible);
+                Q_SIGNAL void gridSnapChanged(bool snapToGrid);
+                Q_SIGNAL void gridVisibilityChanged(bool isVisible);
+                Q_SIGNAL void featureSnapChanged(bool snapToFeatures);
+                Q_SIGNAL void textSizeChanged(bool textSize);
+                Q_SIGNAL void gridSizeChanged(QSize gridSize);
+
+            public:
                 Q_PROPERTY(QString background MEMBER (m_configuration.m_background));
                 Q_PROPERTY(QString icon MEMBER (m_configuration.m_icon));
                 Q_PROPERTY(QString filename MEMBER (m_configuration.m_filename));
                 Q_PROPERTY(QString volumeName MEMBER (m_configuration.m_volumename));
                 Q_PROPERTY(QString format MEMBER (m_configuration.m_format));
-                Q_PROPERTY(int iconSize MEMBER (m_configuration.m_iconsize));
-                Q_PROPERTY(QPoint gridSize MEMBER (m_configuration.m_gridSize));
-                Q_PROPERTY(bool snapToGrid MEMBER (m_configuration.m_snapToGrid));
-                Q_PROPERTY(bool snapToFeatures MEMBER (m_configuration.m_snapToFeatures));
-                Q_PROPERTY(bool gridVisible MEMBER (m_configuration.m_gridVisible));
-                Q_PROPERTY(bool iconsVisible MEMBER (m_configuration.m_iconsVisible));
+                Q_PROPERTY(int iconSize MEMBER (m_configuration.m_iconsize) NOTIFY iconSizeChanged);
+                Q_PROPERTY(QSize gridSize MEMBER (m_configuration.m_gridSize) NOTIFY gridSizeChanged);
+                Q_PROPERTY(bool snapToGrid MEMBER (m_configuration.m_snapToGrid) NOTIFY gridSnapChanged);
+                Q_PROPERTY(bool snapToFeatures MEMBER (m_configuration.m_snapToFeatures) NOTIFY featureSnapChanged);
+                Q_PROPERTY(bool gridVisible MEMBER (m_configuration.m_gridVisible) NOTIFY gridVisibilityChanged);
+                Q_PROPERTY(bool iconsVisible MEMBER (m_configuration.m_iconsVisible) NOTIFY iconVisibilityChanged);
                 Q_PROPERTY(int featureSize MEMBER (m_configuration.m_featureSize));
                 Q_PROPERTY(bool detectFeatures MEMBER (m_configuration.m_detectFeatures));
                 Q_PROPERTY(QList<Nedrysoft::Builder::Symlink *> symlinks READ symlinks WRITE setSymlinks);
                 Q_PROPERTY(QList<Nedrysoft::Builder::File *> files READ files WRITE setFiles);
-                Q_PROPERTY(int textSize MEMBER (m_configuration.m_textSize));
+                Q_PROPERTY(int textSize MEMBER (m_configuration.m_textSize) NOTIFY textSizeChanged);
                 Q_PROPERTY(Nedrysoft::Builder::TextPosition textPosition MEMBER (m_configuration.m_textPosition));
 
             private:
