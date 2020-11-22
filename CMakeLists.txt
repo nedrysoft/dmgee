@@ -109,6 +109,18 @@ list(APPEND app_SOURCES
     src/AnsiEscape.h
     src/ThemeSupport.mm
     src/ThemeSupport.h
+    src/SettingsDialog.cpp
+    src/SettingsDialog.h
+    src/TransparentWidget.cpp
+    src/TransparentWidget.h
+    src/SettingsDialog.cpp
+    src/SettingsDialog.h
+    src/MacHelper.mm
+    src/MacHelper.h
+    src/ISettingsPage.h
+    src/GeneralSettingsPage.cpp
+    src/GeneralSettingsPage.h
+    src/GeneralSettingsPage.ui
 
     src/app.qrc
     icons/dmgee.icns
@@ -209,6 +221,7 @@ set(APPLICATION_QT_LIBRARIES
     Widgets
     QuickWidgets
     WebEngineWidgets
+    MacExtras
 )
 
 # Check that the Qt libraries are available

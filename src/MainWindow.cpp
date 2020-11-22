@@ -25,6 +25,7 @@
 #include "AboutDialog.h"
 #include "AnsiEscape.h"
 #include "ImageLoader.h"
+#include "SettingsDialog.h"
 #include "ThemeSupport.h"
 
 #include <QAction>
@@ -73,7 +74,8 @@ Nedrysoft::MainWindow::MainWindow() :
         ui(new Ui::MainWindow),
         m_minimumPixelArea(10000),
         m_backgroundImage(),
-        m_builder(new Builder) {
+        m_builder(new Builder),
+        m_settingsDialog(nullptr) {
 
     ui->setupUi(this);
 
@@ -144,6 +146,24 @@ Nedrysoft::MainWindow::MainWindow() :
     connect(ui->terminalWidget, &Nedrysoft::HTermWidget::openUrl, this, &Nedrysoft::MainWindow::onTerminalUrlClicked);
     connect(ui->actionQuit, &QAction::triggered, this, &Nedrysoft::MainWindow::close);
     connect(ui->terminalWidget, &Nedrysoft::HTermWidget::terminalBuffer, this, &Nedrysoft::MainWindow::copyTerminalBufferToClipboard);
+
+    connect(ui->actionPreferences, &QAction::triggered, [=]() {
+        if (m_settingsDialog) {
+            m_settingsDialog->raise();
+
+            return;
+        }
+
+        m_settingsDialog = new SettingsDialog(this);
+
+        m_settingsDialog->show();
+
+        connect(m_settingsDialog, &SettingsDialog::closed, [=](){
+            m_settingsDialog->deleteLater();
+
+            m_settingsDialog = nullptr;
+        });
+    });
 }
 
 Nedrysoft::MainWindow::~MainWindow() {
@@ -180,8 +200,14 @@ bool Nedrysoft::MainWindow::eventFilter(QObject *watched, QEvent *event) {
     return QObject::eventFilter(watched, event);
 }
 
-void Nedrysoft::MainWindow::closeEvent(QCloseEvent *event) {
-    event->accept();
+void Nedrysoft::MainWindow::closeEvent(QCloseEvent *closeEvent) {
+    if (m_settingsDialog) {
+        m_settingsDialog->close();
+        m_settingsDialog->deleteLater();
+        m_settingsDialog = nullptr;
+    }
+
+    closeEvent->accept();
 }
 
 void Nedrysoft::MainWindow::processBackground()

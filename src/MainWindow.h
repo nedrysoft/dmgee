@@ -24,6 +24,7 @@
 
 #include "Builder.h"
 #include "Image.h"
+#include "SettingsDialog.h"
 #include "SplashScreen.h"
 #include "ThemeSupport.h"
 
@@ -306,9 +307,10 @@ namespace Nedrysoft {
                 QLabel *m_stateLabel;                                   //! The current status of the application
                 QMovie *m_loadingMovie;                                 //! The loading spinner
                 Nedrysoft::Utils::ThemeSupport *m_themeSupport;         //! Theme support instance
+                Nedrysoft::SettingsDialog *m_settingsDialog;            //! Settings dialog instance
 
                 QVariantMap m_config;                                   //! the configuration as a variant map
     };
 }
 
-#endif //NEDRYSOFT_MAINWINDOW_H
+#endif // NEDRYSOFT_MAINWINDOW_H

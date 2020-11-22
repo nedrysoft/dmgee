@@ -45,7 +45,7 @@ namespace Nedrysoft {
                 Q_OBJECT
 
                 /**
-                 * @brief       Error codes returned via the finished signal
+                 * @brief       Error codes returned via the finished signal.
                  */
                 enum ErrorCode {
                     Ok,                                                 /**< Script was sucessfully run. */
@@ -55,7 +55,7 @@ namespace Nedrysoft {
 
             private:
                 /**
-                 * @brief       Structure that contains a list of methods for a built in module
+                 * @brief       Structure that contains a list of methods for a built in module.
                  */
                 struct PythonModule {
                     QString moduleName;                                 //! The name of the module (import <module name>)
@@ -105,7 +105,7 @@ namespace Nedrysoft {
                 void addModulePaths(QStringList modulePaths);
 
                 /**
-                 * @brief       Adds a C module to the python interpreter
+                 * @brief       Adds a C module to the python interpreter.
                  *
                  * @param[in]   moduleName the name of the module exposed to python.
                  * @param[in]   moduleMethods the methods of the module.
@@ -113,20 +113,20 @@ namespace Nedrysoft {
                 void addModule(const QString &moduleName, PyMethodDef moduleMethods[]);
 
                 /**
-                 * @brief       Sets a variable for this instance
+                 * @brief       Sets a variable for this instance.
                  *
                  * @note        The python interpreter runs in a different thread.  This function just stores the variables
                  *              in a map and these are then added just before the script is run.
                  *
-                 * @param[in]   key the key name of the variable
-                 * @param[in]   balue the value of the variable
+                 * @param[in]   key the key name of the variable.
+                 * @param[in]   balue the value of the variable.
                  */
                 void setVariable(const QString &key, void *value);
 
                 /**
-                 * @brief       Returns the variable value for the current thread
+                 * @brief       Returns the variable value for the current thread.
                  *
-                 * @param[in]   key the key name of the variable
+                 * @param[in]   key the key name of the variable.
                  *
                  * @returns     the value of the variable. (or nullptr if it does not exist)
                  */
@@ -140,8 +140,8 @@ namespace Nedrysoft {
                  *              function is used internally to register and add values from the calling thread to the thread
                  *              that the interpreter runs in.
                  *
-                 * @param[in]   key the key name of the variable
-                 * @param[in]   value the value of the variable
+                 * @param[in]   key the key name of the variable.
+                 * @param[in]   value the value of the variable.
                  */
                 static void addVariable(const QString &key, void *value);
 
@@ -150,7 +150,7 @@ namespace Nedrysoft {
                  * @brief       This signal is emitted when the python script has completed.
                  *
                  * @param[in]   result zero if no error occurred; otherwise it indicates an error occured.
-                 * @param[in]   pythonResult is the error code from python if applicable.
+                 * @param[in]   pythonResult the error code from python if applicable.
                  */
                 Q_SIGNAL void finished(int result, int pythonResult);
 
