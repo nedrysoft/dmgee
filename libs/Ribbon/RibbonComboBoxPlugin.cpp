@@ -42,6 +42,7 @@ constexpr auto ConfigurationXML = R"(
 RibbonComboBoxPlugin::RibbonComboBoxPlugin(QObject *parent) :
         QObject(parent),
         m_initialized(false) {
+
 }
 
 void RibbonComboBoxPlugin::initialize(QDesignerFormEditorInterface *core) {

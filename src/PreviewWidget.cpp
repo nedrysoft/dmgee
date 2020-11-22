@@ -38,7 +38,6 @@
 
 Nedrysoft::PreviewWidget::PreviewWidget(QWidget *parent) :
         QWidget(parent),
-
         m_iconPosition(),
         m_builder(nullptr) {
 
@@ -56,29 +55,6 @@ Nedrysoft::PreviewWidget::PreviewWidget(QWidget *parent) :
 
     m_graphicsView.setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_graphicsView.setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
-/*
-    for (auto i = 0; i < width / m_gridSize.width(); i++) {
-        float gridX = ( i * m_gridSize.width()) + x;
-
-        auto line = new QGraphicsLineItem(gridX, y, gridX, y + height);
-
-        line.setPen(QPen(QColor(255, 255, 255, 45)));
-
-        m_grid.addToGroup(line);
-    }
-
-    for (auto i = 0; i < height / m_gridSize.height(); i++) {
-        float gridY = ( i * m_gridSize.height()) + y;
-
-        gridPath.moveTo(QPointF(x, gridY));
-        gridPath.lineTo(QPointF(x + width, gridY));
-    }
-
-    painter.setPen();
-
-    painter.drawPath(gridPath);
-*/
 }
 
 void Nedrysoft::PreviewWidget::setBuilder(Nedrysoft::Builder *builder) {
@@ -286,6 +262,7 @@ void Nedrysoft::PreviewWidget::setIconSize(int size) {
                     auto pixmapItem = dynamic_cast<SnappedGraphicsPixmapItem *>(item);
 
                     pixmapItem->setScale(static_cast<float>(iconSize)/static_cast<float>(pixmapItem->pixmap().width()));
+
                     break;
                 }
             }
@@ -329,15 +306,25 @@ void Nedrysoft::PreviewWidget::addText(QPoint pos, QString text) {
 }
 
 void Nedrysoft::PreviewWidget::paintEvent(QPaintEvent *event) {
-    QWidget::paintEvent(event);
+    QPainter painter(this);
 
-    /*QPainter painter(this);
-
-    painter.fillRect(event->rect(), Qt::lightGray);*/
+    painter.fillRect(rect(), Qt::black);
 }
 
 void Nedrysoft::PreviewWidget::setGridSize(QSize gridSize) {
     m_graphicsScene.setGrid(gridSize);
 
     update();
+}
+
+void Nedrysoft::PreviewWidget::resizeEvent(QResizeEvent *event) {
+    QWidget::resizeEvent(event);
+
+    fitToView();
+}
+
+void Nedrysoft::PreviewWidget::showEvent(QShowEvent *event) {
+    QWidget::showEvent(event);
+
+    fitToView();
 }

@@ -40,6 +40,7 @@ constexpr auto ConfigurationXML = R"(
 RibbonCheckBoxPlugin::RibbonCheckBoxPlugin(QObject *parent) :
         QObject(parent),
         m_initialized(false) {
+
 }
 
 void RibbonCheckBoxPlugin::initialize(QDesignerFormEditorInterface *core) {

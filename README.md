@@ -66,6 +66,7 @@ The following third party libraries/assets/tools/services have been used in the 
 - [opencv](https://opencv.org) - Computer vision and learning libraries, licensed under the [Apache License](https://github.com/opencv/opencv/blob/master/LICENSE).
 - [DevIL](http://openil.sourceforge.net) - Image loading library, licensed under the [LGPL-2.1](http://openil.sourceforge.net/license.php).
 - [toml](https://github.com/marzer/tomlplusplus) - A toml C++ parser library, licensed under the [MIT license](https://github.com/marzer/tomlplusplus/blob/master/LICENSE)
+- [hterm](https://chromium.googlesource.com/apps/libapps/+/master/hterm/) - A javascipt terminal emulator used to proide rich output, licensed under the [BSD license](https://chromium.googlesource.com/apps/libapps/+/HEAD/hterm/LICENSE)
 
 In addition, the following commercially licensed tools/services have also been used.
 
@@ -73,6 +74,12 @@ In addition, the following commercially licensed tools/services have also been u
 - [Affinity Photo](https://www.serif.com/photo) - Bitmap artwork design application.
 - [CLion](https://www.jetbrains.com/clion/) - C/C++/Obj-C development IDE.
 - [Noun Project](https://thenounproject.com) - An icon service with thousands of fantastic icons.  (I have a commercial license)
+
+#  Translations
+
+If any kind souls can provide translations for the application, I will include these and credit you for your work.
+
+Translations can be made using the Qt Linguist tool.
 
 # License
 

@@ -24,7 +24,8 @@
 #include "FlatTabBar.h"
 
 Nedrysoft::FlatTabWidget::FlatTabWidget(QWidget *parent) :
-    QTabWidget(parent) {
+        QTabWidget(parent) {
+
     auto tabBar = new FlatTabBar;
 
     setTabBar(tabBar);

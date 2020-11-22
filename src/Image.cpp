@@ -37,6 +37,7 @@ Nedrysoft::Image::Image() :
         m_imageId(0),
         m_isValid(false),
         m_length(0) {
+
 }
 
 Nedrysoft::Image::Image(QString filename, bool loadContent, int width, int height) :

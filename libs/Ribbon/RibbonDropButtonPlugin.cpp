@@ -34,6 +34,7 @@ constexpr auto ConfigurationXML = R"(
 RibbonDropButtonPlugin::RibbonDropButtonPlugin(QObject *parent) :
         QObject(parent),
         m_initialized(false) {
+
 }
 
 void RibbonDropButtonPlugin::initialize(QDesignerFormEditorInterface *core) {

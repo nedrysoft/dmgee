@@ -330,7 +330,7 @@ Each function definition must conform to the following code standard.
 3. Each initialiser is indented by 2 levels.
 3. One initialiser per line.
 4. The final initialiser contains the opening brace for the function.
-5. A blank line should follow the opening brace for constructors that have initialisers, for constructors without initialisers the blank line should be omitted.
+5. A blank line should always follow the opening brace for constructors that have initialisers regardless of whether or not any statements follow.  For constructors without initialisers the blank line should be omitted.
 
 *Good*
 
@@ -341,6 +341,19 @@ RibbonDropButtonPlugin::RibbonDropButtonPlugin(QObject *parent) :
     
     ...
 }
+
+Nedrysoft::Image::Image() :
+        m_data(nullptr),
+        m_width(0),
+        m_height(0),
+        m_stride(0),
+        m_imageId(0),
+        m_isValid(false),
+        m_length(0) {
+    <blank line>
+}
+
+
 ```
 ```c++
 RibbonDropButtonPlugin::RibbonDropButtonPlugin(QObject *parent) :
@@ -392,7 +405,17 @@ RibbonDropButtonPlugin::RibbonDropButtonPlugin(QObject *parent) :
     ...
 }
 ```
-
+```c++
+Nedrysoft::Image::Image() :
+        m_data(nullptr),
+        m_width(0),
+        m_height(0),
+        m_stride(0),
+        m_imageId(0),
+        m_isValid(false),
+        m_length(0) {
+}
+```
 ### Return values
 
 Return values should not be enclosed in braces.
@@ -652,3 +675,9 @@ The following tags are currently used:
 * feat: work on a specific feature.
 
 If another tag type is required, then please raise a github issue to discuss adding it.
+
+#  Translations
+
+If any kind souls can provide translations for the application, I will include these and credit you for your work.
+
+Translations can be made using the Qt Linguist tool.

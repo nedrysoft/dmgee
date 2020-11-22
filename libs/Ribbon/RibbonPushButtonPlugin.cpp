@@ -39,6 +39,7 @@ constexpr auto ConfigurationXML = R"(
 RibbonPushButtonPlugin::RibbonPushButtonPlugin(QObject *parent) :
         QObject(parent),
         m_initialized(false) {
+
 }
 
 void RibbonPushButtonPlugin::initialize(QDesignerFormEditorInterface *core) {

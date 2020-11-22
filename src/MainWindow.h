@@ -165,13 +165,6 @@ namespace Nedrysoft {
                  */
                 bool setConfigValue(const QString& valueName, QVariant value);
 
-                /**
-                 * @brief       Reimplements: QWidget::resizeEvent(QResizeEvent *event).
-                 *
-                 * @param[in]   event the event information.
-                 */
-                void resizeEvent(QResizeEvent *event) override;
-
             private:
                 /**
                  * @brief       Returns a human readable string parts for an elapsed duration in milliseconds.
@@ -322,6 +315,11 @@ namespace Nedrysoft {
                  * @brief       Called when the preferences action is triggered.
                  */
                 Q_SLOT void onPreferencesTriggered();
+
+                /**
+                 * @brief       Saves the current configuration.
+                 */
+                Q_SLOT void onSaveConfiguration();
 
         private:
                 Ui::MainWindow *ui;                                     //! ui class for the main window

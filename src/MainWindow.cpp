@@ -65,6 +65,7 @@ using namespace std::chrono_literals;
 constexpr auto splashScreenDuration = 100ms;//3s;
 constexpr auto repositoryUrl = "https://github.com/fizzyade/dmgee";
 constexpr auto menuIconSize = 32;
+constexpr auto spinnerSize = 16;
 
 Nedrysoft::MainWindow *Nedrysoft::MainWindow::m_instance = nullptr;
 
@@ -120,25 +121,32 @@ Nedrysoft::MainWindow::MainWindow() :
 
     // connect signals
 
+    connect(m_builder, &Nedrysoft::Builder::progressUpdate, this, &MainWindow::onProgressUpdate, Qt::QueuedConnection);
+
+    connect(ui->saveButton, &Nedrysoft::Ribbon::RibbonPushButton::clicked, this, &MainWindow::onSaveConfiguration);
+
     connect(ui->fontSizeLineEdit, &QLineEdit::textChanged, this, &MainWindow::onFontSizeChanged);
     connect(ui->iconsSizeLineEdit, &QLineEdit::textChanged, this, &MainWindow::onIconSizeChanged);
-    connect(ui->gridSnapCheckbox, &QCheckBox::clicked, this, &MainWindow::onGridSnapChanged);
+    connect(ui->showIconsCheckBox, &QCheckBox::stateChanged, this, &MainWindow::onIconsVisibilityChanged);
+
     connect(ui->buildButton, &Nedrysoft::Ribbon::RibbonPushButton::clicked, this, &MainWindow::onCreateDMG);
-    connect(ui->actionAbout, &QAction::triggered, this, &Nedrysoft::MainWindow::onAboutDialogTriggered);
-    connect(ui->minFeatureSlider, &QSlider::valueChanged, this, &Nedrysoft::MainWindow::onFeatureSliderMinimumValueChanged);
-    connect(ui->gridVisibleCheckbox, &QCheckBox::stateChanged, this, &Nedrysoft::MainWindow::onGridVisibilityChanged);
-    connect(ui->showIconsCheckBox, &QCheckBox::stateChanged, this, &Nedrysoft::MainWindow::onIconsVisibilityChanged);
-    connect(ui->featureAutoDetectCheckbox, &QCheckBox::stateChanged, this, &Nedrysoft::MainWindow::onFeatureVisibilityChanged);
-    connect(ui->designFilesAddButton, &Nedrysoft::Ribbon::RibbonDropButton::clicked, this, &Nedrysoft::MainWindow::onDesignFilesAddButtonClicked);
-    connect(m_builder, &Nedrysoft::Builder::progressUpdate, this, &Nedrysoft::MainWindow::onProgressUpdate, Qt::QueuedConnection);
-    connect(ui->terminalWidget, &Nedrysoft::HTermWidget::terminalReady, this, &Nedrysoft::MainWindow::onTerminalReady);
-    connect(ui->terminalWidget, &Nedrysoft::HTermWidget::contextMenu, this, &Nedrysoft::MainWindow::onTerminalContextMenuTriggered);
-    connect(ui->terminalWidget, &Nedrysoft::HTermWidget::openUrl, this, &Nedrysoft::MainWindow::onTerminalUrlClicked);
-    connect(ui->actionQuit, &QAction::triggered, this, &Nedrysoft::MainWindow::close);
-    connect(ui->terminalWidget, &Nedrysoft::HTermWidget::terminalBuffer, this, &Nedrysoft::MainWindow::copyTerminalBufferToClipboard);
-    connect(ui->actionPreferences, &QAction::triggered, this, &Nedrysoft::MainWindow::onPreferencesTriggered);
-    connect(ui->gridXLineEdit, &QLineEdit::textChanged, this, &Nedrysoft::MainWindow::onGridSizeChanged);
-    connect(ui->gridYLineEdit, &QLineEdit::textChanged, this, &Nedrysoft::MainWindow::onGridSizeChanged);
+    connect(ui->designFilesAddButton, &Nedrysoft::Ribbon::RibbonDropButton::clicked, this, &MainWindow::onDesignFilesAddButtonClicked);
+    connect(ui->minFeatureSlider, &QSlider::valueChanged, this, &MainWindow::onFeatureSliderMinimumValueChanged);
+    connect(ui->featureAutoDetectCheckbox, &QCheckBox::stateChanged, this, &MainWindow::onFeatureVisibilityChanged);
+
+    connect(ui->terminalWidget, &Nedrysoft::HTermWidget::terminalReady, this, &MainWindow::onTerminalReady);
+    connect(ui->terminalWidget, &Nedrysoft::HTermWidget::contextMenu, this, &MainWindow::onTerminalContextMenuTriggered);
+    connect(ui->terminalWidget, &Nedrysoft::HTermWidget::openUrl, this, &MainWindow::onTerminalUrlClicked);
+    connect(ui->terminalWidget, &Nedrysoft::HTermWidget::terminalBuffer, this, &MainWindow::copyTerminalBufferToClipboard);
+
+    connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::close);
+    connect(ui->actionPreferences, &QAction::triggered, this, &MainWindow::onPreferencesTriggered);
+    connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::onAboutDialogTriggered);
+
+    connect(ui->gridVisibleCheckbox, &QCheckBox::stateChanged, this, &MainWindow::onGridVisibilityChanged);
+    connect(ui->gridXLineEdit, &QLineEdit::textChanged, this, &MainWindow::onGridSizeChanged);
+    connect(ui->gridYLineEdit, &QLineEdit::textChanged, this, &MainWindow::onGridSizeChanged);
+    connect(ui->gridSnapCheckbox, &QCheckBox::clicked, this, &MainWindow::onGridSnapChanged);
 
     ui->previewWidget->setBuilder(m_builder);
 
@@ -309,10 +317,6 @@ void Nedrysoft::MainWindow::updatePixmap() {
     ui->previewWidget->fitToView();
 }
 
-void Nedrysoft::MainWindow::resizeEvent(QResizeEvent *event) {
-    ui->previewWidget->fitToView();
-}
-
 QString Nedrysoft::MainWindow::timespan(int milliseconds, QString &hours, QString &minutes, QString &seconds) {
     QString outputString;
     int asSeconds = milliseconds / 1000;
@@ -370,11 +374,7 @@ void Nedrysoft::MainWindow::onProgressUpdate(QString updateData) {
 }
 
 void Nedrysoft::MainWindow::setupStatusBar() {
-
     m_progressBar = new QProgressBar;
-
-    // load the spinner GIF and add to status bar
-
     m_spinnerMovie = new QMovie;
 
     if (Nedrysoft::Utils::ThemeSupport::isDarkMode()) {
@@ -391,7 +391,7 @@ void Nedrysoft::MainWindow::setupStatusBar() {
         }
     });
 
-    m_spinnerMovie->setScaledSize(QSize(16,16));
+    m_spinnerMovie->setScaledSize(QSize(spinnerSize, spinnerSize));
     m_spinnerMovie->start();
 
     m_progressSpinner = new QLabel();
@@ -408,7 +408,7 @@ void Nedrysoft::MainWindow::setupStatusBar() {
     m_progressBar->setValue(0);
     m_progressBar->setRange(0, 12+m_builder->totalFiles()+m_builder->totalSymlinks());
 
-    m_stateLabel = new QLabel("Idle");
+    m_stateLabel = new QLabel(tr("Idle"));
 
     ui->statusbar->addPermanentWidget(m_stateLabel);
 }
@@ -416,23 +416,23 @@ void Nedrysoft::MainWindow::setupStatusBar() {
 void Nedrysoft::MainWindow::setupDiskImageFormatCombo() {
     QList<QPair<QString, QString> > diskFormats;
 
-    diskFormats << QPair<QString, QString>("UDRW", "UDIF read/write image");
-    diskFormats << QPair<QString, QString>("UDRO", "UDIF read-only image");
-    diskFormats << QPair<QString, QString>("UDCO", "UDIF ADC-compressed image");
-    diskFormats << QPair<QString, QString>("UDZO", "UDIF zlib-compressed image");
-    diskFormats << QPair<QString, QString>("UDBZ", "UDIF bzip2-compressed image (macOS 10.4+ only)");
-    diskFormats << QPair<QString, QString>("UFBI", "UDIF entire image with MD5 checksum");
-    diskFormats << QPair<QString, QString>("UDRo", "UDIF read-only (obsolete format)");
-    diskFormats << QPair<QString, QString>("UDCo", "UDIF compressed (obsolete format)");
-    diskFormats << QPair<QString, QString>("UDTO", "DVD/CD-R master for export");
-    diskFormats << QPair<QString, QString>("UDxx", "UDIF stub image");
-    diskFormats << QPair<QString, QString>("UDSP", "SPARSE (grows with content)");
-    diskFormats << QPair<QString, QString>("UDSB", "SPARSEBUNDLE (grows with content; bundle-backed)");
-    diskFormats << QPair<QString, QString>("RdWr", "NDIF read/write image (deprecated)");
-    diskFormats << QPair<QString, QString>("Rdxx", "NDIF read-only image (Disk Copy 6.3.3 format)");
-    diskFormats << QPair<QString, QString>("ROCo", "NDIF compressed image (deprecated)");
-    diskFormats << QPair<QString, QString>("Rken", "NDIF compressed (obsolete format)");
-    diskFormats << QPair<QString, QString>("DC42", "Disk Copy 4.2 image");
+    diskFormats << QPair<QString, QString>("UDRW", tr("UDIF read/write image"));
+    diskFormats << QPair<QString, QString>("UDRO", tr("UDIF read-only image"));
+    diskFormats << QPair<QString, QString>("UDCO", tr("UDIF ADC-compressed image"));
+    diskFormats << QPair<QString, QString>("UDZO", tr("UDIF zlib-compressed image"));
+    diskFormats << QPair<QString, QString>("UDBZ", tr("UDIF bzip2-compressed image (macOS 10.4+ only)"));
+    diskFormats << QPair<QString, QString>("UFBI", tr("UDIF entire image with MD5 checksum"));
+    diskFormats << QPair<QString, QString>("UDRo", tr("UDIF read-only (obsolete format)"));
+    diskFormats << QPair<QString, QString>("UDCo", tr("UDIF compressed (obsolete format)"));
+    diskFormats << QPair<QString, QString>("UDTO", tr("DVD/CD-R master for export"));
+    diskFormats << QPair<QString, QString>("UDxx", tr("UDIF stub image"));
+    diskFormats << QPair<QString, QString>("UDSP", tr("SPARSE (grows with content)"));
+    diskFormats << QPair<QString, QString>("UDSB", tr("SPARSEBUNDLE (grows with content; bundle-backed)"));
+    diskFormats << QPair<QString, QString>("RdWr", tr("NDIF read/write image (deprecated)"));
+    diskFormats << QPair<QString, QString>("Rdxx", tr("NDIF read-only image (Disk Copy 6.3.3 format)"));
+    diskFormats << QPair<QString, QString>("ROCo", tr("NDIF compressed image (deprecated)"));
+    diskFormats << QPair<QString, QString>("Rken", tr("NDIF compressed (obsolete format)"));
+    diskFormats << QPair<QString, QString>("DC42", tr("Disk Copy 4.2 image"));
 
     for (auto format : diskFormats) {
         ui->formatComboBox->addItem(format.first);
@@ -447,10 +447,10 @@ void Nedrysoft::MainWindow::onDesignFilesAddButtonClicked(bool dropdown) {
 
         auto menuPos = ui->designFilesAddButton->mapToGlobal(ui->designFilesAddButton->rect().bottomLeft());
 
-        popupMenu.addAction("Background Image...");
-        popupMenu.addAction("Shortcut To Applications");
-        popupMenu.addAction("Shortcut...");
-        popupMenu.addAction("Icon...");
+        popupMenu.addAction(tr("Background Image..."));
+        popupMenu.addAction(tr("Shortcut To Applications"));
+        popupMenu.addAction(tr("Shortcut..."));
+        popupMenu.addAction(tr("Icon..."));
 
         popupMenu.exec(menuPos);
     }
@@ -469,7 +469,7 @@ void Nedrysoft::MainWindow::onFontSizeChanged(const QString &text) {
     int size = text.toInt(&ok);
 
     if (( ok ) && ( size != 0 )) {
-        setConfigValue("textSize", size);
+        setConfigValue("textsize", size);
     }
 }
 
@@ -722,7 +722,8 @@ QString Nedrysoft::MainWindow::handleOperationProgress(QVariantMap operationMap)
                         normalColour;
 
                 updateMessage =
-                        normalColour + QString(tr("Adding symlink %1...")).arg(filename) +
+                        normalColour +
+                        QString(tr("Adding symlink %1...")).arg(filename) +
                         normalColour +
                         reset;
             }
@@ -768,4 +769,8 @@ void Nedrysoft::MainWindow::onGridSizeChanged(QString text) {
     if ((xOk) && (yOk)) {
         setConfigValue("gridsize", QSize(x,y));
     }
+}
+
+void Nedrysoft::MainWindow::onSaveConfiguration() {
+    m_builder->saveConfiguration("/Users/adriancarpenter/Documents/test.dmgee");
 }

@@ -117,6 +117,15 @@ namespace Nedrysoft {
                 bool loadConfiguration(const QString& filename);
 
                 /**
+                 * @brief       Saves the current configuration to a file.
+                 *
+                 * @param[in]   filename the name of the configuration file to be created..
+                 *
+                 * @returns     true if saved without error; otherwise false.
+                 */
+                bool saveConfiguration(const QString &filename);
+
+                /**
                  * @brief       Returns the number of files that are in the configuration.
                  *
                  * @returns     the number of files.

@@ -42,7 +42,7 @@ constexpr auto ThemeStylesheet = R"(
 
 Nedrysoft::Ribbon::RibbonLineEdit::RibbonLineEdit(QWidget *parent) :
         QLineEdit(parent),
-        m_themeSupport(new Nedrysoft::Utils::ThemeSupport){
+        m_themeSupport(new Nedrysoft::Utils::ThemeSupport) {
 
     setAttribute(Qt::WA_MacShowFocusRect,false);
 

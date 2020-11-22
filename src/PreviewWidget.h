@@ -144,6 +144,13 @@ namespace Nedrysoft {
                 void paintEvent(QPaintEvent *event) override;
 
                 /**
+                 * @brief       Reimplements: QWidget::showEvent(QShowEvent *event).
+                 *
+                 * @param[in]   event the event information.
+                 */
+                void showEvent(QShowEvent *event) override;
+
+                /**
                  * @brief       Adds an icon to the DMG.
                  *
                  * @param[in]   image the image to be displayed.
@@ -152,6 +159,13 @@ namespace Nedrysoft {
                  * @param[in]   updateFunction the function to be called when the icon is moved.
                  */
                 void addIcon(Nedrysoft::Image *image, const QPoint &point, IconType iconType, std::function<void(QPoint &point)> updateFunction);
+
+                /**
+                 * @brief       Reimplements: QWidget::resizeEvent(QResizeEvent *event).
+                 *
+                 * @param[in]   event the event information.
+                 */
+                void resizeEvent(QResizeEvent *event) override;
 
             private:
                 QPixmap m_pixmap;                           //! the background image pixmap

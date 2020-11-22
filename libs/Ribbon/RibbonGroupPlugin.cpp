@@ -47,6 +47,7 @@ constexpr auto ConfigurationXML = R"(
 RibbonGroupPlugin::RibbonGroupPlugin(QObject *parent) :
         QObject(parent),
         m_initialized(false) {
+
 }
 
 void RibbonGroupPlugin::initialize(QDesignerFormEditorInterface *core) {

@@ -48,8 +48,8 @@ QVariant Nedrysoft::SnappedGraphicsPixmapItem::itemChange(QGraphicsItem::Graphic
 void Nedrysoft::SnappedGraphicsPixmapItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
     QMenu popupMenu;
 
-    auto deleteAction = popupMenu.addAction("Delete");
-    auto replaceAction = popupMenu.addAction("Replace...");
+    auto deleteAction = popupMenu.addAction(QObject::tr("Delete"));
+    auto replaceAction = popupMenu.addAction(QObject::tr("Replace..."));
 
     auto selectedAction = popupMenu.exec(event->screenPos());
 

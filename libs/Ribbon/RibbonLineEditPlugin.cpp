@@ -42,6 +42,7 @@ constexpr auto ConfigurationXML = R"(
 RibbonLineEditPlugin::RibbonLineEditPlugin(QObject *parent) :
         QObject(parent),
         m_initialized(false) {
+
 }
 
 void RibbonLineEditPlugin::initialize(QDesignerFormEditorInterface *core) {

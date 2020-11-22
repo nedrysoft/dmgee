@@ -34,6 +34,7 @@ constexpr auto ConfigurationXML = R"(
 RibbonSliderPlugin::RibbonSliderPlugin(QObject *parent) :
         QObject(parent),
         m_initialized(false) {
+
 }
 
 void RibbonSliderPlugin::initialize(QDesignerFormEditorInterface *core) {

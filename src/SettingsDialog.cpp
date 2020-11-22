@@ -63,6 +63,7 @@ constexpr auto settingsDialogScaleFactor = 0.5;
 
 Nedrysoft::SettingsDialog::SettingsDialog(QWidget *parent) :
         QWidget(nullptr) {
+
 #if defined(Q_OS_MACOS)
     m_currentPage = nullptr;
 
@@ -396,10 +397,6 @@ Nedrysoft::SettingsPage *Nedrysoft::SettingsDialog::addPage(QString section, QSt
 QIcon Nedrysoft::SettingsDialog::getIcon(SettingsPage::Icon icon) {
 #if defined(Q_OS_MACOS)
     switch(icon) {
-        case SettingsPage::Database: {
-            return QIcon("://assets/Gianni-Polito-Colobrush-System-database.icns");
-        }
-
         case SettingsPage::General: {
             return QIcon(Nedrysoft::MacHelper::macStandardImage(Nedrysoft::StandardImage::NSImageNamePreferencesGeneral, QSize(256,256)));
         }

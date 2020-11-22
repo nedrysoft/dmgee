@@ -26,6 +26,7 @@
 Nedrysoft::Ribbon::RibbonFontManager::RibbonFontManager() :
         m_regularFontId(QFontDatabase::addApplicationFont(":/Nedrysoft/Ribbon/OpenSans/OpenSans-Regular.ttf")),
         m_boldFontId(QFontDatabase::addApplicationFont(":/Nedrysoft/Ribbon/OpenSans/OpenSans-Bold.ttf")) {
+
 }
 
 Nedrysoft::Ribbon::RibbonFontManager *Nedrysoft::Ribbon::RibbonFontManager::getInstance() {
