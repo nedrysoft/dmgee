@@ -87,3 +87,7 @@ python/build/
 python/dist/
 
 bin/
+
+docs/html/
+
+docs/latex/

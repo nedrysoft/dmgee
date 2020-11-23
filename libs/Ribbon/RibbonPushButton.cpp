@@ -29,6 +29,8 @@
 #include <QSpacerItem>
 #include <QStyle>
 
+#include <QDebug>
+
 constexpr auto ThemeStylesheet = R"(
     QPushButton {
         border: 0px;
@@ -57,6 +59,8 @@ Nedrysoft::Ribbon::RibbonPushButton::RibbonPushButton(QWidget *parent) :
 
     m_mainButton->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     m_buttonLabel->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+
+    m_mainButton->installEventFilter(this);
 
     m_buttonLabel->setFont(font);
 
@@ -133,5 +137,17 @@ void Nedrysoft::Ribbon::RibbonPushButton::updateStyleSheets(bool isDarkMode) {
     m_buttonLabel->setStyleSheet(styleSheet);
 }
 
+bool Nedrysoft::Ribbon::RibbonPushButton::eventFilter(QObject *object, QEvent *event) {
+    if (event->type()==QEvent::MouseButtonPress) {
+        QString styleSheet(ThemeStylesheet);
 
+        styleSheet.replace("[background-colour]", "#292929");
+
+        m_mainButton->setStyleSheet(styleSheet);
+    } else if (event->type()==QEvent::MouseButtonRelease) {
+        updateStyleSheets(m_themeSupport->isDarkMode());
+    }
+
+    return false;
+}
 

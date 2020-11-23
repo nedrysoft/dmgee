@@ -47,6 +47,8 @@ Nedrysoft::Ribbon::RibbonDropButton::RibbonDropButton(QWidget *parent) :
     m_mainButton = new QPushButton;
     m_dropButton = new QPushButton;
 
+    m_mainButton->installEventFilter(this);
+
     m_layout->addWidget(m_mainButton);
     m_layout->addWidget(m_dropButton);
     m_layout->addSpacerItem(new QSpacerItem(0,0, QSizePolicy::Minimum, QSizePolicy::MinimumExpanding));
@@ -127,4 +129,18 @@ void Nedrysoft::Ribbon::RibbonDropButton::updateStyleSheets(bool isDarkMode) {
     } else {
         m_dropButton->setIcon(QIcon(":/Nedrysoft/Ribbon/icons/arrow-drop-light@2x.png"));
     }
+}
+
+bool Nedrysoft::Ribbon::RibbonDropButton::eventFilter(QObject *object, QEvent *event) {
+    if (event->type()==QEvent::MouseButtonPress) {
+        QString styleSheet(ThemeStylesheet);
+
+        styleSheet.replace("[background-colour]", "#292929");
+
+        m_mainButton->setStyleSheet(styleSheet);
+    } else if (event->type()==QEvent::MouseButtonRelease) {
+        updateStyleSheets(m_themeSupport->isDarkMode());
+    }
+
+    return false;
 }
