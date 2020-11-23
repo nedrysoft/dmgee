@@ -38,6 +38,7 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QMimeData>
+#include <QFileDialog>
 #include <opencv2/opencv.hpp>
 #include <QLocale>
 #include <QPaintEvent>
@@ -76,7 +77,8 @@ Nedrysoft::MainWindow::MainWindow() :
         ui(new Ui::MainWindow),
         m_backgroundImage(),
         m_builder(new Builder),
-        m_settingsDialog(nullptr) {
+        m_settingsDialog(nullptr),
+        m_openRecentMenu(nullptr) {
 
     ui->setupUi(this);
 
@@ -123,8 +125,6 @@ Nedrysoft::MainWindow::MainWindow() :
 
     connect(m_builder, &Nedrysoft::Builder::progressUpdate, this, &MainWindow::onProgressUpdate, Qt::QueuedConnection);
 
-    connect(ui->saveButton, &Nedrysoft::Ribbon::RibbonPushButton::clicked, this, &MainWindow::onSaveConfiguration);
-
     connect(ui->fontSizeLineEdit, &QLineEdit::textChanged, this, &MainWindow::onFontSizeChanged);
     connect(ui->iconsSizeLineEdit, &QLineEdit::textChanged, this, &MainWindow::onIconSizeChanged);
     connect(ui->showIconsCheckBox, &QCheckBox::stateChanged, this, &MainWindow::onIconsVisibilityChanged);
@@ -148,15 +148,32 @@ Nedrysoft::MainWindow::MainWindow() :
     connect(ui->gridYLineEdit, &QLineEdit::textChanged, this, &MainWindow::onGridSizeChanged);
     connect(ui->gridSnapCheckbox, &QCheckBox::clicked, this, &MainWindow::onGridSnapChanged);
 
+    connect(ui->loadButton, &Nedrysoft::Ribbon::RibbonPushButton::clicked, this, &MainWindow::onLoadClicked);
+    connect(ui->newButton, &Nedrysoft::Ribbon::RibbonPushButton::clicked, this, &MainWindow::onNewClicked);
+    connect(ui->saveButton, &Nedrysoft::Ribbon::RibbonPushButton::clicked, this, &MainWindow::onSaveClicked);
+
     ui->previewWidget->setBuilder(m_builder);
 
     loadConfiguration("/Users/adriancarpenter/Documents/Development/dmgee/dmgee.dmgee");
 
     ui->previewWidget->fitToView();
+
+    updateRecentFiles();
 }
 
 Nedrysoft::MainWindow::~MainWindow() {
     delete ui;
+
+    if (m_openRecentMenu) {
+        delete m_openRecentMenu;
+    }
+
+    delete m_themeSupport;
+    delete m_progressBar;
+    delete m_spinnerMovie;
+    delete m_stateLabel;
+    delete m_progressSpinner;
+    delete m_loadingMovie;
 }
 
 Nedrysoft::MainWindow *Nedrysoft::MainWindow::getInstance() {
@@ -270,8 +287,31 @@ QVariant Nedrysoft::MainWindow::configValue(const QString& valueName, QVariant d
 }
 
 bool Nedrysoft::MainWindow::loadConfiguration(QString filename) {
-    m_builder->loadConfiguration(std::move(filename));
+    QFileInfo fileInfo(filename);
+    bool result = false;
 
+    if (m_builder->loadConfiguration(std::move(filename))) {
+        ui->terminalWidget->println(fore(Qt::lightGray) +
+                                    tr("Configuration file \"%1\" was loaded successfully.").arg(fore(Qt::yellow) +
+                                    hyperlink(
+                                    QUrl::fromLocalFile(filename).toString(), fileInfo.fileName()) +
+                                    fore(Qt::lightGray)) +
+                                    reset);
+        result = true;
+    } else {
+        ui->terminalWidget->println(fore(Qt::lightGray) +
+                                    tr("Configuration \"%1\" could not be loaded").arg(
+                                    hyperlink(fore(Qt::yellow) + QUrl::fromLocalFile(filename).toString(), fileInfo.fileName()) +
+                                    fore(Qt::lightGray)) +
+                                    reset);
+    }
+
+    updateGUI();
+
+    return true;
+}
+
+void Nedrysoft::MainWindow::updateGUI() {
     ui->gridSnapCheckbox->setCheckState(configValue("snaptogrid", false).toBool() ? Qt::Checked : Qt::Unchecked);
     ui->gridVisibleCheckbox->setCheckState(configValue("gridvisible", false).toBool() ? Qt::Checked : Qt::Unchecked);
 
@@ -285,13 +325,26 @@ bool Nedrysoft::MainWindow::loadConfiguration(QString filename) {
 
     ui->featureAutoDetectCheckbox->setCheckState(configValue("detectfeatures", true).toBool() ? Qt::Checked : Qt::Unchecked);
     ui->minFeatureSlider->setValue(configValue("featuresize", 10000).toInt());
-    //ui->featureSnapCheckbox->setCheckState(configValue("snapToFeatures", true).toBool() ? Qt::Checked : Qt::Unchecked);
+
+    ui->volumeNameLineEdit->setText(configValue("volumename", "My DMG").toString());
+
+    auto textPosition = configValue("textposition", "").toString();
+
+    if (textPosition.toLower().compare("top")) {
+        ui->positionComboBox->setCurrentText("Top");
+    } else {
+        ui->positionComboBox->setCurrentText("Bottom");
+    }
+
+    // TODO: need to add this checkbox to ribbon
+    //
+    // ui->featureSnapCheckbox->setCheckState(configValue("snapToFeatures", true).toBool() ? Qt::Checked : Qt::Unchecked);
 
     // add the icons from the configuration to the preview window.
 
     updatePixmap();
 
-    return true;
+    return;
 }
 
 void Nedrysoft::MainWindow::updatePixmap() {
@@ -527,7 +580,7 @@ void Nedrysoft::MainWindow::onTerminalReady() {
             fore(Qt::white)+")"+
             reset);
 
-    ui->terminalWidget->println("\r\n"+fore(Qt::lightGray)+"Ready."+reset);
+    ui->terminalWidget->println("\r\n"+fore(Qt::lightGray)+tr("Ready.\r\n")+reset);
 }
 
 void Nedrysoft::MainWindow::initialiseLoader() {
@@ -771,6 +824,50 @@ void Nedrysoft::MainWindow::onGridSizeChanged(QString text) {
     }
 }
 
-void Nedrysoft::MainWindow::onSaveConfiguration() {
-    m_builder->saveConfiguration("/Users/adriancarpenter/Documents/test.dmgee");
+void Nedrysoft::MainWindow::updateRecentFiles() {
+    if (m_openRecentMenu) {
+        m_openRecentMenu->deleteLater();
+    }
+
+    m_openRecentMenu = new QMenu;
+
+    // TODO: store list of recent files in QSettings and populate here.
+
+    ui->actionOpenRecent->setMenu(m_openRecentMenu);
+}
+
+void Nedrysoft::MainWindow::onLoadClicked() {
+    QString defaultPath;
+    auto defaultPaths = QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation);
+
+    if (defaultPaths.length()) {
+        defaultPath = defaultPaths.at(0);
+    }
+
+    auto filename = QFileDialog::getOpenFileName(this, tr("Open Configuration"), defaultPath, tr("dmgee configuration(*.dmgee)"));
+
+    if (!filename.isNull()) {
+        loadConfiguration(filename);
+    }
+}
+
+void Nedrysoft::MainWindow::onNewClicked() {
+    m_builder->clear();
+
+    updateGUI();
+}
+
+void Nedrysoft::MainWindow::onSaveClicked() {
+    QString defaultPath;
+    auto defaultPaths = QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation);
+
+    if (defaultPaths.length()) {
+        defaultPath = defaultPaths.at(0);
+    }
+
+    auto filename = QFileDialog::getSaveFileName(this, tr("Save Configuration"), defaultPath, tr("dmgee configuration(*.dmgee)"));
+
+    if (!filename.isNull()) {
+        m_builder->saveConfiguration(filename);
+    }
 }

@@ -27,6 +27,7 @@
 
 #include <QDebug>
 #include <QDrag>
+#include <QFileInfo>
 #include <QGraphicsLineItem>
 #include <QGraphicsPixmapItem>
 #include <QMimeData>
@@ -98,9 +99,10 @@ void Nedrysoft::PreviewWidget::setBuilder(Nedrysoft::Builder *builder) {
         auto iconSize = m_builder->property("iconsize").toFloat();
 
         for (auto file : files) {
-            auto applicationIcon = new Nedrysoft::Image(file->file, false, iconSize, iconSize);
+            auto applicationIcon = Nedrysoft::Image(file->file, false, iconSize, iconSize);
+            QFileInfo fileInfo(file->file);
 
-            addIcon(applicationIcon, QPoint(file->x, file->y), PreviewWidget::Icon, [=](QPoint& point){
+            addIcon(fileInfo.baseName(), &applicationIcon, QPoint(file->x, file->y), PreviewWidget::Icon, [=](QPoint& point){
                 file->x = point.x();
                 file->y = point.y();
             });
@@ -123,9 +125,9 @@ void Nedrysoft::PreviewWidget::setBuilder(Nedrysoft::Builder *builder) {
                 auto temporaryName = temporaryDir.path() + symlink->shortcut;
 
                 if (QFile::link(symlink->shortcut, temporaryName)) {
-                    auto applicationsShortcutImage = new Nedrysoft::Image(temporaryName, false, iconSize, iconSize);
+                    auto applicationsShortcutImage = Nedrysoft::Image(temporaryName, false, iconSize, iconSize);
 
-                    addIcon(applicationsShortcutImage, QPoint(symlink->x, symlink->y), PreviewWidget::Shortcut, [=](QPoint& point){
+                    addIcon(symlink->name, &applicationsShortcutImage, QPoint(symlink->x, symlink->y), PreviewWidget::Shortcut, [=](QPoint& point){
                         symlink->x = point.x();
                         symlink->y = point.y();
                     });
@@ -178,8 +180,14 @@ void Nedrysoft::PreviewWidget::setCentroids(QList<QPointF> &centroids) {
     }
 }
 
-void Nedrysoft::PreviewWidget::addIcon(Nedrysoft::Image *image, const QPoint &point, IconType iconType, std::function<void(QPoint &point)> updateFunction) {
+void Nedrysoft::PreviewWidget::addIcon(QString text, Nedrysoft::Image *image, const QPoint &point, IconType iconType, std::function<void(QPoint &point)> updateFunction) {
     auto pixmap = QPixmap::fromImage(image->image());
+
+    auto scale = static_cast<float>(m_builder->property("iconsize").toFloat())/static_cast<float>(pixmap.width());
+    QPoint textPos(point);
+
+    //textPos += QPoint(0, (pixmap.height()*scale)+48);
+    //addText(textPos, "App");
 
     auto snappedIcon = new SnappedGraphicsPixmapItem([pixmap, this, updateFunction](const QPoint &point) {
         QPoint snapPoint = point;

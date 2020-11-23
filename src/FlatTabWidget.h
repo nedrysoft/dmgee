@@ -23,6 +23,7 @@
 #define NEDRYSOFT_FLATTABWIDGET_H
 
 #include <QTabWidget>
+#include "FlatTabBar.h"
 
 namespace Nedrysoft {
     /**
@@ -39,6 +40,14 @@ namespace Nedrysoft {
                  * @param[in]   parent the owner widget.
                  */
                 FlatTabWidget(QWidget *parent = nullptr);
+
+                /**
+                 * @brief       Destroys the FlatTabWidget.
+                 */
+                ~FlatTabWidget();
+
+            private:
+                Nedrysoft::FlatTabBar *m_tabBar;                            //! The customised tab bar
     };
 };
 

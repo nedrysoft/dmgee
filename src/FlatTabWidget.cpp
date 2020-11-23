@@ -26,7 +26,11 @@
 Nedrysoft::FlatTabWidget::FlatTabWidget(QWidget *parent) :
         QTabWidget(parent) {
 
-    auto tabBar = new FlatTabBar;
+    m_tabBar = new FlatTabBar;
 
-    setTabBar(tabBar);
+    setTabBar(m_tabBar);
+}
+
+Nedrysoft::FlatTabWidget::~FlatTabWidget() {
+    delete m_tabBar;
 }

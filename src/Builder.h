@@ -139,6 +139,11 @@ namespace Nedrysoft {
                  */
                 int totalSymlinks();
 
+                /**
+                 * @brief       Clears the current builder config to default.
+                 */
+                void clear();
+
             private:
                 /**
                  * @brief       Python function which allows transfer of a string to c

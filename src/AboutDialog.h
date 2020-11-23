@@ -42,11 +42,6 @@ namespace Nedrysoft {
                  */
                 explicit AboutDialog(QWidget *parent = nullptr);
 
-                /**
-                 * @brief       Destroys the AboutDialog.
-                 */
-                ~AboutDialog() override = default;
-
             protected:
                 /**
                  * @brief       Reimplements: QObject::event(QEvent *e).

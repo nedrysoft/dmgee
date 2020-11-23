@@ -75,9 +75,9 @@ bool Nedrysoft::Builder::createDMG(QString outputFilename) {
 
     outputFilename = outputFilename.replace(QRegularExpression("(^~)"), QDir::homePath());
 
-    QFileInfo outputFileInfo(outputFilename.isEmpty() ? m_configuration.m_filename : outputFilename);
+    QFileInfo outputFileInfo(outputFilename.isEmpty() ? property("filename").toString() : outputFilename);
 
-    QFileInfo fileInfo(m_configuration.m_background);
+    QFileInfo fileInfo(property("background").toString());
 
     if (!fileInfo.absoluteFilePath().isEmpty()) {
         auto backgroundImage = Nedrysoft::Image(fileInfo.absoluteFilePath(), true);
@@ -94,7 +94,7 @@ bool Nedrysoft::Builder::createDMG(QString outputFilename) {
 
     auto parameters = PyDict_New();
 
-    PyDict_SetItemString(parameters, "volume_name", PyUnicode_FromString( m_configuration.m_volumename.toLatin1().constData()));
+    PyDict_SetItemString(parameters, "volume_name", PyUnicode_FromString( property("volumename").toString().toLatin1().constData()));
 
     PyDict_SetItemString(parameters, "filename",
                          PyUnicode_FromString(outputFileInfo.absoluteFilePath().toLatin1().constData()));
@@ -104,10 +104,10 @@ bool Nedrysoft::Builder::createDMG(QString outputFilename) {
 
     auto settings = PyDict_New();
 
-    PyDict_SetItemString(settings, "format", PyUnicode_FromString(m_configuration. m_format.toLatin1().constData()));
+    PyDict_SetItemString(settings, "format", PyUnicode_FromString(property("format").toString().toLatin1().constData()));
     PyDict_SetItemString(settings, "size", Py_None);
-    PyDict_SetItemString(settings, "icon", PyUnicode_FromString(m_configuration.m_icon.toLatin1().constData()));
-    PyDict_SetItemString(settings, "background", PyUnicode_FromString(m_configuration.m_background.toLatin1().constData()));
+    PyDict_SetItemString(settings, "icon", PyUnicode_FromString(property("icon").toString().toLatin1().constData()));
+    PyDict_SetItemString(settings, "background", PyUnicode_FromString(property("background").toString().toLatin1().constData()));
 
     PyDict_SetItemString(settings, "show_status_bar", Py_False);
     PyDict_SetItemString(settings, "show_tab_view", Py_False);
@@ -138,9 +138,9 @@ bool Nedrysoft::Builder::createDMG(QString outputFilename) {
 
     PyDict_SetItemString(settings, "grid_offset", gridOffset);
     PyDict_SetItemString(settings, "grid_spacing", PyLong_FromLong(10));
-    PyDict_SetItemString(settings, "label_pos", PyUnicode_FromString("bottom"));
-    PyDict_SetItemString(settings, "text_size", PyLong_FromLong(16));
-    PyDict_SetItemString(settings, "icon_size", PyLong_FromLong(m_configuration.m_iconsize/1.333333));
+    PyDict_SetItemString(settings, "label_pos", PyUnicode_FromString(property("textposition").toString().toLatin1().constData()));
+    PyDict_SetItemString(settings, "text_size", PyLong_FromLong(property("iconsize").toInt()));
+    PyDict_SetItemString(settings, "icon_size", PyLong_FromLong(property("iconsize").toFloat()/1.333333));
 
     PyDict_SetItemString(settings, "list_icon_size", PyLong_FromLong(16));
     PyDict_SetItemString(settings, "list_text_size", PyLong_FromLong(12));
@@ -229,6 +229,8 @@ bool Nedrysoft::Builder::createDMG(QString outputFilename) {
 
     python->runScript(BuildScript, locals);
 
+    delete python;
+
     return true;
 }
 
@@ -264,20 +266,20 @@ bool Nedrysoft::Builder::saveConfiguration(const QString &filename) {
     }
 
     auto configuration = toml::table{{
-            {"background", configurationFolder.relativeFilePath(m_configuration.m_background).toStdString()},
-            {"icon", configurationFolder.relativeFilePath(m_configuration.m_icon).toStdString()},
-            {"filename",configurationFolder.relativeFilePath(m_configuration.m_filename).toStdString()},
-            {"volumename",m_configuration.m_volumename.toStdString()},
-            {"iconsize", m_configuration.m_iconsize},
-            {"iconsvisible", m_configuration.m_iconsVisible},
-            {"detectfeatures", m_configuration.m_detectFeatures},
-            {"snaptofeatures", m_configuration.m_snapToFeatures},
-            {"textsize", m_configuration.m_textSize},
-            {"gridsize", toml::array{m_configuration.m_gridSize.width(), m_configuration.m_gridSize.height()}},
-            {"gridvisible", m_configuration.m_gridVisible},
-            {"featuresize", m_configuration.m_featureSize},
-            {"snaptogrid", m_configuration.m_snapToGrid},
-            {"format", m_configuration.m_format.toStdString()},
+            {"background", configurationFolder.relativeFilePath(property("background").toString()).toStdString()},
+            {"icon", configurationFolder.relativeFilePath(property("icon").toString()).toStdString()},
+            {"filename",configurationFolder.relativeFilePath(property("filename").toString()).toStdString()},
+            {"volumename",property("volumename").toString().toStdString()},
+            {"iconsize", property("iconsize").toInt()},
+            {"iconsvisible", property("iconsVisible").toBool()},
+            {"detectfeatures", property("detectFeatures").toBool()},
+            {"snaptofeatures", property("snaptofeatures").toBool()},
+            {"textsize", property("textsize").toInt()},
+            {"gridsize", toml::array{property("gridsize").toSize().width(), property("gridsize").toSize().height()}},
+            {"gridvisible", property("gridvisible").toBool()},
+            {"featuresize", property("featuresize").toInt()},
+            {"snaptogrid", property("snaptogrid").toBool()},
+            {"format", property("format").toString().toStdString()},
             {"files", files},
             {"symlinks", symlinks}
         }
@@ -294,12 +296,20 @@ bool Nedrysoft::Builder::saveConfiguration(const QString &filename) {
 
         outputFile.close();
     }
+
+    return true;
 }
 
 bool Nedrysoft::Builder::loadConfiguration(const QString& filename) {
     auto configuration = toml::parse_file(filename.toStdString());
     auto fileInfo = QFileInfo(filename);
     auto dir = QDir(fileInfo.path());
+
+    if (configuration.failed()) {
+        return false;
+    }
+
+    blockSignals(true);
 
     QList<Symlink *> symlinks;
 
@@ -347,14 +357,17 @@ bool Nedrysoft::Builder::loadConfiguration(const QString& filename) {
     setProperty("format", QString::fromStdString(*configuration["format"].value<std::string>()));
     setProperty("iconsize", *configuration["iconsize"].value<int>());
     setProperty("textsize", *configuration["textsize"].value<int>());
+    setProperty("iconsvisible", *configuration["iconsvisible"].value<bool>());
+    setProperty("gridvisible", *configuration["gridvisible"].value<bool>());
+    setProperty("detectfeatures", *configuration["detectfeatures"].value<bool>());
+    setProperty("featuresize", *configuration["featuresize"].value<int>());
 
-    //m_configuration.m_format = QString::fromStdString(*configuration["format"].value<std::string>());
-    m_configuration.m_background = QString::fromStdString(*configuration["background"].value<std::string>()).replace(QRegularExpression("(^~)"), QDir::homePath());;
-    m_configuration.m_icon = QString::fromStdString(*configuration["icon"].value<std::string>());
-    m_configuration.m_filename = QString::fromStdString(*configuration["filename"].value<std::string>()).replace(QRegularExpression("(^~)"), QDir::homePath());;
-    m_configuration.m_volumename = QString::fromStdString(*configuration["volumename"].value<std::string>());
+    setProperty("background", QString::fromStdString(*configuration["background"].value<std::string>()).replace(QRegularExpression("(^~)"), QDir::homePath()));
+    setProperty("icon", QString::fromStdString(*configuration["icon"].value<std::string>()));
+    setProperty("filename", QString::fromStdString(*configuration["filename"].value<std::string>()).replace(QRegularExpression("(^~)"), QDir::homePath()));
+    setProperty("volumename", QString::fromStdString(*configuration["volumename"].value<std::string>()));
 
-    auto textPosition = QString::fromStdString(*configuration["textPosition"].value<std::string>());
+    auto textPosition = QString::fromStdString(*configuration["textposition"].value<std::string>());
 
     if (textPosition.toLower() == "bottom") {
         m_configuration.m_textPosition = Bottom;
@@ -373,7 +386,8 @@ bool Nedrysoft::Builder::loadConfiguration(const QString& filename) {
     }
 
     setProperty("gridsize", gridSize);
-    setProperty("featuresize", *configuration["featuresize"].value<int>());
+
+    blockSignals(false);
 
     return true;
 }
@@ -418,4 +432,26 @@ int Nedrysoft::Builder::totalFiles() {
 
 int Nedrysoft::Builder::totalSymlinks() {
     return m_configuration.m_symlinks.length();
+}
+
+void Nedrysoft::Builder::clear() {
+    setProperty("files", QVariant::fromValue<QList<Nedrysoft::Builder::File *>>(QList<File *>()));
+    setProperty("symlinks", QVariant::fromValue<QList<Nedrysoft::Builder::Symlink *>>(QList<Symlink *>()));
+    setProperty("format", "UDBZ");
+    setProperty("iconsize", 64);
+    setProperty("textsize", 12);
+    setProperty("iconsvisible",true);
+    setProperty("gridvisible", false);
+    setProperty("detectfeatures", true);
+    setProperty("featuresize", 10000);
+
+    setProperty("background", "");
+    setProperty("icon", "");
+    setProperty("filename", "");
+    setProperty("volumename", "New DMG");
+    setProperty("textposition", "Bottom");
+
+    m_configuration.m_textPosition = Right;
+
+    setProperty("gridsize", QSize(20,20));
 }

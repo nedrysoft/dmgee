@@ -85,12 +85,15 @@ void qtMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
 
 int main(int argc, char *argv[]) {
     //qInstallMessageHandler(qtMessageHandler);
+    QCoreApplication::setOrganizationName("Nedrysoft");
+    QCoreApplication::setOrganizationDomain("nedrysoft.com");
+    QCoreApplication::setApplicationName(APPLICATION_SHORT_NAME);
     QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication application(argc, argv);
     QMimeDatabase mimeDatabase;
     int returnValue = 0;
 
-    CLI::App appCli("dmgee is an application for designing and creating custom DMG images.\n", APPLICATION_SHORT_NAME);
+    CLI::App appCli(QCoreApplication::translate("cli","dmge² is an application for designing and creating custom DMG images.").toStdString(), APPLICATION_SHORT_NAME);
 
     auto versionString = QString("%1.%2.%3 (%4 %5)")
         .arg(APPLICATION_GIT_YEAR)
@@ -103,19 +106,19 @@ int main(int argc, char *argv[]) {
     std::string configFilename;
     std::string dmgFilename;
 
-    auto configOption = appCli.add_option("-c, --config", configFilename, "the filename of the configuration file to be used to generate the DMG");
-    auto outputOption = appCli.add_option("-o, --output", dmgFilename, "the filename of the created DMG. (overrides value in config file)");
-    auto editOption = appCli.add_option("-e, --edit", nullptr, "Whether to open the editor (default false)");
-    auto buildOption = appCli.add_option("-b, --build", nullptr, "Uses the given configuration to build the DMG");
-    auto webEngineOption = appCli.add_option("--remote-debugging-port", nullptr, "Uses the given configuration to build the DMG");
-    auto defineOption = appCli.add_option("-d, --define", nullptr, "add a define, used to set the value of a placeholder.");
+    auto configOption = appCli.add_option("-c, --config", configFilename, QCoreApplication::translate("cli","the filename of the configuration file to be used to generate the DMG").toUtf8().data());
+    auto outputOption = appCli.add_option("-o, --output", dmgFilename, QCoreApplication::translate("cli", "the filename of the created DMG. (overrides value in config file)").toUtf8().data());
+    auto editOption = appCli.add_option("-e, --edit", nullptr, QCoreApplication::translate("cli", "Whether to open the editor (default false)").toUtf8().data());
+    auto buildOption = appCli.add_option("-b, --build", nullptr, QCoreApplication::translate("cli", "Uses the given configuration to build the DMG").toUtf8().data());
+    auto webEngineOption = appCli.add_option("--remote-debugging-port", nullptr, QCoreApplication::translate("cli", "Uses the given configuration to build the DMG").toUtf8().data());
+    auto defineOption = appCli.add_option("-d, --define", nullptr, QCoreApplication::translate("cli", "add a define, used to set the value of a placeholder.").toUtf8().data());
 
     buildOption->needs(configOption);
     buildOption->needs(outputOption);
 
     editOption->required(false);
 
-    auto versionMessage = QString("display the version of %1 and then exit").arg(APPLICATION_SHORT_NAME).toStdString();
+    auto versionMessage = QCoreApplication::translate("cli", "display the version of %1 and then exit").arg(APPLICATION_SHORT_NAME).toStdString();
 
     auto versionFlag = appCli.add_flag("-V, --version", versionMessage);
 

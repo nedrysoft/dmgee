@@ -24,8 +24,6 @@ set(CMAKE_CXX_STANDARD 17)
 
 project(dmgee)
 
-set(CMAKE_PREFIX_PATH "/Users/adriancarpenter/Qt/5.15.1/clang_64")
-
 # set up some variables to describe the application
 
 set(APPLICATION_SHORT_NAME "dmgee")
@@ -62,6 +60,10 @@ ADD_DEFINITIONS(-DQT_NO_KEYWORDS)
 # define required for python
 
 ADD_DEFINITIONS(-DPY_SSIZE_T_CLEAN)
+
+# disable TOML exceptions
+
+ADD_DEFINITIONS(-DTOML_EXCEPTIONS=0)
 
 # list of packages we need for the application
 
@@ -229,6 +231,7 @@ set(APPLICATION_QT_LIBRARIES
 # Check that the Qt libraries are available
 
 find_package(Qt5 COMPONENTS ${APPLICATION_QT_LIBRARIES} REQUIRED)
+find_package(Qt5 COMPONENTS LinguistTools)
 
 # Set the target executable name
 
@@ -336,3 +339,10 @@ target_link_libraries(${APPLICATION_SHORT_NAME} ${APPLICATION_QT_LINK_LIBRARIES}
 target_link_libraries(${APPLICATION_SHORT_NAME} Ribbon)
 
 add_subdirectory("libs/Ribbon")
+
+# translations
+
+qt5_create_translation(QM_FILES ${app_SOURCES}
+    ${APPLICATON_SOURCE_ROOT}/translations/dmgee_en.ts
+    ${APPLICATON_SOURCE_ROOT}/translations/dmgee_fr.ts
+)

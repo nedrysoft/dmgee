@@ -319,7 +319,27 @@ namespace Nedrysoft {
                 /**
                  * @brief       Saves the current configuration.
                  */
-                Q_SLOT void onSaveConfiguration();
+                Q_SLOT void onSaveClicked();
+
+                /**
+                 * @brief       Updates the File/Open Recent submenu.
+                 */
+                Q_SLOT void updateRecentFiles();
+
+                /**
+                 * @brief       Called when the new button is clicked.
+                 */
+                Q_SLOT void onLoadClicked();
+
+                /**
+                 * @brief       Updates the File/Open Recent submenu.
+                 */
+                Q_SLOT void onNewClicked();
+
+                /**
+                 * @brief       Updates the GUI when the builder configuration is changed.
+                 */
+                Q_SLOT void updateGUI();
 
         private:
                 Ui::MainWindow *ui;                                     //! ui class for the main window
@@ -335,6 +355,7 @@ namespace Nedrysoft {
                 QMovie *m_loadingMovie;                                 //! The loading spinner
                 Nedrysoft::Utils::ThemeSupport *m_themeSupport;         //! Theme support instance
                 Nedrysoft::SettingsDialog *m_settingsDialog;            //! Settings dialog instance
+                QMenu *m_openRecentMenu;                                //! List of most recently accessed files
 
                 QVariantMap m_config;                                   //! the configuration as a variant map
     };

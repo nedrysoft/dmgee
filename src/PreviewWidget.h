@@ -153,12 +153,13 @@ namespace Nedrysoft {
                 /**
                  * @brief       Adds an icon to the DMG.
                  *
+                 * @param[in]   text is the text to be displayed with the icon.
                  * @param[in]   image the image to be displayed.
                  * @param[in]   point the initial location of the icon.
                  * @param[in]   iconType the type of icon being inserted.
                  * @param[in]   updateFunction the function to be called when the icon is moved.
                  */
-                void addIcon(Nedrysoft::Image *image, const QPoint &point, IconType iconType, std::function<void(QPoint &point)> updateFunction);
+                void addIcon(QString text, Nedrysoft::Image *image, const QPoint &point, IconType iconType, std::function<void(QPoint &point)> updateFunction);
 
                 /**
                  * @brief       Reimplements: QWidget::resizeEvent(QResizeEvent *event).
