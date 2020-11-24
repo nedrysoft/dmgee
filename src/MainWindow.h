@@ -110,6 +110,17 @@ namespace Nedrysoft {
                  */
                 bool loadConfiguration(QString filename);
 
+                /**
+                 * @brief       Saves the current configuration.
+                 *
+                 * @note        Will display a file picker if the there is no current filename.
+                 *
+                 * @param[in]   saveAs true if performing a save as; otherwise false.
+                 *
+                 * @returns     true if file was saved; otherwise false;
+                 */
+                bool saveConfiguration(bool saveAs);
+
             protected:
                 /**
                  * @brief       Reimplements: QWidget::closeEvent(QCloseEvent *event).
@@ -178,12 +189,6 @@ namespace Nedrysoft {
                  */
 
                 QString timespan(int milliseconds, QString &hours, QString &minutes, QString &seconds);
-
-                /**
-                 * @brief       Returns a normalized path, resolves ~.
-                 * @param[in]   filename the filename to be normalized.
-                 */
-                QString normalizedPath(QString filename);
 
                 /**
                  * @brief       Updates the GUI with the current progress.
@@ -338,9 +343,20 @@ namespace Nedrysoft {
                 Q_SLOT void onSaveClicked();
 
                 /**
-                 * @brief       Updates the File/Open Recent submenu.
+                 * @brief       Saves the current configuration as a new file.
                  */
-                Q_SLOT void updateRecentFiles();
+                Q_SLOT void onSaveAsClicked();
+
+                /**
+                 * @brief       Updates the File/Open Recent submenu.
+                 *
+                 * @note        if a filename is passed in, then it will be moved to the top of the recent files list and
+                 *              the menu created.  If no filename, then this method will remove any duplicates and then
+                 *              create the recent files sub menu.
+                 *
+                 * @param[in]   filename is the name of the file to be moved to the top (optional parameter)
+                 */
+                Q_SLOT void updateRecentFiles(QString filename=QString());
 
                 /**
                  * @brief       Called when the new button is clicked.

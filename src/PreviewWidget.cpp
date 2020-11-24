@@ -23,6 +23,7 @@
 
 #include "Builder.h"
 #include "Image.h"
+#include "MacHelper.h"
 #include "SnappedGraphicsPixmapItem.h"
 
 #include <QDebug>
@@ -35,6 +36,7 @@
 #include <QPainter>
 #include <QPainterPath>
 #include <QTemporaryDir>
+#include <QThread>
 #include <memory>
 
 Nedrysoft::PreviewWidget::PreviewWidget(QWidget *parent) :
@@ -90,6 +92,8 @@ void Nedrysoft::PreviewWidget::setBuilder(Nedrysoft::Builder *builder) {
     });
 
     connect(builder, &Nedrysoft::Builder::filesChanged, [=](QList<Nedrysoft::Builder::File *> files) {
+        QList<QGraphicsItem *> deleteList;
+
         for (auto item : m_graphicsScene.items()) {
             if ((item->data(Qt::UserRole).isValid()) && (item->data(Qt::UserRole)==Icon)) {
                 m_graphicsScene.removeItem(item);
@@ -99,10 +103,10 @@ void Nedrysoft::PreviewWidget::setBuilder(Nedrysoft::Builder *builder) {
         auto iconSize = m_builder->property("iconsize").toFloat();
 
         for (auto file : files) {
-            auto applicationIcon = Nedrysoft::Image(file->file, false, iconSize, iconSize);
-            QFileInfo fileInfo(file->file);
+            auto filename = Nedrysoft::MacHelper::resolvedPath(file->file);
+            auto applicationIcon = Nedrysoft::Image(filename, false, iconSize, iconSize);
 
-            addIcon(fileInfo.baseName(), &applicationIcon, QPoint(file->x, file->y), PreviewWidget::Icon, [=](QPoint& point){
+            addIcon(QFileInfo(filename).baseName(), &applicationIcon, QPoint(file->x, file->y), PreviewWidget::Icon, [=](QPoint& point) {
                 file->x = point.x();
                 file->y = point.y();
             });
@@ -181,7 +185,13 @@ void Nedrysoft::PreviewWidget::setCentroids(QList<QPointF> &centroids) {
 }
 
 void Nedrysoft::PreviewWidget::addIcon(QString text, Nedrysoft::Image *image, const QPoint &point, IconType iconType, std::function<void(QPoint &point)> updateFunction) {
-    auto pixmap = QPixmap::fromImage(image->image());
+    QPixmap pixmap;
+
+    if (image->isValid()) {
+        pixmap = QPixmap::fromImage(image->image());
+    } else {
+        pixmap = QPixmap(":/icons/invalid.png");
+    }
 
     auto scale = static_cast<float>(m_builder->property("iconsize").toFloat())/static_cast<float>(pixmap.width());
     QPoint textPos(point);

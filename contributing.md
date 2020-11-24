@@ -145,6 +145,21 @@ QString filename =
         fore(AnsiColour::YELLOW);
 ```
 
+### Casting
+
+C++ style casts must be used, do not use C style casts.
+
+*Good*
+
+```c++
+auto asFloat = static_cast<float>(exampleInteger);
+```
+
+*Bad*
+```c++
+auto asFloat = (float) exampleInteger;
+```
+
 ### Comments
 
 Comments should be used where appropriate, code should use descriptive names which alleviates the need for large blocks of comments.  Comments should be used to describe operations that may not be obvious at first glance exactly what they do.
@@ -641,11 +656,29 @@ class MyObject :
 };
 ```
 
-### Variable names
+### Typing
+
+The use of the keyword character "auto" should be used whereever possible, it produces cleaner looking code.  Primitive types such as int, float, long etc may be typed if auto deosn't make sense or results in ambiguity.
+
+*Good*
+
+```c+++
+auto settingsDialog = SettingsDialog();
+
+int totalCount;
+```
+
+*Bad*
+
+```c+++
+QSettingsDialog settingsDialog;
+```
+
+### Variables
 
 Variable names should be descriptive, the more descriptove the name the easier and clearer the code is to understand.  Variables should be named using camelCase.
 
-* Good
+*Good*
 
 ```c++
 for (int currentCharacter=0;currentCharacter<stringLength;currentCharacter++) {
@@ -653,7 +686,7 @@ for (int currentCharacter=0;currentCharacter<stringLength;currentCharacter++) {
 }
 ```
 
-* Bad
+*Bad*
 
 ```c++
 for (int i=0;i<j;i++) {

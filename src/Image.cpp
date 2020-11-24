@@ -23,6 +23,7 @@
 
 #include "ImageLoader.h"
 
+#include <QDebug>
 #include <IL/ilu.h>
 #include <QBuffer>
 #include <QRegularExpression>
@@ -116,55 +117,69 @@ Nedrysoft::Image::Image(QString filename, bool loadContent, int width, int heigh
 
             m_width = static_cast<unsigned int>(ilGetInteger(IL_IMAGE_WIDTH));
             m_height = static_cast<unsigned int>(ilGetInteger(IL_IMAGE_HEIGHT));
-            m_data = reinterpret_cast<char *>(ilGetData());
             m_length = static_cast<unsigned int>(ilGetInteger(IL_IMAGE_SIZE_OF_DATA));
             m_stride =static_cast<unsigned int>(ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL)) * m_width;
 
+            m_data = static_cast<char *>(malloc(m_length));
+
+            memcpy(m_data, reinterpret_cast<char *>(ilGetData()), m_length);
+
             m_isValid = true;
+
+            ilDeleteImages(1, &m_imageId);
         }
     }
 }
 
 Nedrysoft::Image::~Image() {
-    if (m_data) {
-        ilDeleteImages(1, &m_imageId);
-    }
+    /*if (m_data) {
+        free(m_data);
+    }*/
+    // TODO: figure out why this is causing a crash.
 }
 
 float Nedrysoft::Image::width() const {
-    return static_cast<float>(m_width);
+    return !m_isValid ? 0 : static_cast<float>(m_width);
 }
 
 float Nedrysoft::Image::height() const {
-    return static_cast<float>(m_height);
+    return !m_isValid ? 0 : static_cast<float>(m_height);
 }
 
 float Nedrysoft::Image::stride() const {
-    return static_cast<float>(m_stride);
+    return !m_isValid ? 0 : static_cast<float>(m_stride);
 }
 
 char *Nedrysoft::Image::data() {
-    return m_data;
+    return !m_isValid ? nullptr : m_data;
 }
 
 cv::Mat Nedrysoft::Image::mat() {
-    auto mat = cv::Mat(cv::Size(m_width, m_height), CV_8UC4, m_data, cv::Mat::AUTO_STEP);
+    if (m_isValid) {
+        auto mat = cv::Mat(cv::Size(m_width, m_height), CV_8UC4, m_data, cv::Mat::AUTO_STEP);
 
-    cv::cvtColor(mat, mat, cv::COLOR_BGR2RGB);
+        cv::cvtColor(mat, mat, cv::COLOR_BGR2RGB);
 
-    return mat;
+        return mat;
+    } else {
+        return cv::Mat();
+    }
 }
 
 QImage Nedrysoft::Image::image() {
-    return QImage(reinterpret_cast<const uchar *>(m_data),
-                  static_cast<int>(m_width),
-                  static_cast<int>(m_height),
-                  static_cast<int>(m_stride),
-                  QImage::Format_RGBA8888);
+    if (m_isValid) {
+        return QImage(reinterpret_cast<const uchar *>(m_data),
+                      static_cast<int>(m_width),
+                      static_cast<int>(m_height),
+                      static_cast<int>(m_stride),
+                      QImage::Format_RGBA8888);
+    } else {
+        return QImage();
+    }
 }
 
 QByteArray Nedrysoft::Image::rawData() {
-    return QByteArray(QByteArray(static_cast<const char *>(m_data), m_length));
+    return !m_isValid ? QByteArray() : QByteArray(static_cast<const char *>(m_data), m_length);
 }
 
 bool Nedrysoft::Image::isValid() const {

@@ -50,6 +50,10 @@ namespace Nedrysoft {
                     int x;                                          //! x coordinate of the file
                     int y;                                          //! y coordinate of the file
                     QString file;                                   //! the file name this file. (can be absolute, but recommended to be relative to this config
+
+                    bool operator==(const File& other) const {
+                        return (x == other.x && y == other.y && file == other.file);
+                    }
                 };
 
                 /**
@@ -61,6 +65,10 @@ namespace Nedrysoft {
                     int y;                                          //! y coordinate of the symlink
                     QString name;                                   //! the name to display below the icon
                     QString shortcut;                               //! the target of tme symlink
+
+                    bool operator==(const Symlink& other) const {
+                        return (x == other.x && y == other.y && name == other.name && shortcut == other.shortcut);
+                    }
                 };
 
                 /**
@@ -156,6 +164,20 @@ namespace Nedrysoft {
                  */
                 QString outputFilename();
 
+                /**
+                 * @brief       Returns the filename of this configuration.
+                 *
+                 * @returns     the full path to the configuration file if set; otherwise a null string
+                 */
+                 QString filename();
+
+                 /**
+                  * @brief      Returns whether the configuration has been modified.
+                  *
+                  * @returns    true if modified; otherwise false.
+                  */
+                 bool modified();
+
             private:
                 /**
                  * @brief       Python function which allows transfer of a string to c
@@ -217,7 +239,8 @@ namespace Nedrysoft {
                  * @returns     the normalised filename.
                  */
                 QString normalisedFilename(QString filename);
-
+        public:
+            void setProperty(const char *name, const QVariant &value);
             public:
                 Q_SIGNAL void iconSizeChanged(int iconSize);
                 Q_SIGNAL void iconVisibilityChanged(bool isVisible);

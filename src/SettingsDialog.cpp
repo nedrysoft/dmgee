@@ -23,6 +23,7 @@
 
 #include "GeneralSettingsPage.h"
 #include "ISettingsPage.h"
+#include "LicenseTemplatesSettingsPage.h"
 #include "TransparentWidget.h"
 
 #if defined(Q_OS_MACOS)
@@ -183,6 +184,7 @@ Nedrysoft::SettingsDialog::SettingsDialog(QWidget *parent) :
     setLayout(m_layout);
 #endif
     addPage(tr("General"), tr("General"), tr("General settings"), SettingsPage::Icon::General, new GeneralSettingsPage, true);
+    addPage(tr("License Templates"), tr("License Templates"), tr("License Templates"), SettingsPage::Icon::LicenseTemplates, new LicenseTemplatesSettingsPage, true);
 
 #if defined(Q_OS_MACOS)
     m_toolBar->attachToWindow(nativeWindowHandle());
@@ -398,7 +400,11 @@ QIcon Nedrysoft::SettingsDialog::getIcon(SettingsPage::Icon icon) {
 #if defined(Q_OS_MACOS)
     switch(icon) {
         case SettingsPage::General: {
-            return QIcon(Nedrysoft::MacHelper::macStandardImage(Nedrysoft::StandardImage::NSImageNamePreferencesGeneral, QSize(256,256)));
+            return QIcon(":/icons/gear.png");//QIcon(Nedrysoft::MacHelper::macStandardImage(Nedrysoft::StandardImage::NSImageNamePreferencesGeneral, QSize(256,256)));
+        }
+
+        case SettingsPage::LicenseTemplates: {
+            return QIcon(":/icons/template.png");
         }
     }
 #else

@@ -25,10 +25,12 @@
 #include "AboutDialog.h"
 #include "AnsiEscape.h"
 #include "ImageLoader.h"
+#include "MacHelper.h"
 #include "SettingsDialog.h"
 #include "ThemeSupport.h"
 
 #include <QAction>
+#include <QApplication>
 #include <QClipboard>
 #include <QDesktopServices>
 #include <QElapsedTimer>
@@ -86,6 +88,7 @@ Nedrysoft::MainWindow::MainWindow() :
     m_themeSupport = new Nedrysoft::Utils::ThemeSupport;
 
     qobject_cast<QApplication *>(QCoreApplication::instance())->installEventFilter(this);
+
     QDesktopServices::setUrlHandler("dmgee", this, SLOT("handleOpenByUrl"));
 
     initialiseLoader();
@@ -106,6 +109,8 @@ Nedrysoft::MainWindow::MainWindow() :
     QTimer::singleShot(splashScreenDuration, []() {
         Nedrysoft::SplashScreen::getInstance()->close();
     });
+
+    QGuiApplication::instance()->installEventFilter(this);
 }
 
 Nedrysoft::MainWindow::~MainWindow() {
@@ -141,16 +146,16 @@ bool Nedrysoft::MainWindow::eventFilter(QObject *watched, QEvent *event) {
     if (event->type()==QEvent::FileOpen) {
         auto fileOpenEvent = dynamic_cast<QFileOpenEvent *>(event);
 
-        /*if (!fileOpenEvent->url().isEmpty()) {
-            // TODO: launched via url scheme
+        if (!fileOpenEvent->url().isEmpty()) {
+            if (fileOpenEvent->url().isLocalFile()) {
+                loadConfiguration(fileOpenEvent->url().toLocalFile());
+            }
         } else if (!fileOpenEvent->file().isEmpty()) {
-            // TODO: launched via file association
-        }*/
-
-        return false;
+            loadConfiguration(fileOpenEvent->file());
+        }
     }
 
-    return QObject::eventFilter(watched, event);
+    return false;
 }
 
 void Nedrysoft::MainWindow::closeEvent(QCloseEvent *closeEvent) {
@@ -240,11 +245,11 @@ bool Nedrysoft::MainWindow::loadConfiguration(QString filename) {
 
     auto recentFiles = settings.value("recentFiles").toStringList();
 
-    recentFiles.removeAll(normalizedPath(filename));
+    recentFiles.removeAll(Nedrysoft::MacHelper::normalizedPath(filename));
 
-    filename = normalizedPath(filename);
+    filename = Nedrysoft::MacHelper::normalizedPath(filename);
 
-    auto absoluteFilename = normalizedPath(filename).replace(QRegularExpression("(^~)"), QDir::homePath());
+    auto absoluteFilename = Nedrysoft::MacHelper::resolvedPath(filename);
 
     if (m_builder->loadConfiguration(absoluteFilename)) {
         ui->terminalWidget->println(fore(Qt::lightGray) +
@@ -254,7 +259,7 @@ bool Nedrysoft::MainWindow::loadConfiguration(QString filename) {
                                     reset);
         result = true;
 
-        recentFiles.push_front(normalizedPath(filename));
+        recentFiles.push_front(Nedrysoft::MacHelper::normalizedPath(filename));
     } else {
         ui->terminalWidget->println(fore(Qt::lightGray) +
                                     tr("Configuration \"%1\" could not be loaded").arg(
@@ -299,7 +304,7 @@ void Nedrysoft::MainWindow::updateGUI() {
 
     // TODO: need to add this checkbox to ribbon
     //
-    // ui->featureSnapCheckbox->setCheckState(configValue("snapToFeatures", true).toBool() ? Qt::Checked : Qt::Unchecked);
+    // ui->featureSnapCheckbox->setCheckState(configValue("snaptofeatures", true).toBool() ? Qt::Checked : Qt::Unchecked);
 
     // add the icons from the configuration to the preview window.
 
@@ -314,12 +319,19 @@ void Nedrysoft::MainWindow::updatePixmap() {
     if (!fileInfo.absoluteFilePath().isEmpty()) {
         m_backgroundImage = Nedrysoft::Image(fileInfo.absoluteFilePath(), true);
 
-        m_backgroundPixmap = QPixmap::fromImage(m_backgroundImage.image());
+        if (m_backgroundImage.isValid()) {
+            m_backgroundPixmap = QPixmap::fromImage(m_backgroundImage.image());
 
-        ui->previewWidget->setPixmap(m_backgroundPixmap);
+            ui->previewWidget->setPixmap(m_backgroundPixmap);
 
-        if (ui->featureAutoDetectCheckbox->isChecked()) {
-            processBackground();
+            if (ui->featureAutoDetectCheckbox->isChecked()) {
+                processBackground();
+            }
+        } else {
+            m_backgroundPixmap = QPixmap();
+
+            ui->previewWidget->setPixmap(m_backgroundPixmap);
+            ui->previewWidget->clearCentroids();;
         }
     } else {
         m_backgroundPixmap = QPixmap();
@@ -510,7 +522,7 @@ void Nedrysoft::MainWindow::onGridVisibilityChanged(int state) {
 }
 
 void Nedrysoft::MainWindow::onIconsVisibilityChanged(int state) {
-    m_builder->setProperty("iconsvisible", state);
+    setConfigValue("iconsvisible", state);
 }
 
 void Nedrysoft::MainWindow::onFeatureVisibilityChanged(int state) {
@@ -790,22 +802,9 @@ void Nedrysoft::MainWindow::onGridSizeChanged(QString text) {
     }
 }
 
-QString Nedrysoft::MainWindow::normalizedPath(QString filename) {
-    auto tempFilename = QString(filename).replace(QRegularExpression("(^~)"), QDir::homePath());
-    auto homePath = QDir::homePath();
-
-    auto root = QDir(homePath);
-
-    if (tempFilename.startsWith(homePath)) {
-        return "~/"+root.relativeFilePath(tempFilename);
-    }
-
-    return(filename);
-}
-
-void Nedrysoft::MainWindow::updateRecentFiles() {
+void Nedrysoft::MainWindow::updateRecentFiles(QString filename) {
     QSettings settings;
-
+    int recentFileCount = 0;
     auto recentFiles = settings.value("recentFiles").toStringList();
     auto maxRecentFiles = settings.value("maxRecentFiles", 8).toInt();
 
@@ -815,19 +814,57 @@ void Nedrysoft::MainWindow::updateRecentFiles() {
 
     recentFiles.removeDuplicates();
 
+    if (!filename.isNull()) {
+        recentFiles.removeAll(filename);
+
+        recentFiles.push_front(filename);
+
+        recentFiles = recentFiles.mid(0, maxRecentFiles);
+
+        settings.setValue("recentFiles", recentFiles);
+    }
+
     m_openRecentMenu = new QMenu;
 
     for(auto recentFile : recentFiles) {
-        auto fileAction = new QAction(normalizedPath(recentFile));
+        auto resolvedFilename = Nedrysoft::MacHelper::resolvedPath(recentFile);
+        auto fileInfo = QFileInfo(resolvedFilename);
 
-        fileAction->setData(recentFile);
+        if (fileInfo.isFile()) {
+            auto fileAction = new QAction(Nedrysoft::MacHelper::normalizedPath(recentFile));
 
-        m_openRecentMenu->addAction(fileAction);
+            m_openRecentMenu->addAction(fileAction);
 
-        connect(fileAction, &QAction::triggered, [=](bool checked) {
-            loadConfiguration(fileAction->data().toString());
-        });
+            connect(fileAction, &QAction::triggered, [this, resolvedFilename](bool checked) {
+                loadConfiguration(resolvedFilename);
+            });
+
+            recentFileCount++;
+
+            if (recentFileCount==maxRecentFiles) {
+                break;
+            }
+        }
     }
+
+    if (!recentFileCount) {
+        auto nofilesAction = new QAction(tr("No recent files"));
+
+        nofilesAction->setDisabled(true);
+
+        m_openRecentMenu->addAction(nofilesAction);
+    }
+
+    auto clearAction = new QAction(tr("Clear items"));
+
+    m_openRecentMenu->addSeparator();
+    m_openRecentMenu->addAction(clearAction);
+
+    connect(clearAction, &QAction::triggered, [=](bool checked) {
+        QSettings().setValue("recentFiles", QStringList());
+
+        updateRecentFiles();
+    });
 
     ui->actionOpenRecent->setMenu(m_openRecentMenu);
 }
@@ -843,38 +880,81 @@ void Nedrysoft::MainWindow::onLoadClicked() {
     auto filename = QFileDialog::getOpenFileName(this, tr("Open Configuration"), defaultPath, tr("dmgee configuration(*.dmgee)"));
 
     if (!filename.isNull()) {
-        loadConfiguration(filename);
+        if (loadConfiguration(filename)) {
+
+        }
     }
 }
 
 void Nedrysoft::MainWindow::onNewClicked() {
+    if (m_builder->modified()) {
+        auto result = Nedrysoft::MacHelper::nativeAlert(this,
+                                                    tr("Configuration has been modified."),
+                                                    tr("Would you like to save your changes?"),
+                                                    QStringList() << tr("Save") << tr("Don't Save") << tr("Cancel"));
+
+        switch(result) {
+            case Nedrysoft::AlertButton::FirstButton: {
+                if (!saveConfiguration(false)) {
+                    return;
+                }
+
+                break;
+            }
+
+            case Nedrysoft::AlertButton::SecondButton: {
+                break;
+            }
+
+            case Nedrysoft::AlertButton::ThirdButton: {
+                return;
+            }
+
+            default: {
+                break;
+            }
+        }
+    }
+
     m_builder->clear();
 
     updateGUI();
 }
 
 void Nedrysoft::MainWindow::onSaveClicked() {
-    QString defaultPath;
-    QSettings settings;
-    auto defaultPaths = QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation);
+    saveConfiguration(false);
+}
 
-    if (defaultPaths.length()) {
-        defaultPath = defaultPaths.at(0);
-    }
+void Nedrysoft::MainWindow::onSaveAsClicked() {
+    saveConfiguration(true);
+}
 
-    auto filename = QFileDialog::getSaveFileName(this, tr("Save Configuration"), defaultPath, tr("dmgee configuration(*.dmgee)"));
+bool Nedrysoft::MainWindow::saveConfiguration(bool saveAs) {
+    auto filename = QString();
 
-    if (!filename.isNull()) {
-        if (m_builder->saveConfiguration(filename)) {
-            auto recentFiles = settings.value("recentFiles").toStringList();
+    if (( saveAs ) || ( m_builder->filename().isNull())) {
+        QString defaultPath;
+        QSettings settings;
+        auto defaultPaths = QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation);
 
-            recentFiles.push_front(normalizedPath(filename));
+        if (defaultPaths.length()) {
+            defaultPath = defaultPaths.at(0);
+        }
 
-            settings.setValue("recentFiles", recentFiles);
-
-            updateRecentFiles();
+        filename = QFileDialog::getSaveFileName(this, tr("Save Configuration"), defaultPath,
+                                                tr("dmgee configuration(*.dmgee)"));
+        if (filename.isNull()) {
+            return false;
         }
     }
+
+    if (m_builder->saveConfiguration(filename)) {
+        updateRecentFiles(Nedrysoft::MacHelper::normalizedPath(filename));
+
+        return true;
+    }
+
+    return false;
 }
 
 void Nedrysoft::MainWindow::setupValidators() {
@@ -917,6 +997,7 @@ void Nedrysoft::MainWindow::setupSignals() {
     connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::onLoadClicked);
     connect(ui->actionNew, &QAction::triggered, this, &MainWindow::onNewClicked);
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::onSaveClicked);
+    connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::onSaveAsClicked);
 
     connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::close);
     connect(ui->actionPreferences, &QAction::triggered, this, &MainWindow::onPreferencesTriggered);

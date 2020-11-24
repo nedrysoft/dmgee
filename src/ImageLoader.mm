@@ -61,12 +61,12 @@ bool Nedrysoft::ImageLoader::load(QString &filename, char **data, unsigned int *
 
          memcpy(*data, tiffData.bytes, *length);
 
-         [loadedImage release];
+         //[loadedImage release];
 
          return true;
      }
 
-     [loadedImage release];
+     //[loadedImage release];
 
      return false;
  }

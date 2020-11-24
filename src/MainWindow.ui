@@ -1162,7 +1162,6 @@
     <addaction name="actionClose"/>
     <addaction name="actionSave"/>
     <addaction name="actionSaveAs"/>
-    <addaction name="actionDuplicate"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>

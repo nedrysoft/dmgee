@@ -25,6 +25,10 @@
         <file>../icons/build.png</file>
         <file>../icons/build@2x.png</file>
 
+        <file>../icons/template.png</file>
+        <file>../icons/gear.png</file>
+        <file>../icons/invalid.png</file>
+
         <file>../images/spinner-dark.gif</file>
         <file>../images/spinner-light.gif</file>
         <file>../images/loading.gif</file>

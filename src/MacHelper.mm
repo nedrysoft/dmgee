@@ -21,9 +21,12 @@
 
 #include "MacHelper.h"
 
+#include <QDir>
 #include <QtMac>
+#include <QRegularExpression>
 
-#import <AppKit/AppKit.h>
+#import <Appkit/AppKit.h>
+#import <Appkit/NSAlert.h>
 
 QPixmap Nedrysoft::MacHelper::macStandardImage(StandardImage::StandardImageName standardImage, QSize imageSize) {
     NSBitmapImageRep *bitmapRepresentation = [[NSBitmapImageRep alloc]
@@ -74,4 +77,37 @@ QPixmap Nedrysoft::MacHelper::macStandardImage(StandardImage::StandardImageName 
     [bitmapRepresentation release];
 
     return pixmap;
+}
+
+QString Nedrysoft::MacHelper::resolvedPath(QString filename) {
+    return QFileInfo(QString(filename).replace(QRegularExpression("(^~)"), QDir::homePath())).canonicalFilePath();
+}
+
+QString Nedrysoft::MacHelper::normalizedPath(QString filename) {
+    auto tempFilename = resolvedPath(filename);
+    auto homePath = QDir::homePath();
+
+    auto root = QDir(homePath);
+
+    if (tempFilename.startsWith(homePath)) {
+        return "~/"+root.relativeFilePath(tempFilename);
+    }
+
+    return(QFileInfo(filename).canonicalFilePath());
+}
+
+Nedrysoft::AlertButton::AlertButtonResult Nedrysoft::MacHelper::nativeAlert(QWidget *parent, QString messageText, QString informativeText, QStringList buttons) {
+    NSAlert *alert = [[NSAlert alloc] init];
+
+    for (auto button : buttons) {
+        [alert addButtonWithTitle:button.toNSString()];
+    }
+
+    [alert setMessageText:messageText.toNSString()];
+    [alert setInformativeText:informativeText.toNSString()];
+    [alert setAlertStyle:NSAlertStyleInformational];
+
+    //[alert release];
+
+    return static_cast<Nedrysoft::AlertButton::AlertButtonResult>([alert runModal]);
 }

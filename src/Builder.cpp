@@ -22,6 +22,7 @@
 #include "Python.h"                         //! @note must be included first
 #include "Builder.h"
 #include "Image.h"
+#include "MacHelper.h"
 
 #include <QApplication>
 #include <QDateTime>
@@ -71,6 +72,7 @@ PyMethodDef Nedrysoft::Builder::m_moduleMethods[] = {
 
 Nedrysoft::Builder::Builder() {
     clear();
+    m_filename = QString();
 }
 
 QString Nedrysoft::Builder::normalisedFilename(QString filename) {
@@ -263,8 +265,8 @@ bool Nedrysoft::Builder::saveConfiguration(const QString &filename) {
     auto files = toml::array();
     auto symlinks = toml::array();
 
-    QFileInfo fileInfo(filename);
-    QDir configurationFolder(fileInfo.absolutePath());
+    QFileInfo fileInfo(Nedrysoft::MacHelper::resolvedPath(filename));
+    QDir configurationFolder(Nedrysoft::MacHelper::resolvedPath(filename));
 
     for (auto currentSymlink : m_configuration.m_symlinks) {
         auto symlink = toml::table{{
@@ -277,6 +279,8 @@ bool Nedrysoft::Builder::saveConfiguration(const QString &filename) {
 
         symlinks.push_back(symlink);
         symlinks.push_back(symlink);
+
+        qDebug() << Nedrysoft::MacHelper::resolvedPath(filename) << configurationFolder.relativeFilePath(currentSymlink->name);
     }
 
     for (auto currentFile : m_configuration.m_files) {
@@ -291,9 +295,9 @@ bool Nedrysoft::Builder::saveConfiguration(const QString &filename) {
     }
 
     auto configuration = toml::table{{
-            {"background", configurationFolder.relativeFilePath(property("background").toString()).toStdString()},
-            {"icon", configurationFolder.relativeFilePath(property("icon").toString()).toStdString()},
-            {"filename",configurationFolder.relativeFilePath(property("filename").toString()).toStdString()},
+            {"background", configurationFolder.relativeFilePath(Nedrysoft::MacHelper::resolvedPath(property("background").toString())).toStdString()},
+            {"icon", configurationFolder.relativeFilePath(Nedrysoft::MacHelper::resolvedPath(property("icon").toString())).toStdString()},
+            {"filename",configurationFolder.relativeFilePath(Nedrysoft::MacHelper::resolvedPath(property("filename").toString())).toStdString()},
             {"volumename",property("volumename").toString().toStdString()},
             {"iconsize", property("iconsize").toInt()},
             {"iconsvisible", property("iconsVisible").toBool()},
@@ -305,7 +309,7 @@ bool Nedrysoft::Builder::saveConfiguration(const QString &filename) {
             {"featuresize", property("featuresize").toInt()},
             {"snaptogrid", property("snaptogrid").toBool()},
             {"format", property("format").toString().toStdString()},
-            {"outputfile", property("outputfile").toString().toStdString()},
+            {"outputfile", configurationFolder.relativeFilePath(Nedrysoft::MacHelper::resolvedPath(property("outputfile").toString())).toStdString()},
             {"files", files},
             {"symlinks", symlinks},
         }
@@ -323,6 +327,8 @@ bool Nedrysoft::Builder::saveConfiguration(const QString &filename) {
         outputFile.close();
     }
 
+    m_filename = filename;
+
     return true;
 }
 
@@ -334,8 +340,6 @@ bool Nedrysoft::Builder::loadConfiguration(const QString& filename) {
     if (configuration.failed()) {
         return false;
     }
-
-    blockSignals(true);
 
     QList<Symlink *> symlinks;
 
@@ -384,12 +388,14 @@ bool Nedrysoft::Builder::loadConfiguration(const QString& filename) {
 
     setProperty("files", QVariant::fromValue<QList<Nedrysoft::Builder::File *>>(files));
     setProperty("symlinks", QVariant::fromValue<QList<Nedrysoft::Builder::Symlink *>>(symlinks));
+
     setProperty("format", QString::fromStdString(*configuration["format"].value<std::string>()));
     setProperty("iconsize", *configuration["iconsize"].value<int>());
     setProperty("textsize", *configuration["textsize"].value<int>());
     setProperty("iconsvisible", *configuration["iconsvisible"].value<bool>());
     setProperty("gridvisible", *configuration["gridvisible"].value<bool>());
     setProperty("detectfeatures", *configuration["detectfeatures"].value<bool>());
+
     setProperty("featuresize", *configuration["featuresize"].value<int>());
 
     setProperty("background", QString::fromStdString(*configuration["background"].value<std::string>()).replace(QRegularExpression("(^~)"), QDir::homePath()));
@@ -421,8 +427,6 @@ bool Nedrysoft::Builder::loadConfiguration(const QString& filename) {
     }
 
     setProperty("gridsize", gridSize);
-
-    blockSignals(false);
 
     m_filename = filename;
 
@@ -492,4 +496,21 @@ void Nedrysoft::Builder::clear() {
     m_configuration.m_textPosition = Right;
 
     setProperty("gridsize", QSize(20,20));
+
+    m_filename = "";
+}
+
+void Nedrysoft::Builder::setProperty(const char *name, const QVariant &value) {
+    if (this->property(name)==value)
+        return;
+
+    QObject::setProperty(name, value);
+}
+
+QString Nedrysoft::Builder::filename() {
+    return m_filename;
+}
+
+bool Nedrysoft::Builder::modified() {
+    return true;
 }

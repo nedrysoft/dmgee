@@ -22,6 +22,8 @@
 cmake_minimum_required(VERSION 3.17)
 set(CMAKE_CXX_STANDARD 17)
 
+set(Qt5WebEngineWidgets_DIR "/Users/adriancarpenter/Qt/5.15.1/clang_64/lib/cmake/Qt5WebEngineWidgets")
+
 project(dmgee)
 
 # set up some variables to describe the application
@@ -75,56 +77,59 @@ find_package(Git QUIET)
 # the source files
 
 list(APPEND app_SOURCES
-    src/main.cpp
-    src/MainWindow.cpp
-    src/MainWindow.h
-    src/MainWindow.ui
-    src/Python.cpp
-    src/Python.h
-    src/ImageLoader.mm
-    src/ImageLoader.h
-    src/Image.h
-    src/Image.cpp
-    src/Font.mm
-    src/Font.h
     src/AboutDialog.cpp
     src/AboutDialog.h
     src/AboutDialog.ui
-    src/SplashScreen.cpp
-    src/SplashScreen.h
-    src/PreviewWidget.cpp
-    src/PreviewWidget.h
-    src/Builder.cpp
-    src/Builder.h
-    src/SnappedGraphicsPixmapItem.cpp
-    src/SnappedGraphicsPixmapItem.h
-    src/HTermWidget.cpp
-    src/HTermWidget.h
-    src/HTermApi.cpp
-    src/HTermApi.h
-    src/hterm.qrc
-    src/FlatTabBar.cpp
-    src/FlatTabBar.h
-    src/FlatTabWidget.h
-    src/FlatTabWidget.cpp
     src/AnsiEscape.cpp
     src/AnsiEscape.h
-    src/ThemeSupport.mm
-    src/ThemeSupport.h
-    src/SettingsDialog.cpp
-    src/SettingsDialog.h
-    src/TransparentWidget.cpp
-    src/TransparentWidget.h
-    src/SettingsDialog.cpp
-    src/SettingsDialog.h
-    src/MacHelper.mm
-    src/MacHelper.h
-    src/ISettingsPage.h
+    src/Builder.cpp
+    src/Builder.h
+    src/FlatTabBar.cpp
+    src/FlatTabBar.h
+    src/FlatTabWidget.cpp
+    src/FlatTabWidget.h
+    src/Font.h
+    src/Font.mm
     src/GeneralSettingsPage.cpp
     src/GeneralSettingsPage.h
     src/GeneralSettingsPage.ui
     src/GridGraphicsScene.cpp
     src/GridGraphicsScene.h
+    src/HTermApi.cpp
+    src/HTermApi.h
+    src/HTermWidget.cpp
+    src/HTermWidget.h
+    src/ISettingsPage.h
+    src/Image.cpp
+    src/Image.h
+    src/ImageLoader.h
+    src/ImageLoader.mm
+    src/LicenseTemplatesSettingsPage.cpp
+    src/LicenseTemplatesSettingsPage.h
+    src/LicenseTemplatesSettingsPage.ui
+    src/MacHelper.h
+    src/MacHelper.mm
+    src/MainWindow.cpp
+    src/MainWindow.h
+    src/MainWindow.ui
+    src/PreviewWidget.cpp
+    src/PreviewWidget.h
+    src/Python.cpp
+    src/Python.h
+    src/SettingsDialog.cpp
+    src/SettingsDialog.cpp
+    src/SettingsDialog.h
+    src/SettingsDialog.h
+    src/SnappedGraphicsPixmapItem.cpp
+    src/SnappedGraphicsPixmapItem.h
+    src/SplashScreen.cpp
+    src/SplashScreen.h
+    src/ThemeSupport.h
+    src/ThemeSupport.mm
+    src/TransparentWidget.cpp
+    src/TransparentWidget.h
+    src/hterm.qrc
+    src/main.cpp
 
     src/app.qrc
     icons/dmgee.icns
