@@ -99,6 +99,11 @@ namespace Nedrysoft {
 
             public:
                 /**
+                 * @brief       Constructs a new Builder instance.
+                 */
+                explicit Builder();
+
+                /**
                  * @brief       Uses the dmgbuild python module + configuration file to being a DMG.
                  *
                  * @param[in]   outputFilename the output name of the file to create (or empty to use the value in the configuration).
@@ -143,6 +148,13 @@ namespace Nedrysoft {
                  * @brief       Clears the current builder config to default.
                  */
                 void clear();
+
+                /**
+                 * @brief       Returns the normalised output filename.
+                 *
+                 * @returns     the normalised output filename.
+                 */
+                QString outputFilename();
 
             private:
                 /**
@@ -192,6 +204,20 @@ namespace Nedrysoft {
                  */
                 QList<File *> files();
 
+                /**
+                 * @brief       Reuturns the normalized filename.
+                 *
+                 * @note        The filename is checked for tildes and if one exists then the filename is modified to
+                 *              have the full path to the user.  If the tile is relative, then it is concatenated with
+                 *              the path to the configuration file.  If none of the previous statements are true then
+                 *              the orignal filename is returned.
+                 *
+                 * @param[in]   filename the name of the file to normalise.
+                 *
+                 * @returns     the normalised filename.
+                 */
+                QString normalisedFilename(QString filename);
+
             public:
                 Q_SIGNAL void iconSizeChanged(int iconSize);
                 Q_SIGNAL void iconVisibilityChanged(bool isVisible);
@@ -225,6 +251,8 @@ namespace Nedrysoft {
 
             private:
                 Configuration m_configuration;                      //! the configuration for the DMG
+                QString m_filename;                                 //! the filename of the configuration that was loaded.
+                QString m_outputFilename;                           //! the filename of the output file.
 
                 static PyMethodDef m_moduleMethods[];               //! module method table for the dmgee module
     };

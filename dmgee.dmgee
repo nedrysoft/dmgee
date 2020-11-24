@@ -21,7 +21,6 @@
 
 background = "./images/dmg_background.tiff"
 icon = "./icons/dmgee.icns"
-filename = "dmgee"
 volumename = "dmgee"
 iconsize = 93
 iconsvisible = true
@@ -34,6 +33,7 @@ featuresize = 10000
 snaptogrid = false
 format = "UDBZ"
 textposition = "bottom"
+outputfile = "./bin/x86_64/Debug/dmgee.dmg"
 
 [[file]]
 x = 140

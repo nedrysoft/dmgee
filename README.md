@@ -40,7 +40,11 @@ Binary distributions can be found under the assets on the [github releases](http
 
 ***The application requires Python 3 to be installed, currently the build does not bundle the python libraries and system modules into the application bundle and relies on them being correctly installed an accessible.***
 
-***Furthermore, there is currently no indication or output when a build is triggered, I am going to make changes to the dmgbuild python module so that the build progress and status can be displayed in the application.***
+To build and run the application from source, you will need to ensure that you have python 3 installed and that the modified dmgbuild module is also installed, currently the patch is outstanding while things are finalised, but you can install it directly from my fork with the following command:
+
+```shell script
+python3 -m pip install git+https://github.com/fizzyade/dmgbuild.git@master --force
+```
 
 ## The Ribbon Bar
 

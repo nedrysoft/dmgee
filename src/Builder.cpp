@@ -69,18 +69,42 @@ PyMethodDef Nedrysoft::Builder::m_moduleMethods[] = {
     {NULL},
 };
 
-bool Nedrysoft::Builder::createDMG(QString outputFilename) {
+Nedrysoft::Builder::Builder() {
+    clear();
+}
+
+QString Nedrysoft::Builder::normalisedFilename(QString filename) {
+    filename = filename.replace(QRegularExpression("(^~)"), QDir::homePath());
+
+    QFileInfo outputFileInfo(filename);
+
+    if (outputFileInfo.isRelative()) {
+        QDir rootDir(m_filename);
+
+        rootDir.cdUp();
+
+        return QDir::cleanPath(rootDir.absoluteFilePath(filename));
+    }
+
+    return QDir::cleanPath(filename);
+}
+
+QString Nedrysoft::Builder::outputFilename() {
+    return  normalisedFilename(m_outputFilename);
+}
+
+bool Nedrysoft::Builder::createDMG(QString filename) {
     QList<QString> modulePaths;
     int imageWidth, imageHeight;
 
-    outputFilename = outputFilename.replace(QRegularExpression("(^~)"), QDir::homePath());
+    auto dmgFilename = normalisedFilename(filename);
+    auto backgroundFilename = normalisedFilename(property("background").toString());
+    auto iconFilename = normalisedFilename(property("icon").toString());
 
-    QFileInfo outputFileInfo(outputFilename.isEmpty() ? property("filename").toString() : outputFilename);
+    m_outputFilename = dmgFilename;
 
-    QFileInfo fileInfo(property("background").toString());
-
-    if (!fileInfo.absoluteFilePath().isEmpty()) {
-        auto backgroundImage = Nedrysoft::Image(fileInfo.absoluteFilePath(), true);
+    if (QFileInfo(backgroundFilename).exists()) {
+        auto backgroundImage = Nedrysoft::Image(backgroundFilename, true);
 
         imageWidth = static_cast<int>(backgroundImage.width());
         imageHeight = static_cast<int>(backgroundImage.height());
@@ -97,7 +121,7 @@ bool Nedrysoft::Builder::createDMG(QString outputFilename) {
     PyDict_SetItemString(parameters, "volume_name", PyUnicode_FromString( property("volumename").toString().toLatin1().constData()));
 
     PyDict_SetItemString(parameters, "filename",
-                         PyUnicode_FromString(outputFileInfo.absoluteFilePath().toLatin1().constData()));
+                         PyUnicode_FromString(dmgFilename.toLatin1().constData()));
 
     PyDict_SetItemString(parameters, "lookForHiDPI", Py_False);
     PyDict_SetItemString(parameters, "detach_retries", PyLong_FromLong(5));
@@ -106,8 +130,8 @@ bool Nedrysoft::Builder::createDMG(QString outputFilename) {
 
     PyDict_SetItemString(settings, "format", PyUnicode_FromString(property("format").toString().toLatin1().constData()));
     PyDict_SetItemString(settings, "size", Py_None);
-    PyDict_SetItemString(settings, "icon", PyUnicode_FromString(property("icon").toString().toLatin1().constData()));
-    PyDict_SetItemString(settings, "background", PyUnicode_FromString(property("background").toString().toLatin1().constData()));
+    PyDict_SetItemString(settings, "icon", PyUnicode_FromString(iconFilename.toLatin1().constData()));
+    PyDict_SetItemString(settings, "background", PyUnicode_FromString(backgroundFilename.toLatin1().constData()));
 
     PyDict_SetItemString(settings, "show_status_bar", Py_False);
     PyDict_SetItemString(settings, "show_tab_view", Py_False);
@@ -196,9 +220,10 @@ bool Nedrysoft::Builder::createDMG(QString outputFilename) {
     auto iconLocations = PyDict_New();
 
     for(auto file : m_configuration.m_files) {
-        QFileInfo currentFileInfo(file->file);
+        auto absoluteFilename = normalisedFilename(file->file);
+        QFileInfo currentFileInfo(absoluteFilename);
 
-        PyList_Append(files, PyUnicode_FromString(file->file.toLatin1().data()));
+        PyList_Append(files, PyUnicode_FromString(absoluteFilename.toLatin1().data()));
 
         auto position = PyTuple_Pack(2, PyLong_FromLong(file->x), PyLong_FromLong(file->y));
 
@@ -206,7 +231,9 @@ bool Nedrysoft::Builder::createDMG(QString outputFilename) {
     }
 
     for(auto symlink : m_configuration.m_symlinks) {
-        PyDict_SetItemString(symLinks, symlink->name.toLatin1().constData(), PyUnicode_FromString(symlink->shortcut.toLatin1().constData()));
+        auto absoluteFilename = normalisedFilename(symlink->shortcut);
+
+        PyDict_SetItemString(symLinks, symlink->name.toLatin1().constData(), PyUnicode_FromString(absoluteFilename.toLatin1().constData()));
 
         auto position = PyTuple_Pack(2, PyLong_FromLong(symlink->x), PyLong_FromLong(symlink->y));
 
@@ -228,8 +255,6 @@ bool Nedrysoft::Builder::createDMG(QString outputFilename) {
     python->setVariable("builderInstance", this);
 
     python->runScript(BuildScript, locals);
-
-    delete python;
 
     return true;
 }
@@ -280,8 +305,9 @@ bool Nedrysoft::Builder::saveConfiguration(const QString &filename) {
             {"featuresize", property("featuresize").toInt()},
             {"snaptogrid", property("snaptogrid").toBool()},
             {"format", property("format").toString().toStdString()},
+            {"outputfile", property("outputfile").toString().toStdString()},
             {"files", files},
-            {"symlinks", symlinks}
+            {"symlinks", symlinks},
         }
     };
 
@@ -313,43 +339,47 @@ bool Nedrysoft::Builder::loadConfiguration(const QString& filename) {
 
     QList<Symlink *> symlinks;
 
-    for (toml::node &elem : *configuration["symlink"].as_array()) {
-        auto symlink = new Symlink;
-        auto entry = *elem.as_table();
-        auto filePath = QString::fromStdString(*entry["shortcut"].value<std::string>());
+    if (configuration["symlink"].is_array()) {
+        for (toml::node &elem : *configuration["symlink"].as_array()) {
+            auto symlink = new Symlink;
+            auto entry = *elem.as_table();
+            auto filePath = QString::fromStdString(*entry["shortcut"].value<std::string>());
 
-        filePath = filePath.replace(QRegularExpression("(^~)"), QDir::homePath());
+            filePath = filePath.replace(QRegularExpression("(^~)"), QDir::homePath());
 
-        if (QFileInfo(filePath).isRelative()) {
-            filePath = dir.absoluteFilePath(filePath);
+            if (QFileInfo(filePath).isRelative()) {
+                filePath = dir.absoluteFilePath(filePath);
+            }
+
+            symlink->x = *entry["x"].value<int>();
+            symlink->y = *entry["y"].value<int>();
+            symlink->name = QString::fromStdString(*entry["name"].value<std::string>());
+            symlink->shortcut = filePath;;
+
+            symlinks.push_back(symlink);
         }
-
-        symlink->x = *entry["x"].value<int>();
-        symlink->y = *entry["y"].value<int>();
-        symlink->name = QString::fromStdString(*entry["name"].value<std::string>());
-        symlink->shortcut =  filePath;;
-
-        symlinks.push_back(symlink);
     }
 
     QList<File *> files;
 
-    for (toml::node &elem : *configuration["file"].as_array()) {
-        auto file = new File;
-        auto entry = *elem.as_table();
-        auto filePath = QString::fromStdString(*entry["file"].value<std::string>());
+    if (configuration["file"].is_array()) {
+        for (toml::node &elem : *configuration["file"].as_array()) {
+            auto file = new File;
+            auto entry = *elem.as_table();
+            auto filePath = QString::fromStdString(*entry["file"].value<std::string>());
 
-        filePath = filePath.replace(QRegularExpression("(^~)"), QDir::homePath());
+            filePath = filePath.replace(QRegularExpression("(^~)"), QDir::homePath());
 
-        if (QFileInfo(filePath).isRelative()) {
-            filePath = dir.absoluteFilePath(filePath);
+            if (QFileInfo(filePath).isRelative()) {
+                filePath = dir.absoluteFilePath(filePath);
+            }
+
+            file->x = *entry["x"].value<int>();
+            file->y = *entry["y"].value<int>();
+            file->file = filePath;
+
+            files.push_back(file);
         }
-
-        file->x = *entry["x"].value<int>();
-        file->y = *entry["y"].value<int>();
-        file->file = filePath;
-
-        files.push_back(file);
     }
 
     setProperty("files", QVariant::fromValue<QList<Nedrysoft::Builder::File *>>(files));
@@ -366,6 +396,7 @@ bool Nedrysoft::Builder::loadConfiguration(const QString& filename) {
     setProperty("icon", QString::fromStdString(*configuration["icon"].value<std::string>()));
     setProperty("filename", QString::fromStdString(*configuration["filename"].value<std::string>()).replace(QRegularExpression("(^~)"), QDir::homePath()));
     setProperty("volumename", QString::fromStdString(*configuration["volumename"].value<std::string>()));
+    setProperty("outputfile", QString::fromStdString(*configuration["outputfile"].value<std::string>()));
 
     auto textPosition = QString::fromStdString(*configuration["textposition"].value<std::string>());
 
@@ -377,17 +408,23 @@ bool Nedrysoft::Builder::loadConfiguration(const QString& filename) {
         // TODO: some error handling
     }
 
-    auto gridSizeList = *configuration["gridsize"].as_array();
-
     auto gridSize = QSize();
 
-    if (gridSizeList.size()==2) {
-        gridSize = QSize(*gridSizeList[0].value<int>(), *gridSizeList[1].value<int>());
+    if (configuration["gridsize"].is_array()) {
+        auto gridSizeList = *configuration["gridsize"].as_array();
+
+        if (gridSizeList.size() == 2) {
+            gridSize = QSize(*gridSizeList[0].value<int>(), *gridSizeList[1].value<int>());
+        }
+    } else {
+        gridSize = QSize(64, 64);
     }
 
     setProperty("gridsize", gridSize);
 
     blockSignals(false);
+
+    m_filename = filename;
 
     return true;
 }
@@ -447,9 +484,10 @@ void Nedrysoft::Builder::clear() {
 
     setProperty("background", "");
     setProperty("icon", "");
-    setProperty("filename", "");
+    setProperty("filename", "output");
     setProperty("volumename", "New DMG");
     setProperty("textposition", "Bottom");
+    setProperty("outputfile", "output.dmg");
 
     m_configuration.m_textPosition = Right;
 

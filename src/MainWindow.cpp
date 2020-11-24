@@ -44,6 +44,7 @@
 #include <QPaintEvent>
 #include <QPainter>
 #include <QResizeEvent>
+#include <QSettings>
 #include <QStyleFactory>
 #include <QTemporaryDir>
 #include <QTimer>
@@ -84,81 +85,27 @@ Nedrysoft::MainWindow::MainWindow() :
 
     m_themeSupport = new Nedrysoft::Utils::ThemeSupport;
 
-    /*auto p = ui->previewContainer->palette();
-
-    p.setColor(QPalette::Base, Qt::red);
-
-    ui->previewContainer->setBackgroundRole(QPalette::Base);
-    ui->previewContainer->setPalette(p);*/
+    qobject_cast<QApplication *>(QCoreApplication::instance())->installEventFilter(this);
+    QDesktopServices::setUrlHandler("dmgee", this, SLOT("handleOpenByUrl"));
 
     initialiseLoader();
 
     setupStatusBar();
+    setupComboBoxes();
+    setupValidators();
+    setupSignals();
 
-    qobject_cast<QApplication *>(QCoreApplication::instance())->installEventFilter(this);
+    updateGUI();
+    updateRecentFiles();
+
+    // set up validators for fields that require one
+
+    ui->previewWidget->setBuilder(m_builder);
+    ui->previewWidget->fitToView();
 
     QTimer::singleShot(splashScreenDuration, []() {
         Nedrysoft::SplashScreen::getInstance()->close();
     });
-
-    updatePixmap();
-
-    QDesktopServices::setUrlHandler("dmgee", this, SLOT("handleOpenByUrl"));
-
-    // set up gui controls
-
-    ui->previewWidget->setIconSize(configValue("iconsize", 64).value<int>());
-
-    ui->gridXLineEdit->setValidator(new QIntValidator(0, 100));
-    ui->gridYLineEdit->setValidator(new QIntValidator(0, 100));
-    ui->iconsSizeLineEdit->setValidator(new QIntValidator(16, 512));
-    ui->fontSizeLineEdit->setValidator(new QIntValidator(6, 72));
-
-    ui->positionComboBox->addItems(QStringList() << tr("Bottom") << tr("Right"));
-    ui->positionComboBox->setCurrentIndex(configValue("textposition", Nedrysoft::Builder::Bottom).value<Nedrysoft::Builder::TextPosition>());
-
-    processBackground();
-
-    setupDiskImageFormatCombo();
-
-    // connect signals
-
-    connect(m_builder, &Nedrysoft::Builder::progressUpdate, this, &MainWindow::onProgressUpdate, Qt::QueuedConnection);
-
-    connect(ui->fontSizeLineEdit, &QLineEdit::textChanged, this, &MainWindow::onFontSizeChanged);
-    connect(ui->iconsSizeLineEdit, &QLineEdit::textChanged, this, &MainWindow::onIconSizeChanged);
-    connect(ui->showIconsCheckBox, &QCheckBox::stateChanged, this, &MainWindow::onIconsVisibilityChanged);
-
-    connect(ui->buildButton, &Nedrysoft::Ribbon::RibbonPushButton::clicked, this, &MainWindow::onCreateDMG);
-    connect(ui->designFilesAddButton, &Nedrysoft::Ribbon::RibbonDropButton::clicked, this, &MainWindow::onDesignFilesAddButtonClicked);
-    connect(ui->minFeatureSlider, &QSlider::valueChanged, this, &MainWindow::onFeatureSliderMinimumValueChanged);
-    connect(ui->featureAutoDetectCheckbox, &QCheckBox::stateChanged, this, &MainWindow::onFeatureVisibilityChanged);
-
-    connect(ui->terminalWidget, &Nedrysoft::HTermWidget::terminalReady, this, &MainWindow::onTerminalReady);
-    connect(ui->terminalWidget, &Nedrysoft::HTermWidget::contextMenu, this, &MainWindow::onTerminalContextMenuTriggered);
-    connect(ui->terminalWidget, &Nedrysoft::HTermWidget::openUrl, this, &MainWindow::onTerminalUrlClicked);
-    connect(ui->terminalWidget, &Nedrysoft::HTermWidget::terminalBuffer, this, &MainWindow::copyTerminalBufferToClipboard);
-
-    connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::close);
-    connect(ui->actionPreferences, &QAction::triggered, this, &MainWindow::onPreferencesTriggered);
-    connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::onAboutDialogTriggered);
-
-    connect(ui->gridVisibleCheckbox, &QCheckBox::stateChanged, this, &MainWindow::onGridVisibilityChanged);
-    connect(ui->gridXLineEdit, &QLineEdit::textChanged, this, &MainWindow::onGridSizeChanged);
-    connect(ui->gridYLineEdit, &QLineEdit::textChanged, this, &MainWindow::onGridSizeChanged);
-    connect(ui->gridSnapCheckbox, &QCheckBox::clicked, this, &MainWindow::onGridSnapChanged);
-
-    connect(ui->loadButton, &Nedrysoft::Ribbon::RibbonPushButton::clicked, this, &MainWindow::onLoadClicked);
-    connect(ui->newButton, &Nedrysoft::Ribbon::RibbonPushButton::clicked, this, &MainWindow::onNewClicked);
-    connect(ui->saveButton, &Nedrysoft::Ribbon::RibbonPushButton::clicked, this, &MainWindow::onSaveClicked);
-
-    ui->previewWidget->setBuilder(m_builder);
-
-    loadConfiguration("/Users/adriancarpenter/Documents/Development/dmgee/dmgee.dmgee");
-
-    ui->previewWidget->fitToView();
-
-    updateRecentFiles();
 }
 
 Nedrysoft::MainWindow::~MainWindow() {
@@ -288,16 +235,26 @@ QVariant Nedrysoft::MainWindow::configValue(const QString& valueName, QVariant d
 
 bool Nedrysoft::MainWindow::loadConfiguration(QString filename) {
     QFileInfo fileInfo(filename);
+    QSettings settings;
     bool result = false;
 
-    if (m_builder->loadConfiguration(std::move(filename))) {
+    auto recentFiles = settings.value("recentFiles").toStringList();
+
+    recentFiles.removeAll(normalizedPath(filename));
+
+    filename = normalizedPath(filename);
+
+    auto absoluteFilename = normalizedPath(filename).replace(QRegularExpression("(^~)"), QDir::homePath());
+
+    if (m_builder->loadConfiguration(absoluteFilename)) {
         ui->terminalWidget->println(fore(Qt::lightGray) +
                                     tr("Configuration file \"%1\" was loaded successfully.").arg(fore(Qt::yellow) +
-                                    hyperlink(
-                                    QUrl::fromLocalFile(filename).toString(), fileInfo.fileName()) +
+                                    hyperlink(QUrl::fromLocalFile(filename).toString(), fileInfo.fileName()) +
                                     fore(Qt::lightGray)) +
                                     reset);
         result = true;
+
+        recentFiles.push_front(normalizedPath(filename));
     } else {
         ui->terminalWidget->println(fore(Qt::lightGray) +
                                     tr("Configuration \"%1\" could not be loaded").arg(
@@ -307,6 +264,10 @@ bool Nedrysoft::MainWindow::loadConfiguration(QString filename) {
     }
 
     updateGUI();
+
+    settings.setValue("recentFiles", recentFiles);
+
+    updateRecentFiles();
 
     return true;
 }
@@ -466,7 +427,7 @@ void Nedrysoft::MainWindow::setupStatusBar() {
     ui->statusbar->addPermanentWidget(m_stateLabel);
 }
 
-void Nedrysoft::MainWindow::setupDiskImageFormatCombo() {
+void Nedrysoft::MainWindow::setupComboBoxes() {
     QList<QPair<QString, QString> > diskFormats;
 
     diskFormats << QPair<QString, QString>("UDRW", tr("UDIF read/write image"));
@@ -492,6 +453,9 @@ void Nedrysoft::MainWindow::setupDiskImageFormatCombo() {
     }
 
     ui->formatComboBox->setCurrentText("UDBZ");
+
+    ui->positionComboBox->addItems(QStringList() << tr("Bottom") << tr("Right"));
+    ui->positionComboBox->setCurrentIndex(configValue("textposition", Nedrysoft::Builder::Bottom).value<Nedrysoft::Builder::TextPosition>());
 }
 
 void Nedrysoft::MainWindow::onDesignFilesAddButtonClicked(bool dropdown) {
@@ -564,7 +528,9 @@ void Nedrysoft::MainWindow::onGridSnapChanged(bool checked) {
 void Nedrysoft::MainWindow::onCreateDMG() {
     ui->terminalWidget->println("");
 
-    m_builder->createDMG("~/Desktop/test.dmg");
+    // TODO: output file should be overridable from the command line
+
+    m_builder->createDMG(m_builder->property("outputfile").toString());
 }
 
 void Nedrysoft::MainWindow::onTerminalReady() {
@@ -683,7 +649,7 @@ QString Nedrysoft::MainWindow::handleBuildProgress(QVariantMap buildMap) {
                 style(AnsiStyle::BRIGHT)+
                 tr("Build took %1.").arg(durationString);
 
-        auto outputFilename = QString("~/Desktop/test.dmg").replace(QRegularExpression("(^~)"), QDir::homePath());
+        auto outputFilename = m_builder->outputFilename();
 
         QFileInfo fileInfo(outputFilename);
 
@@ -824,14 +790,44 @@ void Nedrysoft::MainWindow::onGridSizeChanged(QString text) {
     }
 }
 
+QString Nedrysoft::MainWindow::normalizedPath(QString filename) {
+    auto tempFilename = QString(filename).replace(QRegularExpression("(^~)"), QDir::homePath());
+    auto homePath = QDir::homePath();
+
+    auto root = QDir(homePath);
+
+    if (tempFilename.startsWith(homePath)) {
+        return "~/"+root.relativeFilePath(tempFilename);
+    }
+
+    return(filename);
+}
+
 void Nedrysoft::MainWindow::updateRecentFiles() {
+    QSettings settings;
+
+    auto recentFiles = settings.value("recentFiles").toStringList();
+    auto maxRecentFiles = settings.value("maxRecentFiles", 8).toInt();
+
     if (m_openRecentMenu) {
         m_openRecentMenu->deleteLater();
     }
 
+    recentFiles.removeDuplicates();
+
     m_openRecentMenu = new QMenu;
 
-    // TODO: store list of recent files in QSettings and populate here.
+    for(auto recentFile : recentFiles) {
+        auto fileAction = new QAction(normalizedPath(recentFile));
+
+        fileAction->setData(recentFile);
+
+        m_openRecentMenu->addAction(fileAction);
+
+        connect(fileAction, &QAction::triggered, [=](bool checked) {
+            loadConfiguration(fileAction->data().toString());
+        });
+    }
 
     ui->actionOpenRecent->setMenu(m_openRecentMenu);
 }
@@ -859,6 +855,7 @@ void Nedrysoft::MainWindow::onNewClicked() {
 
 void Nedrysoft::MainWindow::onSaveClicked() {
     QString defaultPath;
+    QSettings settings;
     auto defaultPaths = QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation);
 
     if (defaultPaths.length()) {
@@ -868,6 +865,60 @@ void Nedrysoft::MainWindow::onSaveClicked() {
     auto filename = QFileDialog::getSaveFileName(this, tr("Save Configuration"), defaultPath, tr("dmgee configuration(*.dmgee)"));
 
     if (!filename.isNull()) {
-        m_builder->saveConfiguration(filename);
+        if (m_builder->saveConfiguration(filename)) {
+            auto recentFiles = settings.value("recentFiles").toStringList();
+
+            recentFiles.push_front(normalizedPath(filename));
+
+            settings.setValue("recentFiles", recentFiles);
+
+            updateRecentFiles();
+        }
     }
+}
+
+void Nedrysoft::MainWindow::setupValidators() {
+    ui->gridXLineEdit->setValidator(new QIntValidator(0, 100));
+    ui->gridYLineEdit->setValidator(new QIntValidator(0, 100));
+    ui->iconsSizeLineEdit->setValidator(new QIntValidator(16, 512));
+    ui->fontSizeLineEdit->setValidator(new QIntValidator(6, 72));
+}
+
+void Nedrysoft::MainWindow::setupSignals() {
+    connect(m_builder, &Nedrysoft::Builder::progressUpdate, this, &MainWindow::onProgressUpdate, Qt::QueuedConnection);
+
+    connect(ui->terminalWidget, &Nedrysoft::HTermWidget::terminalReady, this, &MainWindow::onTerminalReady);
+    connect(ui->terminalWidget, &Nedrysoft::HTermWidget::contextMenu, this, &MainWindow::onTerminalContextMenuTriggered);
+    connect(ui->terminalWidget, &Nedrysoft::HTermWidget::openUrl, this, &MainWindow::onTerminalUrlClicked);
+    connect(ui->terminalWidget, &Nedrysoft::HTermWidget::terminalBuffer, this, &MainWindow::copyTerminalBufferToClipboard);
+
+    // ribbon bar
+
+    connect(ui->fontSizeLineEdit, &QLineEdit::textChanged, this, &MainWindow::onFontSizeChanged);
+    connect(ui->iconsSizeLineEdit, &QLineEdit::textChanged, this, &MainWindow::onIconSizeChanged);
+    connect(ui->showIconsCheckBox, &QCheckBox::stateChanged, this, &MainWindow::onIconsVisibilityChanged);
+
+    connect(ui->buildButton, &Nedrysoft::Ribbon::RibbonPushButton::clicked, this, &MainWindow::onCreateDMG);
+    connect(ui->designFilesAddButton, &Nedrysoft::Ribbon::RibbonDropButton::clicked, this, &MainWindow::onDesignFilesAddButtonClicked);
+    connect(ui->minFeatureSlider, &QSlider::valueChanged, this, &MainWindow::onFeatureSliderMinimumValueChanged);
+    connect(ui->featureAutoDetectCheckbox, &QCheckBox::stateChanged, this, &MainWindow::onFeatureVisibilityChanged);
+
+    connect(ui->gridVisibleCheckbox, &QCheckBox::stateChanged, this, &MainWindow::onGridVisibilityChanged);
+    connect(ui->gridXLineEdit, &QLineEdit::textChanged, this, &MainWindow::onGridSizeChanged);
+    connect(ui->gridYLineEdit, &QLineEdit::textChanged, this, &MainWindow::onGridSizeChanged);
+    connect(ui->gridSnapCheckbox, &QCheckBox::clicked, this, &MainWindow::onGridSnapChanged);
+
+    connect(ui->loadButton, &Nedrysoft::Ribbon::RibbonPushButton::clicked, this, &MainWindow::onLoadClicked);
+    connect(ui->newButton, &Nedrysoft::Ribbon::RibbonPushButton::clicked, this, &MainWindow::onNewClicked);
+    connect(ui->saveButton, &Nedrysoft::Ribbon::RibbonPushButton::clicked, this, &MainWindow::onSaveClicked);
+
+    // menu actions
+
+    connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::onLoadClicked);
+    connect(ui->actionNew, &QAction::triggered, this, &MainWindow::onNewClicked);
+    connect(ui->actionSave, &QAction::triggered, this, &MainWindow::onSaveClicked);
+
+    connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::close);
+    connect(ui->actionPreferences, &QAction::triggered, this, &MainWindow::onPreferencesTriggered);
+    connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::onAboutDialogTriggered);
 }

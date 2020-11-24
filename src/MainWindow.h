@@ -180,6 +180,12 @@ namespace Nedrysoft {
                 QString timespan(int milliseconds, QString &hours, QString &minutes, QString &seconds);
 
                 /**
+                 * @brief       Returns a normalized path, resolves ~.
+                 * @param[in]   filename the filename to be normalized.
+                 */
+                QString normalizedPath(QString filename);
+
+                /**
                  * @brief       Updates the GUI with the current progress.
                  * @param[in]   updateData the JSON update as a string.
                  */
@@ -205,9 +211,19 @@ namespace Nedrysoft {
                 void setupStatusBar();
 
                 /**
-                 * @brief       Sets up the disk image formats combobox.
+                 * @brief       Sets up the validators for ribbon bar line edits.
                  */
-                void setupDiskImageFormatCombo();
+                void setupValidators();
+
+                /**
+                 * @brief       Sets up the signals from the ribbon controls and menus.
+                 */
+                void setupSignals();
+
+                /**
+                 * @brief       Sets up ribbon comboboxes.
+                 */
+                void setupComboBoxes();
 
                 /**
                  * @brief       Handles a click on the add files to design button.
