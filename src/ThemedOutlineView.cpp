@@ -27,6 +27,7 @@ constexpr auto borderColor = qRgb(0x21,0x21,0x21);
 constexpr auto buttonWidth = 30;
 constexpr auto textColour = qRgb(0xFF, 0xFF, 0xFF);
 constexpr auto buttonBoxHeight = 18;
+constexpr auto buttonBoxWidth = 30;
 constexpr auto borderWidth = 1;
 
 constexpr QRgb backgroundGradient[] = {
@@ -41,21 +42,13 @@ constexpr QRgb backgroundGradientHighlighted[] = {
     qRgb(0x57, 0x57, 0x57)
 };
 
-Nedrysoft::ThemedOutlineView::ThemedOutlineView(QWidget *parent)
-        : QWidget(parent) {
-
-    m_treeViewWidget = new QTreeView;
-    m_layout = new QVBoxLayout;
-
-    auto palette = m_treeViewWidget->palette();
-
-    palette.setColor(QPalette::Base, Qt::transparent);
-
-    m_treeViewWidget->setPalette(palette);
+Nedrysoft::ThemedOutlineView::ThemedOutlineView(QWidget *parent) :
+        QWidget(parent),
+        m_treeViewWidget(new QTreeView),
+        m_layout(new QVBoxLayout),
+        m_buttonBox(new ThemedOutlineButtonBox) {
 
     m_layout->addWidget(m_treeViewWidget);
-
-    m_buttonBox = new ThemedOutlineButtonBox;
 
     m_layout->addWidget(m_buttonBox);
 
@@ -65,6 +58,14 @@ Nedrysoft::ThemedOutlineView::ThemedOutlineView(QWidget *parent)
     setFixedWidth(200);
 
     setLayout(m_layout);
+
+    connect(m_treeViewWidget, &QTreeView::clicked, [=](const QModelIndex &index) {
+       Q_EMIT clicked(index);
+    });
+
+    connect(m_buttonBox, &Nedrysoft::ThemedOutlineButtonBox::buttonClicked, [=](int index) {
+       Q_EMIT buttonClicked(index);
+    });
 
     m_treeViewWidget->setHeaderHidden(true);
 }
@@ -93,13 +94,13 @@ void Nedrysoft::ThemedOutlineView::renderToPixmap(QRect rect) {
     imagePainter.end();
 }
 
-
 void Nedrysoft::ThemedOutlineView::setItemModel(QStandardItemModel *model) {
     m_treeViewWidget->setModel(model);
 }
 
-Nedrysoft::ThemedOutlineButtonBox::ThemedOutlineButtonBox(QWidget *parent)
-        : QWidget(parent) {
+Nedrysoft::ThemedOutlineButtonBox::ThemedOutlineButtonBox(QWidget *parent) :
+        QWidget(parent),
+        m_buttonIndex(-1) {
 
     setFixedHeight(buttonBoxHeight+borderWidth);
 }
@@ -110,8 +111,57 @@ void Nedrysoft::ThemedOutlineButtonBox::paintEvent(QPaintEvent *event) {
     painter.drawPixmap(rect(), m_pixmap);
 }
 
+void Nedrysoft::ThemedOutlineButtonBox::mousePressEvent(QMouseEvent *event) {
+    int xHit = event->pos().x()/buttonBoxWidth;
+
+    if ((xHit>=0) && (xHit<2)) {
+        m_buttonIndex = xHit;
+
+        renderToPixmap(rect());
+
+        update();
+    }
+}
+
+void Nedrysoft::ThemedOutlineButtonBox::mouseReleaseEvent(QMouseEvent *event) {
+    auto xHit = event->pos().x()/buttonBoxWidth;
+
+    if ( (event->pos().y()>=0) &&
+         (event->pos().y()<buttonBoxHeight) &&
+         (xHit >= 0 ) &&
+         (xHit < 2 ) ) {
+            Q_EMIT buttonClicked(m_buttonIndex);
+    }
+
+    m_buttonIndex = -1;
+
+    renderToPixmap(rect());
+
+    update();
+}
+
+void Nedrysoft::ThemedOutlineButtonBox::mouseMoveEvent(QMouseEvent *event) {
+    auto xHit = event->pos().x()/buttonBoxWidth;
+    auto previousIndex = m_buttonIndex;
+
+    if ( (event->pos().y()>=0) &&
+         (event->pos().y()<buttonBoxHeight) &&
+         (xHit >= 0 ) &&
+         (xHit < 2 )) {
+        m_buttonIndex = xHit;
+    } else {
+        m_buttonIndex = -1;
+    }
+
+    if (previousIndex!=m_buttonIndex) {
+        renderToPixmap(rect());
+
+        update();
+    }
+}
+
 QSize Nedrysoft::ThemedOutlineButtonBox::sizeHint() {
-    return QSize(30, buttonBoxHeight+borderWidth);
+    return QSize(buttonBoxWidth, buttonBoxHeight+borderWidth);
 }
 
 void Nedrysoft::ThemedOutlineButtonBox::renderToPixmap(QRect rect)
@@ -192,5 +242,5 @@ void Nedrysoft::ThemedOutlineButtonBox::resizeEvent(QResizeEvent *event) {
 }
 
 bool Nedrysoft::ThemedOutlineButtonBox::buttonIsHighlighted(int buttonIndex) {
-    return false;
+    return buttonIndex==m_buttonIndex;
 }

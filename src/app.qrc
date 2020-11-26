@@ -37,5 +37,11 @@
         <file>../icons/copy-light@2x.png</file>
         <file>../icons/trash-dark@2x.png</file>
         <file>../icons/trash-light@2x.png</file>
+
+        <file>../icons/red-dot@2x.png</file>
+        <file>../icons/green-dot@2x.png</file>
+        <file>../icons/blue-dot@2x.png</file>
+
+        <file>../licences/rules.yaml</file>
     </qresource>
 </RCC>

@@ -50,7 +50,7 @@ namespace Nedrysoft {
         public:
             enum Icon {
                 General,
-                LicenseTemplates
+                LicenceTemplates
             };
 
         public:

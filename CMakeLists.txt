@@ -87,6 +87,8 @@ list(APPEND app_SOURCES
     src/AnsiEscape.h
     src/Builder.cpp
     src/Builder.h
+    src/BulletWidget.cpp
+    src/BulletWidget.h
     src/FlatTabBar.cpp
     src/FlatTabBar.h
     src/FlatTabWidget.cpp

@@ -185,7 +185,7 @@ Nedrysoft::SettingsDialog::SettingsDialog(QWidget *parent) :
 #endif
 
     addPage(tr("General"), tr("General"), tr("General settings"), SettingsPage::Icon::General, new GeneralSettingsPage, true);
-    addPage(tr("License Templates"), tr("License Templates"), tr("License Templates"), SettingsPage::Icon::LicenseTemplates, new LicenseTemplatesSettingsPage, true);
+    addPage(tr("Licence Templates"), tr("Licence Templates"), tr("Licence Templates"), SettingsPage::Icon::LicenceTemplates, new LicenceTemplatesSettingsPage, true);
 
     m_toolBar->addAllowedStandardItem(QMacToolBarItem::FlexibleSpace);
 
@@ -407,7 +407,7 @@ QIcon Nedrysoft::SettingsDialog::getIcon(SettingsPage::Icon icon) {
             return QIcon(":/icons/gear.png");//QIcon(Nedrysoft::MacHelper::macStandardImage(Nedrysoft::StandardImage::NSImageNamePreferencesGeneral, QSize(256,256)));
         }
 
-        case SettingsPage::LicenseTemplates: {
+        case SettingsPage::LicenceTemplates: {
             return QIcon(":/icons/template.png");
         }
     }

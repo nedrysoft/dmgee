@@ -47,6 +47,13 @@ namespace Nedrysoft {
                  */
                 ThemedOutlineButtonBox(QWidget * parent = nullptr);
 
+                /**
+                 * @brief       This signal is emitted when a button has been clicked
+                 *
+                 * @param[in]   buttonIndex the index of the button that was blicked.
+                 */
+                Q_SIGNAL void buttonClicked(int buttonIndex);
+
             private:
                 /**
                  * @brief       Renders the widget content to a pixmap.
@@ -76,6 +83,12 @@ namespace Nedrysoft {
                  */
                 void paintEvent(QPaintEvent *event) override;
 
+                void mousePressEvent(QMouseEvent *event) override;
+
+                void mouseReleaseEvent(QMouseEvent *event) override;
+
+                void mouseMoveEvent(QMouseEvent *event) override;
+
                 /**
                  * @brief       Reimplements: QWidget::sizeHint().
                  *
@@ -92,7 +105,7 @@ namespace Nedrysoft {
 
             private:
                 QPixmap m_pixmap;                                       //! the widget pixmap
-
+                int m_buttonIndex;
     };
 
     /**
@@ -110,6 +123,11 @@ namespace Nedrysoft {
                  */
                 ThemedOutlineView(QWidget *parent=nullptr);
 
+                /**
+                 * @brief       Sets the item model which the TreeView is bound to
+                 *
+                 * @param[in]   model the item model.
+                 */
                 void setItemModel(QStandardItemModel *model);
 
             private:
@@ -138,6 +156,21 @@ namespace Nedrysoft {
                  * @param[in]   event the event information.
                  */
                 void resizeEvent(QResizeEvent *event) override;
+
+            public:
+                /**
+                 * @brief       This signal is emitted when TreeView selection changes.
+                 *
+                 * @index[in]   index the index of the current selection if valid.
+                 */
+                Q_SIGNAL void clicked(const QModelIndex &index);
+
+                /**
+                 * @brief       This signal is emitted when a button has been clicked
+                 *
+                 * @param[in]   buttonIndex the index of the button that was blicked.
+                 */
+                Q_SIGNAL void buttonClicked(int buttonIndex);
 
             private:
                 QTreeView *m_treeViewWidget;                                //! the treeview widget

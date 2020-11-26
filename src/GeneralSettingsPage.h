@@ -58,12 +58,14 @@ namespace Nedrysoft {
             ~GeneralSettingsPage();
 
             /**
-             * @sa          ISettingsPage::canAcceptSettings();
+             * @brief       Reimplements: ISettingsPage::canAcceptSettings().
+             *
+             * @returns     true if settings can be accepted; otherwise false.
              */
             bool canAcceptSettings();
 
             /**
-             * @sa          ISettingsPage::acceptSettings();
+             * @brief       Reimplements: ISettingsPage::acceptSettings().
              */
             void acceptSettings();
 

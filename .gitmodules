@@ -7,3 +7,6 @@
 [submodule "thirdparty/yaml-cpp"]
 	path = thirdparty/yaml-cpp
 	url = https://github.com/jbeder/yaml-cpp.git
+[submodule "licences/choosealicence.com"]
+	path = licences/choosealicence.com
+	url = https://github.com/github/choosealicense.com
