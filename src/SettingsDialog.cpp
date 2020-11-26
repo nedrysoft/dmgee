@@ -23,7 +23,7 @@
 
 #include "GeneralSettingsPage.h"
 #include "ISettingsPage.h"
-#include "LicenseTemplatesSettingsPage.h"
+#include "LicenceTemplatesSettingsPage.h"
 #include "TransparentWidget.h"
 
 #if defined(Q_OS_MACOS)
@@ -183,9 +183,13 @@ Nedrysoft::SettingsDialog::SettingsDialog(QWidget *parent) :
 
     setLayout(m_layout);
 #endif
+
     addPage(tr("General"), tr("General"), tr("General settings"), SettingsPage::Icon::General, new GeneralSettingsPage, true);
     addPage(tr("License Templates"), tr("License Templates"), tr("License Templates"), SettingsPage::Icon::LicenseTemplates, new LicenseTemplatesSettingsPage, true);
 
+    m_toolBar->addAllowedStandardItem(QMacToolBarItem::FlexibleSpace);
+
+    //Nedrysoft::MacHelper::addSpacer(m_toolBar);
 #if defined(Q_OS_MACOS)
     m_toolBar->attachToWindow(nativeWindowHandle());
 

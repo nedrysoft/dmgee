@@ -22,7 +22,8 @@
 cmake_minimum_required(VERSION 3.17)
 set(CMAKE_CXX_STANDARD 17)
 
-set(Qt5WebEngineWidgets_DIR "/Users/adriancarpenter/Qt/5.15.1/clang_64/lib/cmake/Qt5WebEngineWidgets")
+set(Qt5WebEngineWidgets_DIR "/Users/adriancarpenter/Qt/5.15.2/clang_64/lib/cmake/Qt5WebEngineWidgets")
+set(CMAKE_PREFIX_PATH "/Users/adriancarpenter/Qt/5.15.2/clang_64")
 
 project(dmgee)
 
@@ -40,6 +41,8 @@ else()
         set(APPLICATION_PLATFORM_ARCH "x86_32")
     endif()
 endif()
+
+add_subdirectory(thirdparty/yaml-cpp)
 
 set(APPLICATON_SOURCE_ROOT "${CMAKE_CURRENT_LIST_DIR}")
 
@@ -104,11 +107,13 @@ list(APPEND app_SOURCES
     src/Image.h
     src/ImageLoader.h
     src/ImageLoader.mm
-    src/LicenseTemplatesSettingsPage.cpp
-    src/LicenseTemplatesSettingsPage.h
-    src/LicenseTemplatesSettingsPage.ui
+    src/LicenceTemplatesSettingsPage.cpp
+    src/LicenceTemplatesSettingsPage.h
+    src/LicenceTemplatesSettingsPage.ui
     src/MacHelper.h
     src/MacHelper.mm
+    src/ThemedOutlineView.h
+    src/ThemedOutlineView.cpp
     src/MainWindow.cpp
     src/MainWindow.h
     src/MainWindow.ui
@@ -133,6 +138,8 @@ list(APPEND app_SOURCES
 
     src/app.qrc
     icons/dmgee.icns
+
+    licences/licences.qrc
 )
 
 list(APPEND all_SOURCES ${app_SOURCES})
@@ -201,6 +208,7 @@ target_include_directories(${APPLICATION_SHORT_NAME} PRIVATE
     libs/
     src
     dmgee_BINARY_DIR/${PROJECT_NAME}_autogen
+    thirdparty/yaml-cpp/include
 )
 
 # find objective c sources and set options
@@ -215,12 +223,36 @@ foreach(currentSourceFile IN LISTS application_SOURCES)
     endif()
 endforeach(currentSourceFile)
 
+# Generate a qrc containing the license files
+
+file(GLOB files "${APPLICATON_SOURCE_ROOT}/licences/*.txt")
+
+set(LicenceFiles "")
+
+string(APPEND LicenceFiles "<RCC>\r\n")
+string(APPEND LicenceFiles "  <qresource prefix=\"/licences\">\r\n")
+
+foreach(file ${files})
+    get_filename_component(licenseFilename ${file} NAME)
+
+    string(APPEND LicenceFiles "    <file>${licenseFilename}</file>\r\n")
+endforeach()
+
+string(APPEND LicenceFiles "  </qresource>\r\n")
+string(APPEND LicenceFiles "</RCC>\r\n")
+
+file(GENERATE OUTPUT "${APPLICATON_SOURCE_ROOT}/licences/licences.qrc" CONTENT "${LicenceFiles}" TARGET ${APPLICATION_SHORT_NAME})
+
+set_source_files_properties(${APPLICATON_SOURCE_ROOT}/licences/licences.qrc PROPERTIES GENERATED TRUE)
+
 # add the libraries we need to link to
 
 target_link_libraries(${APPLICATION_SHORT_NAME} "-framework Cocoa -framework IOKit -framework CoreVideo -framework QuartzCore")
 target_link_libraries(${APPLICATION_SHORT_NAME} "-L${Python3_LIBRARY_DIRS} ${Python3_LIBRARIES}")
 target_link_libraries(${APPLICATION_SHORT_NAME} ${OpenCV_LIBS} )
 target_link_libraries(${APPLICATION_SHORT_NAME} ${IL_LIBRARIES} ${ILU_LIBRARIES})
+target_link_libraries(${APPLICATION_SHORT_NAME} -L/Users/adriancarpenter/Documents/Development/dmgee/cmake-build-debug/thirdparty/yaml-cpp)
+target_link_libraries(${APPLICATION_SHORT_NAME} -lyaml-cppd)
 
 # List of Qt libraries used by the application
 

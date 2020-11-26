@@ -19,14 +19,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef LICENSETEMPLATESSETTINGSPAGE_H
-#define LICENSETEMPLATESSETTINGSPAGE_H
+#ifndef LICENCETEMPLATESSETTINGSPAGE_H
+#define LICENCETEMPLATESSETTINGSPAGE_H
 
-#include <QWidget>
 #include "ISettingsPage.h"
 
+#include <QList>
+#include <QMap>
+#include <QStandardItemModel>
+#include <QWidget>
+
+
 namespace Ui {
-    class LicenseTemplatesSettingsPage;
+    class LicenceTemplatesSettingsPage;
 }
 
 namespace Nedrysoft {
@@ -41,6 +46,25 @@ namespace Nedrysoft {
             public ISettingsPage
     {
             Q_OBJECT
+
+        private:
+            struct Licence {
+                QString m_title;
+                QString m_spdxId;
+                QString m_description;
+                QString m_how;
+                QMap<QString, QString> m_using;
+                QStringList m_permissions;
+                QStringList m_conditions;
+                QStringList m_limitations;
+                bool m_featured;
+                bool m_hidden;
+                QString m_nickname;
+                QString m_note;
+                QString m_redirectFrom;
+                QString m_licence;
+                bool m_valid;
+            };
 
         public:
             /**
@@ -69,6 +93,9 @@ namespace Nedrysoft {
              */
             void acceptSettings();
 
+        private:
+            Nedrysoft::LicenseTemplatesSettingsPage::Licence loadLicence(QString filename);
+
         protected:
             /**
              * @brief               Size hint
@@ -80,10 +107,12 @@ namespace Nedrysoft {
             QSize sizeHint() const;
 
         private:
-            Ui::LicenseTemplatesSettingsPage *ui;               //! ui class
+            Ui::LicenceTemplatesSettingsPage *ui;               //! ui class
 
-            QSize m_size;                               //! the calculated size of the widget
+            QSize m_size;                                       //! the calculated size of the widget
+
+            QStandardItemModel m_licenceModel;
     };
 }
 
-#endif // LICENSETEMPLATESSETTINGSPAGE_H
+#endif // LICENCETEMPLATESSETTINGSPAGE_H

@@ -159,6 +159,14 @@ bool Nedrysoft::MainWindow::eventFilter(QObject *watched, QEvent *event) {
 }
 
 void Nedrysoft::MainWindow::closeEvent(QCloseEvent *closeEvent) {
+    if (m_builder->modified()) {
+        if (!checkAndSaveIfSaveRequired()) {
+            closeEvent->ignore();
+
+            return;
+        }
+    }
+
     if (m_settingsDialog) {
         m_settingsDialog->close();
         m_settingsDialog->deleteLater();
@@ -887,38 +895,48 @@ void Nedrysoft::MainWindow::onLoadClicked() {
 }
 
 void Nedrysoft::MainWindow::onNewClicked() {
+    if (checkAndSaveIfSaveRequired()) {
+        m_builder->clear();
+
+        updateGUI();
+    }
+}
+
+bool Nedrysoft::MainWindow::checkAndSaveIfSaveRequired() {
     if (m_builder->modified()) {
+        auto messageText = tr("Configuration has not been saved.");
+
+        if (!m_builder->filename().isEmpty()) {
+            QFileInfo fileInfo(m_builder->filename());
+
+            messageText = tr("Configuration %1 has been modified.").arg(fileInfo.fileName());
+        }
+
         auto result = Nedrysoft::MacHelper::nativeAlert(this,
-                                                    tr("Configuration has been modified."),
+                                                    messageText,
                                                     tr("Would you like to save your changes?"),
                                                     QStringList() << tr("Save") << tr("Don't Save") << tr("Cancel"));
 
         switch(result) {
-            case Nedrysoft::AlertButton::FirstButton: {
-                if (!saveConfiguration(false)) {
-                    return;
-                }
-
-                break;
+            case Nedrysoft::AlertButton::Button(1): {
+                return saveConfiguration(false);
             }
 
-            case Nedrysoft::AlertButton::SecondButton: {
-                break;
+            case Nedrysoft::AlertButton::Button(2): {
+                return true;
             }
 
-            case Nedrysoft::AlertButton::ThirdButton: {
-                return;
+            case Nedrysoft::AlertButton::Button(3): {
+                return false;
             }
 
             default: {
-                break;
+                return false;
             }
         }
     }
 
-    m_builder->clear();
-
-    updateGUI();
+    return true;
 }
 
 void Nedrysoft::MainWindow::onSaveClicked() {

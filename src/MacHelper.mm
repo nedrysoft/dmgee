@@ -111,3 +111,14 @@ Nedrysoft::AlertButton::AlertButtonResult Nedrysoft::MacHelper::nativeAlert(QWid
 
     return static_cast<Nedrysoft::AlertButton::AlertButtonResult>([alert runModal]);
 }
+
+void Nedrysoft::MacHelper::addSpacer(QMacToolBar *toolbar) {
+    NSToolbar *nativeToolbar = toolbar->nativeToolbar();
+
+    NSToolbarItem *toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:NSToolbarFlexibleSpaceItemIdentifier] autorelease];
+
+    qDebug() << toolbarItem;
+
+    [nativeToolbar insertItemWithItemIdentifier:[toolbarItem itemIdentifier] atIndex:2];
+
+}

@@ -23,6 +23,7 @@
 #define NEDRYSOFT_MACHELPER_H
 
 #include <QPixmap>
+#include <QtMacExtras>
 
 namespace Nedrysoft {
     namespace StandardImage {
@@ -47,8 +48,11 @@ namespace Nedrysoft {
         enum AlertButtonResult {
             FirstButton = 1000,
             SecondButton,
-            ThirdButton,
-            Button
+            ThirdButton
+        };
+
+        constexpr int Button(int n) {
+            return FirstButton+n-1;
         };
     }
 
@@ -102,6 +106,8 @@ namespace Nedrysoft {
              * @returns     the id of the button which was selected.
              */
             static Nedrysoft::AlertButton::AlertButtonResult nativeAlert(QWidget *parent, QString messageText, QString informativeText, QStringList buttons);
+
+            static void addSpacer(QMacToolBar *toolbar);
     };
 };
 

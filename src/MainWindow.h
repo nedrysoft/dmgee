@@ -231,6 +231,18 @@ namespace Nedrysoft {
                 void setupComboBoxes();
 
                 /**
+                 * @brief       Checks if the document has been saved and prompts as needed.
+                 *
+                 * @details     If the document has not yet been saved or has been modified, then the user will be
+                 *              prompted asking if they want to save and then the save action will be performed.
+                 *
+                 *              Used by the closeEvent and onNewClicked to determine if it's ok to to perform the action.
+                 *
+                 * @returns     true if ok to continue with action; false otherwise.
+                 */
+                bool checkAndSaveIfSaveRequired();
+
+                /**
                  * @brief       Handles a click on the add files to design button.
                  *
                  * @param[in]   dropdown true if drop down button clicked; otherwise false.

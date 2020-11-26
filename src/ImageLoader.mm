@@ -47,9 +47,7 @@ bool Nedrysoft::ImageLoader::load(QString &filename, char **data, unsigned int *
 }
 
  bool Nedrysoft::ImageLoader::imageForFile(QString &filename, char **data, unsigned int *length, int width, int height) {
-     NSString *fileName = filename.toNSString();
-
-     NSImage *loadedImage = [[NSWorkspace sharedWorkspace] iconForFile:fileName];
+     auto loadedImage = [[NSWorkspace sharedWorkspace] iconForFile:filename.toNSString()];
 
      [loadedImage setSize:NSMakeSize(width,height)];
 
@@ -61,12 +59,8 @@ bool Nedrysoft::ImageLoader::load(QString &filename, char **data, unsigned int *
 
          memcpy(*data, tiffData.bytes, *length);
 
-         //[loadedImage release];
-
          return true;
      }
-
-     //[loadedImage release];
 
      return false;
  }

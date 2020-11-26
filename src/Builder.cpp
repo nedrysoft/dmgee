@@ -70,9 +70,11 @@ PyMethodDef Nedrysoft::Builder::m_moduleMethods[] = {
     {NULL},
 };
 
-Nedrysoft::Builder::Builder() {
+Nedrysoft::Builder::Builder() :
+        m_filename(QString()),
+        m_isModified(false) {
+
     clear();
-    m_filename = QString();
 }
 
 QString Nedrysoft::Builder::normalisedFilename(QString filename) {
@@ -328,6 +330,7 @@ bool Nedrysoft::Builder::saveConfiguration(const QString &filename) {
     }
 
     m_filename = filename;
+    m_isModified = false;
 
     return true;
 }
@@ -411,7 +414,7 @@ bool Nedrysoft::Builder::loadConfiguration(const QString& filename) {
     } else if (textPosition.toLower() == "right") {
         m_configuration.m_textPosition = Right;
     } else {
-        // TODO: some error handling
+        m_configuration.m_textPosition = Bottom;
     }
 
     auto gridSize = QSize();
@@ -429,6 +432,7 @@ bool Nedrysoft::Builder::loadConfiguration(const QString& filename) {
     setProperty("gridsize", gridSize);
 
     m_filename = filename;
+    m_isModified = false;
 
     return true;
 }
@@ -498,11 +502,15 @@ void Nedrysoft::Builder::clear() {
     setProperty("gridsize", QSize(20,20));
 
     m_filename = "";
+
+    m_isModified = false;
 }
 
 void Nedrysoft::Builder::setProperty(const char *name, const QVariant &value) {
     if (this->property(name)==value)
         return;
+
+    m_isModified = true;
 
     QObject::setProperty(name, value);
 }
@@ -512,5 +520,9 @@ QString Nedrysoft::Builder::filename() {
 }
 
 bool Nedrysoft::Builder::modified() {
-    return true;
+    return m_isModified;
+}
+
+void Nedrysoft::Builder::setModified(bool isModified) {
+    m_isModified = isModified;
 }

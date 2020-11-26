@@ -24,6 +24,7 @@
 
 #include "HTermApi.h"
 
+#include <QWidget>
 #include <QWebChannel>
 #include <QWebEnginePage>
 #include <QWebEngineProfile>
