@@ -39,9 +39,9 @@ Nedrysoft::LicenceTemplatesSettingsPage::LicenceTemplatesSettingsPage(QWidget *p
 
     ui->setupUi(this);
 
-    loadRules(":/licences/rules.yaml");
+    loadRules(":/choosealicence.com/_data/rules.yml");
 
-    QDirIterator it(":/licences", QDirIterator::Subdirectories);
+    QDirIterator it(":/choosealicence.com/_licenses", QDirIterator::Subdirectories);
 
     QStandardItem *builtInLicenses = new QStandardItem(tr("Built In"));
 

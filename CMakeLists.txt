@@ -227,20 +227,25 @@ endforeach(currentSourceFile)
 
 # Generate a qrc containing the license files
 
-file(GLOB files "${APPLICATON_SOURCE_ROOT}/licences/*.txt")
+file(GLOB files "${APPLICATON_SOURCE_ROOT}/licences/choosealicence.com/_licenses/*.txt")
 
 set(LicenceFiles "")
 
 string(APPEND LicenceFiles "<RCC>\r\n")
-string(APPEND LicenceFiles "  <qresource prefix=\"/licences\">\r\n")
+string(APPEND LicenceFiles "  <qresource prefix=\"/\">\r\n")
 
 foreach(file ${files})
     get_filename_component(licenseFilename ${file} NAME)
 
-    string(APPEND LicenceFiles "    <file>${licenseFilename}</file>\r\n")
+    string(APPEND LicenceFiles "    <file>./choosealicence.com/_licenses/${licenseFilename}</file>\r\n")
 endforeach()
 
+# add rules yml
+
+string(APPEND LicenceFiles "    <file>./choosealicence.com/_data/rules.yml</file>\r\n")
+
 string(APPEND LicenceFiles "  </qresource>\r\n")
+
 string(APPEND LicenceFiles "</RCC>\r\n")
 
 file(GENERATE OUTPUT "${APPLICATON_SOURCE_ROOT}/licences/licences.qrc" CONTENT "${LicenceFiles}" TARGET ${APPLICATION_SHORT_NAME})
