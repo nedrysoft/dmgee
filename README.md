@@ -4,7 +4,7 @@
 
 ---
 
-![Example DMG](https://user-images.githubusercontent.com/55795671/100303053-94518300-2f93-11eb-8ce9-fd5c30f2e84b.png)
+![Example DMG](https://bit.ly/33i5lKE)
 
 ___
 
