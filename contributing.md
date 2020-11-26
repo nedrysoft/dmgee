@@ -1,6 +1,6 @@
 # Contributing to the project
 
-The following document contains a set of guidelines for contributing to the project.  Any pull-requests should be compliant with this guide.  Code style is often fluent, if you have a suggestion which you think will improve the readability of the code then please open an issue so that we can discuss that potentially modify the style guide to accomodate any new changes.
+The following document contains a set of guidelines for contributing to the project.  Any pull-requests should be compliant with this guide.  Code style is often fluent, if you have a suggestion which you think will improve the readability of the code then please open an issue so that we can discuss that potentially modify the style guide to accommodate any new changes.
 
 #C++ Style Guide
 
@@ -37,7 +37,7 @@ Header files should always start with a copyright block.
 
 ## Includes
 
-Include files are logically grouped according to scope and sorted alphabetically for clarity.
+Include files are logically grouped according to their scope and sorted alphabetically for clarity.
 
 ### Source file
 
@@ -53,7 +53,7 @@ Include files are logically grouped according to scope and sorted alphabetically
 2. *Empty Line*
 3. System includes (sorted alphabetically)
 
-(*Objective C++ files are also grouped together*)
+(*Objective C++ files are also grouped*)
 
 ### Exceptions
 
@@ -63,7 +63,7 @@ If a file needs to be included at a specific location (i.e either the first incl
 
 ## Include Guards
 
-All include files should have an include guard to prevent the file being included more than once.
+All include files should have an include guard to prevent the file from being included more than once.
 
 ```c++
 #ifndef NEDRYSOFT_RIBBONPUSHBUTTON_H
@@ -80,7 +80,7 @@ The format of an include guard should be as follows:
 
 ## Namespaces
 
-All code must exist in an appropriate namespace to prevent clashes with third pary code, when using an item from a namespace then the fully qualified name should be used and "using <namespace>" should not be used, by including the full namespace it makes it much easier to locate where a function can be found.
+All code must exist in an appropriate namespace to prevent clashes with third party code, when using an item from a namespace then the fully qualified name should be used, and "using <namespace>" should not be used, by including the full namespace it makes it much easier to locate where a function can be found.
 
 * C++17 nested namespaces should always be used.
 * Braces should be on the same line as the namespace definition.
@@ -112,7 +112,7 @@ namespace Nedrysoft
 
 ### Constants
 
-For constant values it is preferred that ```constexpr``` is used rather than ```#define```.  Constants should be limited to a namespace or class scope and should not be global.
+For constant values, it is preferred that ```constexpr``` is used rather than ```#define```.  Constants should be limited to a namespace or the class scope and should not be global.
 
 *Good*
 
@@ -132,7 +132,7 @@ constexpr auto RibbonPushButtonDefaultFontSize = 10;
 
 ### Line Breaks
 
-Line breaks are permitted when the improve clarity.  A double indent must be used on the following lines.
+Line breaks are permitted when they improve clarity.  A double indent must be used on the following lines.
 
 ```c++
 QString filename =
@@ -166,7 +166,7 @@ Comments should be used where appropriate, code should use descriptive names whi
 
 ### Doxygen
 
-Doxygen comments must be included in every header file, the comments should follow the javadoc style for consistency.
+Doxygen comments must be included in every header file, the comments should follow the JavaDoc style for consistency.
 
 *Good*
 
@@ -182,8 +182,8 @@ Doxygen comments must be included in every header file, the comments should foll
 bool eventFilter(QObject *watched, QEvent *event) override;
 ```
 
-* The comment must directly proceed the method and there should be no gap between the comment and the function declaration.
-* A new line must exist between each section of the comment, params are grouped together without newlines.
+* The comment must directly before the method and there should be no gap between the comment and the function declaration.
+* A new line must exist between each section of the comment, params are grouped without newlines.
 * The ```@returns``` tag should be used instead of ```@return```.
 * Parameters should include the direction of data.
 
@@ -275,15 +275,15 @@ class NEDRYSOFT_RIBBON_WIDGET_EXPORT RibbonTabBar :
             void updateStyleSheet(bool isDarkMode);
     
         private:⁶
-            QFont m_selectedFont;                                   //! font to use on selected tab
+            QFont m_selectedFont;                                   //! the font to use on the selected tab
     }
 }
 ```
 
-1. This section should implicitly set the scope to private and should ***only*** include Qt macros.  Macros are grouped logically together and each group separated by a new line.
+1. This section should implicitly set the scope to private and should ***only*** include Qt macros.  Macros are grouped logically together and each group is separated by a new line.
 2. This section (there may be more than one depending on scope) should define any ```enums``` or ```constexpr```.
-3. This section includes constructors, destructors and any public methods that the class exposes.
-4. This section contains any overridden super class functions.
+3. This section includes constructors, destructors, and any public methods that the class exposes.
+4. This section contains any overridden superclass functions.
 5. This section (there may be more than one depending on scope) contains internal functions.
 6. This section contains any member variables.
 
@@ -318,7 +318,7 @@ class myclass {
 
 ### Member variables
 
-Member variables should use camelCase and be prexied with ```m_```.
+Member variables should use camelCase and be prefixed with ```m_```.
 
 ```c++
 class MyClass {
@@ -340,12 +340,12 @@ Function names should be descriptive and whenever possible not truncated, using 
 
 Each function definition must conform to the following code standard.
 
-1. Member variables should use initialiser lists over assignment.
+1. Member variables should use initialiser lists instead of being assigned.
 2. The colon for the initialiser list must appear on the same line as the function definition.
 3. Each initialiser is indented by 2 levels.
 3. One initialiser per line.
 4. The final initialiser contains the opening brace for the function.
-5. A blank line should always follow the opening brace for constructors that have initialisers regardless of whether or not any statements follow.  For constructors without initialisers the blank line should be omitted.
+5. A blank line should always follow the opening brace for constructors that have initialisers regardless of whether or not any statements follow.  For constructors, without initialisers the blank line should be omitted.
 
 *Good*
 
@@ -457,7 +457,7 @@ The program flow style is an extension of the rules described above.
 
 #### if conditional
 
-* Braces should always be used, even in the case of a single line statement.
+* Braces should always be used, even in the case of a single-line statement.
 * Braces appear on the same line as the terminating conditional statement
 * Multiple conditions may be split across multiple lines if it improves clarity.
 * Each conditional must be surrounded by braces to avoid ambiguity.
@@ -511,7 +511,7 @@ else
 
 #### for loops
 
-* Whereever possible use range based loops or iterators.
+* Wherever possible use range-based loops or iterators.
 * Use descriptive names for indices or iterators
 
 *Good*
@@ -626,7 +626,7 @@ void MyClass::downloadFile(DownloadInfo downloadInfo, std::function<void(Downloa
 
 #### Singletons
 
-* Singletons may be used where appropriate, for example the MainWindow of the application may be accessed through a singleton which provides access to the object across the project easily.
+* Singletons may be used where appropriate, for example, the MainWindow of the application may be accessed through a singleton which provides access to the object across the project easily.
 * Singletons must use the C++11 pattern.
 
 ```c++
@@ -658,7 +658,7 @@ class MyObject :
 
 ### Typing
 
-The use of the keyword character "auto" should be used whereever possible, it produces cleaner looking code.  Primitive types such as int, float, long etc may be typed if auto deosn't make sense or results in ambiguity.
+The use of the keyword character "auto" should be used wherever possible, it produces a cleaner looking code.  Primitive types such as int, float, long, etc may be typed if auto doesn't make sense or results in ambiguity.
 
 *Good*
 
@@ -676,7 +676,7 @@ QSettingsDialog settingsDialog;
 
 ### Variables
 
-Variable names should be descriptive, the more descriptove the name the easier and clearer the code is to understand.  Variables should be named using camelCase.
+Variable names should be descriptive, the more descriptive the name the easier and clearer the code is to understand.  Variables should be named using camelCase.
 
 *Good*
 
@@ -696,21 +696,21 @@ for (int i=0;i<j;i++) {
 
 # Commit Messages
 
-This repository uses the coventional commit style for commit messages, it is imperitive that any commits follow this style.
+This repository uses the conventional commit style for commit messages, any commits must follow this style.
 
 The following tags are currently used:
 
-* repo: a change to the repo, includes operations such a editing README.md or restructuring.
+* repo: a change to the repo, includes operations such as editing README.md or restructuring.
 * wip: a work in progress message.
 * refactor: refactoring of the code.
 * chore: general housekeeping task such as removing dead files from the repo.
-* fix: a fix of a specific issue, should normally be linked to a github issue.
+* fix: a fix of a specific issue, should normally be linked to a GitHub issue.
 * feat: work on a specific feature.
 
-If another tag type is required, then please raise a github issue to discuss adding it.
+If another tag type is required, then please raise a GitHub issue to discuss adding it.
 
 #  Translations
 
-If any kind souls can provide translations for the application, I will include these and credit you for your work.
+Translations of the application are welcomed and the author will be fully credited for their work.
 
-Translations can be made using the Qt Linguist tool.
+The Qt Linguist tool should be used to create translations.
