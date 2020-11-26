@@ -84,9 +84,9 @@ The following commercially licensed tools/services have also been used during de
 
 #  Translations
 
-If any kind souls can provide translations for the application, I will include these and credit you for your work.
+Translations of the application are welcomed and the author will be fully credited for their work.
 
-Translations are performed using the Qt Linguist tool.
+The Qt Linguist tool should be used to create translations.
 
 # License
 
