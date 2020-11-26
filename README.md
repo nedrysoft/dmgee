@@ -37,6 +37,7 @@ Binary distributions can be found under the assets on the [github releases](http
 - DevIL development libraries
 - toml++ development libraries
 - CLI11 development libraries
+- yaml-cpp development libraries
 
 ***The application requires Python 3 to be installed, currently, the build does not bundle the python libraries and system modules into the application bundle and relies on them being correctly installed and accessible.***
 
@@ -71,7 +72,7 @@ The following third-party libraries/assets/tools/services have been used in the 
 - [DevIL](http://openil.sourceforge.net) - Image loading library, licensed under the [LGPL-2.1](http://openil.sourceforge.net/license.php).
 - [toml](https://github.com/marzer/tomlplusplus) - A toml C++ parser library, licensed under the [MIT license](https://github.com/marzer/tomlplusplus/blob/master/LICENSE)
 - [hterm](https://chromium.googlesource.com/apps/libapps/+/master/hterm/) - A javascipt terminal emulator used to proide rich output, licensed under the [BSD license](https://chromium.googlesource.com/apps/libapps/+/HEAD/hterm/LICENSE)
-- [yaml-c++](https://github.com/jbeder/yaml-cpp) - A YAML parser and emitter used to decode the metadata in the licence files, licensed under the [MIT license](https://raw.githubusercontent.com/jbeder/yaml-cpp/master/LICENSE)
+- [yaml-cpp](https://github.com/jbeder/yaml-cpp) - A YAML parser and emitter used to decode the metadata in the licence files, licensed under the [MIT license](https://raw.githubusercontent.com/jbeder/yaml-cpp/master/LICENSE)
 - [choosealicense.com](https://github.com/github/choosealicense.com) - Provides a repository of open source licenses which contain metadata to show extra information, licensed under the [Creative Commons Attribution 3.0 Unported license](https://creativecommons.org/licenses/by/3.0/)
 
 The following commercially licensed tools/services have also been used during development.
