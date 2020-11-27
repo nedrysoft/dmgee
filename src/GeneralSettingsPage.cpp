@@ -41,21 +41,17 @@ Nedrysoft::GeneralSettingsPage::GeneralSettingsPage(QWidget *parent) :
 
 }
 
-Nedrysoft::GeneralSettingsPage::~GeneralSettingsPage()
-{
+Nedrysoft::GeneralSettingsPage::~GeneralSettingsPage() {
     delete ui;
 }
 
-bool Nedrysoft::GeneralSettingsPage::canAcceptSettings()
-{
+bool Nedrysoft::GeneralSettingsPage::canAcceptSettings() {
     return true;
 }
 
-void Nedrysoft::GeneralSettingsPage::acceptSettings()
-{
+void Nedrysoft::GeneralSettingsPage::acceptSettings() {
 }
 
-QSize Nedrysoft::GeneralSettingsPage::sizeHint() const
-{
+QSize Nedrysoft::GeneralSettingsPage::sizeHint() const {
     return m_size;
 }

@@ -63,8 +63,7 @@ bool Nedrysoft::Ribbon::RibbonTabBar::eventFilter(QObject *watched, QEvent *even
 
     static auto lastTabIndex = -1;
 
-    switch(event->type())
-    {
+    switch(event->type()) {
         case QEvent::Enter: {
             auto enterEvent = reinterpret_cast<QEnterEvent *>(event);
 

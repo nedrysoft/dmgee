@@ -53,8 +53,7 @@ void Nedrysoft::AboutDialog::focusOutEvent(QFocusEvent *event) {
 }
 
 bool Nedrysoft::AboutDialog::event(QEvent *event) {
-    switch(event->type())
-    {
+    switch(event->type()) {
         case QEvent::MouseButtonPress:
         case QEvent::KeyPress: {
             close();

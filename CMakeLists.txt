@@ -87,6 +87,11 @@ list(APPEND app_SOURCES
     src/Builder.h
     src/BulletWidget.cpp
     src/BulletWidget.h
+    src/ChooseALicenseLicence.cpp
+    src/ChooseALicenseLicence.h
+    src/ChooseALicenseLicenceWidget.cpp
+    src/ChooseALicenseLicenceWidget.h
+    src/ChooseALicenseLicenceWidget.ui
     src/FlatTabBar.cpp
     src/FlatTabBar.h
     src/FlatTabWidget.cpp
@@ -102,7 +107,7 @@ list(APPEND app_SOURCES
     src/HTermWidget.h
     src/Helper.cpp
     src/Helper.h
-    src/ILicense.h
+    src/ILicence.h
     src/ISettingsPage.h
     src/Image.cpp
     src/Image.h

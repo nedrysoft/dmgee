@@ -247,6 +247,7 @@ bool Nedrysoft::SettingsDialog::close() {
 
     return QWidget::close();
 }
+
 void Nedrysoft::SettingsDialog::resizeEvent(QResizeEvent *event) {
     for(auto page : m_pages) {
         if (page->m_widget) {

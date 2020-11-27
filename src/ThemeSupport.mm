@@ -33,8 +33,7 @@ Nedrysoft::Utils::ThemeSupport::ThemeSupport() {
     });
 }
 
-bool Nedrysoft::Utils::ThemeSupport::isDarkMode()
-{
+bool Nedrysoft::Utils::ThemeSupport::isDarkMode() {
     NSAppearance *appearance = nullptr;
 
     if (@available(macOS 11, *)) {

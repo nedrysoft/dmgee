@@ -109,8 +109,7 @@ QSize Nedrysoft::ThemedOutlineViewButtonBox::sizeHint() {
     return QSize(buttonBoxWidth, buttonBoxHeight+borderWidth);
 }
 
-void Nedrysoft::ThemedOutlineViewButtonBox::renderToPixmap(QRect rect)
-{
+void Nedrysoft::ThemedOutlineViewButtonBox::renderToPixmap(QRect rect) {
     m_pixmap = QPixmap(rect.width(), rect.height());
 
     QPainter imagePainter(&m_pixmap);

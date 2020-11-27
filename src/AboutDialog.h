@@ -78,4 +78,5 @@ namespace Nedrysoft {
             QPixmap m_backgroundPixmap;                      //! the background image used for the about dialog
     };
 }
+
 #endif // NEDRYSOFT_ABOUTDIALOG_H

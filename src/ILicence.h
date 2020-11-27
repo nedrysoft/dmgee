@@ -23,6 +23,7 @@
 #define NEDRYSOFT_ILICENCE_H
 
 #include <QString>
+#include <QWidget>
 
 namespace Nedrysoft {
     /**
@@ -30,16 +31,23 @@ namespace Nedrysoft {
      *
      * @details     Describes the interface contract that a license must adhere to.
      */
-    class ILicense {
+    class ILicence {
         public:
             /**
-             * @brief       Returns the license text for this licence.
+             * @brief       Returns the licence text for this licence.
              *
              * @param[in]   replacements the map containing any field values that should be replaced in the licence text.
              *
              * @returns     A licence as a string.
              */
-            virtual QString license(QMap<QString, QString> replacements) = 0;
+            virtual QString licence(QMap<QString, QString> replacements) = 0;
+
+            /**
+             * @brief       Returns a new viewer widget for this type of license.
+             *
+             * @returns     the widget.
+             */
+            virtual QWidget *widget() = 0;
     };
 }
 

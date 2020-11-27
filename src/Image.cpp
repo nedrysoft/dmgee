@@ -42,11 +42,7 @@ Nedrysoft::Image::Image() :
 }
 
 Nedrysoft::Image::Image(QString filename, bool loadContent, int width, int height) :
-        m_data(nullptr),
-        m_width(0),
-        m_height(0),
-        m_stride(0),
-        m_imageId(0) {
+        Image() {
 
     ILboolean success = IL_FALSE;
     char *tiffData;
