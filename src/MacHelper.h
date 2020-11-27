@@ -33,9 +33,9 @@ namespace Nedrysoft {
          * @details     Provides parity naming with AppKit standard images.
          */
         enum StandardImageName {
-            NSImageNamePreferencesGeneral,
-            NSImageNameUserAccounts,
-            NSImageNameAdvanced
+            NSImageNamePreferencesGeneral,                        /**< the general icon in preferences. */
+            NSImageNameUserAccounts,                              /**< the user accounts icon in preferences. */
+            NSImageNameAdvanced                                   /**< the name icon in preferences. */
         };
     };
 
@@ -46,11 +46,21 @@ namespace Nedrysoft {
          * @details     Equivilent values from NSAlert
          */
         enum AlertButtonResult {
-            FirstButton = 1000,
-            SecondButton,
-            ThirdButton
+            FirstButton = 1000,                                   /**< the first button in an NSAlert **/
+            SecondButton,                                         /**< the second button in a NSAlert **/
+            ThirdButton                                           /**< the third button in a NSAlert */
         };
 
+        /**
+         * @brief       Returns the NSAlert button identifier for the zero based index.
+         *
+         * @notes       This is a constexpr function which the preprocessor will convert to a constant value, and
+         *              this allows it to be used in switch statements.
+         *
+         * @param[in]   n the zero based index of the button;
+         *
+         * @returns     the macOS identifier of the button that was
+         */
         constexpr int Button(int n) {
             return FirstButton+n-1;
         };
@@ -71,30 +81,11 @@ namespace Nedrysoft {
              *
              * @returns     A pixmap of the named image.
              */
-            static QPixmap macStandardImage(StandardImage::StandardImageName imageName, QSize imageSize);
+            static QPixmap standardImage(StandardImage::StandardImageName imageName, QSize imageSize);
 
             /**
-             * @brief       Returns a resolved path
+             * @brief       Shows a native macOS alert dialog.
              *
-             * @notes       if the filename starts with ~, then it is resolved to the actual users home directory.
-             *
-             * @param[in]   filename the filename to be resp;ved.
-             */
-            static QString resolvedPath(QString filename);
-
-            /**
-             * @brief       Returns a normalized path.
-             *
-             * @notes       The filename may include ~, ., .., and will return the path to the given file.  If
-             *              the file is in the users home directory then the path will be relative and start
-             *              with ~/
-             *
-             * @param[in]   filename the filename to be normalized.
-             */
-            static QString normalizedPath(QString filename);
-
-            /**
-             * @brief       Shows a native macOS message box.
              * @param[in]   parent the owner widget.
              * @param[in]   messageText the main message text.
              * @param[in]   informativeText the text to appear below the main message.
@@ -102,6 +93,8 @@ namespace Nedrysoft {
              *
              * @note        macOS returns NSAlertFirstButtonReturn, NSAlertSecondButtonReturn, NSAlertThirdButtonReturn
              *              NSAlertFirstButtonReturn+n etc.  NSAlertFirstButtonReturn is the constant 1000.
+             *
+             * @see         NedrySoft::AlertButton
              *
              * @returns     the id of the button which was selected.
              */
@@ -136,6 +129,22 @@ namespace Nedrysoft {
              * @returns     true if the image was loaded successfully; otherwise false.
              */
             static bool imageForFile(QString &filename, char **data, unsigned int *length, int width, int height);
+
+            /**
+             * @brief       Returns the name of the font used in the GUI of macOS.
+             *
+             * @returns     the name of the system font.
+             */
+            static QString systemFontName();
+
+            /**
+             * @brief       Returns the path of the font specified by fontName.
+             *
+             * @param[in]   fontName is the name of the font to find.
+             *
+             * @returns     the path to the font if found; otherwise an empty string.
+             */
+            static QString fontFilename(const QString &fontName);
     };
 };
 

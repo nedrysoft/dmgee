@@ -20,33 +20,20 @@
  */
 
 #include "ThemedOutlineView.h"
+
+#include "ThemedOutlineViewButtonBox.h"
+
 #include <QDebug>
 #include <QResizeEvent>
 
-constexpr auto borderColor = qRgb(0x21,0x21,0x21);
-constexpr auto buttonWidth = 30;
-constexpr auto textColour = qRgb(0xFF, 0xFF, 0xFF);
-constexpr auto buttonBoxHeight = 18;
-constexpr auto buttonBoxWidth = 30;
 constexpr auto borderWidth = 1;
-
-constexpr QRgb backgroundGradient[] = {
-    qRgb(0x4b, 0x4b, 0x4b),
-    qRgb(0x49, 0x49, 0x49),
-    qRgb(0x46, 0x46, 0x46)
-};
-
-constexpr QRgb backgroundGradientHighlighted[] = {
-    qRgb(0x60, 0x60, 0x60),
-    qRgb(0x5f, 0x5f, 0x5f),
-    qRgb(0x57, 0x57, 0x57)
-};
+constexpr auto borderColor = qRgb(0x21,0x21,0x21);
 
 Nedrysoft::ThemedOutlineView::ThemedOutlineView(QWidget *parent) :
         QWidget(parent),
         m_treeViewWidget(new QTreeView),
         m_layout(new QVBoxLayout),
-        m_buttonBox(new ThemedOutlineButtonBox) {
+        m_buttonBox(new ThemedOutlineViewButtonBox) {
 
     m_layout->addWidget(m_treeViewWidget);
 
@@ -59,13 +46,8 @@ Nedrysoft::ThemedOutlineView::ThemedOutlineView(QWidget *parent) :
 
     setLayout(m_layout);
 
-    connect(m_treeViewWidget, &QTreeView::clicked, [=](const QModelIndex &index) {
-       Q_EMIT clicked(index);
-    });
-
-    connect(m_buttonBox, &Nedrysoft::ThemedOutlineButtonBox::buttonClicked, [=](int index) {
-       Q_EMIT buttonClicked(index);
-    });
+    connect(m_treeViewWidget, &QTreeView::clicked, this, &Nedrysoft::ThemedOutlineView::clicked);
+    connect(m_buttonBox, &Nedrysoft::ThemedOutlineViewButtonBox::buttonClicked, this, &Nedrysoft::ThemedOutlineView::buttonClicked);
 
     m_treeViewWidget->sortByColumn(0, Qt::AscendingOrder);
     m_treeViewWidget->setSortingEnabled(true);
@@ -97,153 +79,6 @@ void Nedrysoft::ThemedOutlineView::renderToPixmap(QRect rect) {
     imagePainter.end();
 }
 
-void Nedrysoft::ThemedOutlineView::setItemModel(QStandardItemModel *model) {
+void Nedrysoft::ThemedOutlineView::setModel(QAbstractItemModel *model) {
     m_treeViewWidget->setModel(model);
-}
-
-Nedrysoft::ThemedOutlineButtonBox::ThemedOutlineButtonBox(QWidget *parent) :
-        QWidget(parent),
-        m_buttonIndex(-1) {
-
-    setFixedHeight(buttonBoxHeight+borderWidth);
-}
-
-void Nedrysoft::ThemedOutlineButtonBox::paintEvent(QPaintEvent *event) {
-    QPainter painter(this);
-
-    painter.drawPixmap(rect(), m_pixmap);
-}
-
-void Nedrysoft::ThemedOutlineButtonBox::mousePressEvent(QMouseEvent *event) {
-    int xHit = event->pos().x()/buttonBoxWidth;
-
-    if ((xHit>=0) && (xHit<2)) {
-        m_buttonIndex = xHit;
-
-        renderToPixmap(rect());
-
-        update();
-    }
-}
-
-void Nedrysoft::ThemedOutlineButtonBox::mouseReleaseEvent(QMouseEvent *event) {
-    auto xHit = event->pos().x()/buttonBoxWidth;
-
-    if ( (event->pos().y()>=0) &&
-         (event->pos().y()<buttonBoxHeight) &&
-         (xHit >= 0 ) &&
-         (xHit < 2 ) ) {
-            Q_EMIT buttonClicked(m_buttonIndex);
-    }
-
-    m_buttonIndex = -1;
-
-    renderToPixmap(rect());
-
-    update();
-}
-
-void Nedrysoft::ThemedOutlineButtonBox::mouseMoveEvent(QMouseEvent *event) {
-    auto xHit = event->pos().x()/buttonBoxWidth;
-    auto previousIndex = m_buttonIndex;
-
-    if ( (event->pos().y()>=0) &&
-         (event->pos().y()<buttonBoxHeight) &&
-         (xHit >= 0 ) &&
-         (xHit < 2 )) {
-        m_buttonIndex = xHit;
-    } else {
-        m_buttonIndex = -1;
-    }
-
-    if (previousIndex!=m_buttonIndex) {
-        renderToPixmap(rect());
-
-        update();
-    }
-}
-
-QSize Nedrysoft::ThemedOutlineButtonBox::sizeHint() {
-    return QSize(buttonBoxWidth, buttonBoxHeight+borderWidth);
-}
-
-void Nedrysoft::ThemedOutlineButtonBox::renderToPixmap(QRect rect)
-{
-    m_pixmap = QPixmap(rect.width(), rect.height());
-
-    QPainter imagePainter(&m_pixmap);
-
-    QStringList buttonList = QStringList() << "+" << "-";
-
-    auto gradient = QLinearGradient(0, rect.top(), 0, rect.bottom());
-
-    gradient.setColorAt(0, backgroundGradient[0]);
-    gradient.setColorAt(0.5, backgroundGradient[1]);
-    gradient.setColorAt(1, backgroundGradient[2]);
-
-    auto selectedGradient = QLinearGradient(0, rect.top(), 0, rect.bottom());
-
-    selectedGradient.setColorAt(0, backgroundGradientHighlighted[0]);
-    selectedGradient.setColorAt(0.5, backgroundGradientHighlighted[1]);
-    selectedGradient.setColorAt(1, backgroundGradientHighlighted[2]);
-
-    imagePainter.fillRect(rect, gradient);
-
-    imagePainter.setPen(borderColor);
-
-    auto boxRect = rect;
-
-    imagePainter.setRenderHint(QPainter::Antialiasing, false);
-
-    imagePainter.drawRect(boxRect.adjusted(0,0, -borderWidth, -borderWidth));
-
-    auto buttonRect = rect.adjusted(0, borderWidth,0,0);
-
-    QFont font = QFont(imagePainter.font());
-
-    font.setPixelSize(buttonBoxHeight);
-
-    imagePainter.setFont(font);
-
-    QFontMetrics fontMetrics(font);
-
-    buttonRect.adjust(borderWidth, 0, 0, -borderWidth);
-
-    auto currentButton = 0;
-
-    for(auto buttonText : buttonList) {
-        buttonRect.setRight(buttonRect.left()+buttonWidth-borderWidth);
-
-        auto textRect = buttonRect.adjusted(0,0,0, -fontMetrics.descent());
-
-        if (buttonIsHighlighted(currentButton)) {
-            imagePainter.fillRect(buttonRect, selectedGradient);
-        }
-
-        imagePainter.setPen(textColour);
-        imagePainter.drawText(textRect, Qt::AlignHCenter | Qt::AlignVCenter, buttonText);
-
-        imagePainter.setPen(borderColor);
-
-        textRect.setLeft(textRect.right());
-
-        auto startPoint = QPoint(textRect.topLeft())+QPoint(0, 0);
-        auto endPoint = QPoint(textRect.bottomLeft())+QPoint(0, fontMetrics.descent());
-
-        imagePainter.drawLine(startPoint, endPoint);
-
-        buttonRect.setLeft(buttonRect.right()+borderWidth);
-
-        currentButton++;
-    }
-
-    imagePainter.end();
-}
-
-void Nedrysoft::ThemedOutlineButtonBox::resizeEvent(QResizeEvent *event) {
-    renderToPixmap(rect());
-}
-
-bool Nedrysoft::ThemedOutlineButtonBox::buttonIsHighlighted(int buttonIndex) {
-    return buttonIndex==m_buttonIndex;
 }

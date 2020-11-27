@@ -22,6 +22,7 @@
 #include "PreviewWidget.h"
 
 #include "Builder.h"
+#include "Helper.h"
 #include "Image.h"
 #include "MacHelper.h"
 #include "SnappedGraphicsPixmapItem.h"
@@ -103,7 +104,7 @@ void Nedrysoft::PreviewWidget::setBuilder(Nedrysoft::Builder *builder) {
         auto iconSize = m_builder->property("iconsize").toFloat();
 
         for (auto file : files) {
-            auto filename = Nedrysoft::MacHelper::resolvedPath(file->file);
+            auto filename = Nedrysoft::Helper::resolvedPath(file->file);
             auto applicationIcon = Nedrysoft::Image(filename, false, iconSize, iconSize);
 
             addIcon(QFileInfo(filename).baseName(), &applicationIcon, QPoint(file->x, file->y), PreviewWidget::Icon, [=](QPoint& point) {

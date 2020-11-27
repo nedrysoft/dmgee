@@ -74,6 +74,7 @@ Third-party libraries/assets/tools/services were used in the development of dmge
 - [hterm](https://chromium.googlesource.com/apps/libapps/+/master/hterm/) - A javascipt terminal emulator used to proide rich output, licensed under the [BSD license](https://chromium.googlesource.com/apps/libapps/+/HEAD/hterm/LICENSE)
 - [yaml-cpp](https://github.com/jbeder/yaml-cpp) - A YAML parser and emitter used to decode the metadata in the licence files, licensed under the [MIT license](https://raw.githubusercontent.com/jbeder/yaml-cpp/master/LICENSE)
 - [choosealicense.com](https://github.com/github/choosealicense.com) - Provides a repository of open source licenses which contain metadata to show extra information, licensed under the [Creative Commons Attribution 3.0 Unported license](https://creativecommons.org/licenses/by/3.0/)
+- [spdx.org](https://spdx.org) - The official repository of SPDX licenses, licensed under the [PDDL-1.0 license](https://opendatacommons.org/licenses/pddl/1-0/)
 
 Other propriety or licensed tools/services used during development.
 

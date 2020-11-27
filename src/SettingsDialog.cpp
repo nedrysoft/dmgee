@@ -189,7 +189,6 @@ Nedrysoft::SettingsDialog::SettingsDialog(QWidget *parent) :
 
     m_toolBar->addAllowedStandardItem(QMacToolBarItem::FlexibleSpace);
 
-    //Nedrysoft::MacHelper::addSpacer(m_toolBar);
 #if defined(Q_OS_MACOS)
     m_toolBar->attachToWindow(nativeWindowHandle());
 
@@ -401,7 +400,6 @@ Nedrysoft::SettingsPage *Nedrysoft::SettingsDialog::addPage(QString section, QSt
 }
 
 QIcon Nedrysoft::SettingsDialog::getIcon(SettingsPage::Icon icon) {
-#if defined(Q_OS_MACOS)
     switch(icon) {
         case SettingsPage::General: {
             return QIcon(":/icons/gear.png");
@@ -411,17 +409,6 @@ QIcon Nedrysoft::SettingsDialog::getIcon(SettingsPage::Icon icon) {
             return QIcon(":/icons/template.png");
         }
     }
-#else
-    switch(icon) {
-        case SettingsPage::Database: {
-            return QIcon(":/assets/noun_database_2757856.png");
-        }
-
-        case SettingsPage::General: {
-            return QIcon(":/assets/noun_Settings_716654.png");
-        }
-    }
-#endif
 
     return QIcon();
 }

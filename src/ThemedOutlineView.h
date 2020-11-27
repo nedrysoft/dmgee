@@ -24,6 +24,8 @@
 
 #include <QWidget>
 
+#include "ThemedOutlineViewButtonBox.h"
+
 #include <QTreeView>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -33,97 +35,6 @@
 #include <QStandardItemModel>
 
 namespace Nedrysoft {
-    /**
-     * @brief       the ThemedOutlineButtonBox widget mimics a flat design button box consistent with macOS.
-     */
-    class ThemedOutlineButtonBox :
-            public QWidget {
-
-        private:
-            Q_OBJECT;
-
-        public:
-            /**
-             * @brief       Constructs a new ThemedOutlineButtonBox instance.
-             */
-            ThemedOutlineButtonBox(QWidget * parent = nullptr);
-
-            /**
-             * @brief       This signal is emitted when a button has been clicked
-             *
-             * @param[in]   buttonIndex the index of the button that was blicked.
-             */
-            Q_SIGNAL void buttonClicked(int buttonIndex);
-
-        private:
-            /**
-             * @brief       Renders the widget content to a pixmap.
-             *
-             * @details     This widget draws to a pixmap to ensure that it draws without antialiasing, drawing
-             *              directly in the paintEvent to the widget on macOS results in antialiasing which doesn't
-             *              result in pixel perfect rendering.
-             *
-             * @param[in]   rect the rectangle of the widget.
-             */
-            void renderToPixmap(QRect rect);
-
-            /**
-             * @brief       Check if the button is highlighted.
-             *
-             * @param[in]   buttonIndex the index of the button to check.
-             *
-             * @returns     true if highlighted; otherwise false.
-             */
-            bool buttonIsHighlighted(int buttonIndex);
-
-        protected:
-            /**
-             * @brief       Reimplements: QWidget::paintEvent(QPaintEvent *event).
-             *
-             * @param[in]   event the event information.
-             */
-            void paintEvent(QPaintEvent *event) override;
-
-            /**
-             * @brief       Reimplements: QWidget::mousePressEvent(QMouseEvent *event).
-             *
-             * @param[in]   event the event information.
-             */
-            void mousePressEvent(QMouseEvent *event) override;
-
-            /**
-             * @brief       Reimplements: QWidget::mouseReleaseEvent(QMouseEvent *event).
-             *
-             * @param[in]   event the event information.
-             */
-            void mouseReleaseEvent(QMouseEvent *event) override;
-
-            /**
-             * @brief       Reimplements: QWidget::mouseMoveEvent(QMouseEvent *event).
-             *
-             * @param[in]   event the event information.
-             */
-            void mouseMoveEvent(QMouseEvent *event) override;
-
-            /**
-             * @brief       Reimplements an access function for property: QWidget::sizeHint.
-             *
-             * @returns     the recommended size for the widget.
-             */
-            QSize sizeHint();
-
-            /**
-             * @brief       Reimplements: QWidget::resizeEvent(QResizeEvent *event).
-             *
-             * @param[in]   event the event information.
-             */
-            void resizeEvent(QResizeEvent *event) override;
-
-        private:
-            QPixmap m_pixmap;                                       //! the widget pixmap
-            int m_buttonIndex;                                      //! the current button index that is "hit"
-    };
-
     /**
      * @brief       the ThemedOutlineView widget provides a QTreeView with a button box at the bottom..
      */
@@ -144,7 +55,7 @@ namespace Nedrysoft {
              *
              * @param[in]   model the item model.
              */
-            void setItemModel(QStandardItemModel *model);
+            void setModel(QAbstractItemModel *model);
 
         private:
             /**
@@ -191,7 +102,7 @@ namespace Nedrysoft {
         private:
             QTreeView *m_treeViewWidget;                                //! the treeview widget
             QVBoxLayout *m_layout;                                      //! main layout (QTreeView + ThemedOutlineButtonBox)
-            ThemedOutlineButtonBox *m_buttonBox;                        //! the button box at the bottom of the widget
+            ThemedOutlineViewButtonBox *m_buttonBox;                    //! the button box at the bottom of the widget
             QPixmap m_pixmap;                                           //! pixmap for rendering the widget content
     };
 }

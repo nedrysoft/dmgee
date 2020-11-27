@@ -156,6 +156,8 @@ int main(int argc, char *argv[]) {
         application.setApplicationDisplayName(applicationName);
         application.setApplicationName(applicationName);
 
+        int id = QFontDatabase::addApplicationFont(":/fonts/FiraCode/FiraCode-Regular.ttf");
+
         auto mainWindow = Nedrysoft::MainWindow::getInstance();
 
         mainWindow->show();

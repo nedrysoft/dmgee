@@ -20,10 +20,8 @@
 #
 
 cmake_minimum_required(VERSION 3.17)
-set(CMAKE_CXX_STANDARD 17)
 
-set(Qt5WebEngineWidgets_DIR "/Users/adriancarpenter/Qt/5.15.2/clang_64/lib/cmake/Qt5WebEngineWidgets")
-set(CMAKE_PREFIX_PATH "/Users/adriancarpenter/Qt/5.15.2/clang_64")
+set(CMAKE_CXX_STANDARD 17)
 
 project(dmgee)
 
@@ -93,8 +91,6 @@ list(APPEND app_SOURCES
     src/FlatTabBar.h
     src/FlatTabWidget.cpp
     src/FlatTabWidget.h
-    src/Font.h
-    src/Font.mm
     src/GeneralSettingsPage.cpp
     src/GeneralSettingsPage.h
     src/GeneralSettingsPage.ui
@@ -104,6 +100,9 @@ list(APPEND app_SOURCES
     src/HTermApi.h
     src/HTermWidget.cpp
     src/HTermWidget.h
+    src/Helper.cpp
+    src/Helper.h
+    src/ILicense.h
     src/ISettingsPage.h
     src/Image.cpp
     src/Image.h
@@ -112,8 +111,6 @@ list(APPEND app_SOURCES
     src/LicenceTemplatesSettingsPage.ui
     src/MacHelper.h
     src/MacHelper.mm
-    src/ThemedOutlineView.h
-    src/ThemedOutlineView.cpp
     src/MainWindow.cpp
     src/MainWindow.h
     src/MainWindow.ui
@@ -131,6 +128,10 @@ list(APPEND app_SOURCES
     src/SplashScreen.h
     src/ThemeSupport.h
     src/ThemeSupport.mm
+    src/ThemedOutlineView.cpp
+    src/ThemedOutlineView.h
+    src/ThemedOutlineViewButtonBox.cpp
+    src/ThemedOutlineViewButtonBox.h
     src/TransparentWidget.cpp
     src/TransparentWidget.h
     src/hterm.qrc
@@ -225,17 +226,25 @@ endforeach(currentSourceFile)
 
 # Generate a qrc containing the license files
 
-file(GLOB files "${APPLICATON_SOURCE_ROOT}/licences/choosealicence.com/_licenses/*.txt")
-
 set(LicenceFiles "")
 
 string(APPEND LicenceFiles "<RCC>\r\n")
 string(APPEND LicenceFiles "  <qresource prefix=\"/\">\r\n")
 
+file(GLOB files "${APPLICATON_SOURCE_ROOT}/licences/choosealicence.com/_licenses/*.txt")
+
 foreach(file ${files})
     get_filename_component(licenseFilename ${file} NAME)
 
     string(APPEND LicenceFiles "    <file>./choosealicence.com/_licenses/${licenseFilename}</file>\r\n")
+endforeach()
+
+file(GLOB files "${APPLICATON_SOURCE_ROOT}/licences/spdx/json/details/*.json")
+
+foreach(file ${files})
+    get_filename_component(licenseFilename ${file} NAME)
+
+    string(APPEND LicenceFiles "    <file>./spdx/json/details/${licenseFilename}</file>\r\n")
 endforeach()
 
 # add rules yml

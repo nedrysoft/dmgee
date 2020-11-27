@@ -43,9 +43,11 @@ Nedrysoft::LicenceTemplatesSettingsPage::LicenceTemplatesSettingsPage(QWidget *p
 
     QDirIterator it(":/choosealicence.com/_licenses", QDirIterator::Subdirectories);
 
-    QStandardItem *builtInLicenses = new QStandardItem(tr("choosealicense.com"));
+    QStandardItem *chooseALicenseItem = new QStandardItem(tr("choosealicense.com"));
+    QStandardItem *spdxItem = new QStandardItem(tr("spdx.org"));
 
-    builtInLicenses->setEditable(false);
+    chooseALicenseItem->setEditable(false);
+    spdxItem->setEditable(false);
 
     while (it.hasNext()) {
         auto filename = it.next();
@@ -54,19 +56,23 @@ Nedrysoft::LicenceTemplatesSettingsPage::LicenceTemplatesSettingsPage(QWidget *p
         if (licence.m_valid) {
             auto item = new QStandardItem;
 
-            item->setText(licence.m_spdxId);
+            if (!licence.m_nickname.isEmpty()) {
+                item->setText(licence.m_nickname);
+            } else {
+                item->setText(licence.m_spdxId);
+            }
+
             item->setData(QVariant::fromValue<Nedrysoft::LicenceTemplatesSettingsPage::Licence>(licence), Qt::UserRole);
             item->setEditable(false);
 
-            builtInLicenses->appendRow(item);
+            chooseALicenseItem->appendRow(item);
         }
     }
 
-    m_licenceModel.appendRow(builtInLicenses);
+    m_licenceModel.appendRow(chooseALicenseItem);
+    m_licenceModel.appendRow(spdxItem);
 
-    ui->outlineView->setItemModel(&m_licenceModel);
-
-    //m_licenceModel.sort(0, Qt::AscendingOrder);
+    ui->outlineView->setModel(&m_licenceModel);
 
     connect(ui->outlineView, &ThemedOutlineView::buttonClicked, [=](int buttonIndex) {
         // TODO: handle the buttons
@@ -111,6 +117,7 @@ Nedrysoft::LicenceTemplatesSettingsPage::LicenceTemplatesSettingsPage(QWidget *p
     ui->titleLabel->setText("");
     ui->descriptionLabel->setText("");
     ui->licenseText->setText("");
+    ui->licenseText->setFont(QFont("Fira Code", ui->licenseText->font().pointSize()));
 
     ui->line->setVisible(false);
     ui->line_2->setVisible(false);

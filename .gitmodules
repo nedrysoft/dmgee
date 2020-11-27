@@ -10,3 +10,6 @@
 [submodule "licences/choosealicence.com"]
 	path = licences/choosealicence.com
 	url = https://github.com/github/choosealicense.com
+[submodule "licences/spdx"]
+	path = licences/spdx
+	url = https://github.com/spdx/license-list-data

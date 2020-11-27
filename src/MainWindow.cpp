@@ -24,6 +24,7 @@
 
 #include "AboutDialog.h"
 #include "AnsiEscape.h"
+#include "Helper.h"
 #include "MacHelper.h"
 #include "SettingsDialog.h"
 #include "ThemeSupport.h"
@@ -252,11 +253,11 @@ bool Nedrysoft::MainWindow::loadConfiguration(QString filename) {
 
     auto recentFiles = settings.value("recentFiles").toStringList();
 
-    recentFiles.removeAll(Nedrysoft::MacHelper::normalizedPath(filename));
+    recentFiles.removeAll(Nedrysoft::Helper::normalizedPath(filename));
 
-    filename = Nedrysoft::MacHelper::normalizedPath(filename);
+    filename = Nedrysoft::Helper::normalizedPath(filename);
 
-    auto absoluteFilename = Nedrysoft::MacHelper::resolvedPath(filename);
+    auto absoluteFilename = Nedrysoft::Helper::resolvedPath(filename);
 
     if (m_builder->loadConfiguration(absoluteFilename)) {
         ui->terminalWidget->println(fore(Qt::lightGray) +
@@ -266,7 +267,7 @@ bool Nedrysoft::MainWindow::loadConfiguration(QString filename) {
                                     reset);
         result = true;
 
-        recentFiles.push_front(Nedrysoft::MacHelper::normalizedPath(filename));
+        recentFiles.push_front(Nedrysoft::Helper::normalizedPath(filename));
     } else {
         ui->terminalWidget->println(fore(Qt::lightGray) +
                                     tr("Configuration \"%1\" could not be loaded").arg(
@@ -780,7 +781,6 @@ QString Nedrysoft::MainWindow::handleOperationProgress(QVariantMap operationMap)
 }
 
 void Nedrysoft::MainWindow::onPreferencesTriggered() {
-    qDebug() << "onPreferencesTriggered" << m_settingsDialog;
     if (m_settingsDialog) {
         m_settingsDialog->raise();
 
@@ -795,8 +795,6 @@ void Nedrysoft::MainWindow::onPreferencesTriggered() {
         m_settingsDialog->deleteLater();
 
         m_settingsDialog = nullptr;
-
-        qDebug() << "SettingsDialog::closed" << m_settingsDialog;
     });
 }
 
@@ -837,11 +835,11 @@ void Nedrysoft::MainWindow::updateRecentFiles(QString filename) {
     m_openRecentMenu = new QMenu;
 
     for(auto recentFile : recentFiles) {
-        auto resolvedFilename = Nedrysoft::MacHelper::resolvedPath(recentFile);
+        auto resolvedFilename = Nedrysoft::Helper::resolvedPath(recentFile);
         auto fileInfo = QFileInfo(resolvedFilename);
 
         if (fileInfo.isFile()) {
-            auto fileAction = new QAction(Nedrysoft::MacHelper::normalizedPath(recentFile));
+            auto fileAction = new QAction(Nedrysoft::Helper::normalizedPath(recentFile));
 
             m_openRecentMenu->addAction(fileAction);
 
@@ -969,7 +967,7 @@ bool Nedrysoft::MainWindow::saveConfiguration(bool saveAs) {
     }
 
     if (m_builder->saveConfiguration(filename)) {
-        updateRecentFiles(Nedrysoft::MacHelper::normalizedPath(filename));
+        updateRecentFiles(Nedrysoft::Helper::normalizedPath(filename));
 
         return true;
     }

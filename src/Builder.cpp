@@ -20,7 +20,10 @@
  */
 
 #include "Python.h"                         //! @note must be included first
+
 #include "Builder.h"
+
+#include "Helper.h"
 #include "Image.h"
 #include "MacHelper.h"
 
@@ -267,8 +270,8 @@ bool Nedrysoft::Builder::saveConfiguration(const QString &filename) {
     auto files = toml::array();
     auto symlinks = toml::array();
 
-    QFileInfo fileInfo(Nedrysoft::MacHelper::resolvedPath(filename));
-    QDir configurationFolder(Nedrysoft::MacHelper::resolvedPath(filename));
+    QFileInfo fileInfo(Nedrysoft::Helper::resolvedPath(filename));
+    QDir configurationFolder(Nedrysoft::Helper::resolvedPath(filename));
 
     for (auto currentSymlink : m_configuration.m_symlinks) {
         auto symlink = toml::table{{
@@ -282,7 +285,7 @@ bool Nedrysoft::Builder::saveConfiguration(const QString &filename) {
         symlinks.push_back(symlink);
         symlinks.push_back(symlink);
 
-        qDebug() << Nedrysoft::MacHelper::resolvedPath(filename) << configurationFolder.relativeFilePath(currentSymlink->name);
+        qDebug() << Nedrysoft::Helper::resolvedPath(filename) << configurationFolder.relativeFilePath(currentSymlink->name);
     }
 
     for (auto currentFile : m_configuration.m_files) {
@@ -297,9 +300,9 @@ bool Nedrysoft::Builder::saveConfiguration(const QString &filename) {
     }
 
     auto configuration = toml::table{{
-            {"background", configurationFolder.relativeFilePath(Nedrysoft::MacHelper::resolvedPath(property("background").toString())).toStdString()},
-            {"icon", configurationFolder.relativeFilePath(Nedrysoft::MacHelper::resolvedPath(property("icon").toString())).toStdString()},
-            {"filename",configurationFolder.relativeFilePath(Nedrysoft::MacHelper::resolvedPath(property("filename").toString())).toStdString()},
+            {"background", configurationFolder.relativeFilePath(Nedrysoft::Helper::resolvedPath(property("background").toString())).toStdString()},
+            {"icon", configurationFolder.relativeFilePath(Nedrysoft::Helper::resolvedPath(property("icon").toString())).toStdString()},
+            {"filename",configurationFolder.relativeFilePath(Nedrysoft::Helper::resolvedPath(property("filename").toString())).toStdString()},
             {"volumename",property("volumename").toString().toStdString()},
             {"iconsize", property("iconsize").toInt()},
             {"iconsvisible", property("iconsVisible").toBool()},
@@ -311,7 +314,7 @@ bool Nedrysoft::Builder::saveConfiguration(const QString &filename) {
             {"featuresize", property("featuresize").toInt()},
             {"snaptogrid", property("snaptogrid").toBool()},
             {"format", property("format").toString().toStdString()},
-            {"outputfile", configurationFolder.relativeFilePath(Nedrysoft::MacHelper::resolvedPath(property("outputfile").toString())).toStdString()},
+            {"outputfile", configurationFolder.relativeFilePath(Nedrysoft::Helper::resolvedPath(property("outputfile").toString())).toStdString()},
             {"files", files},
             {"symlinks", symlinks},
         }

@@ -23,7 +23,7 @@
 
 #import <Appkit/AppKit.h>
 
-QPixmap Nedrysoft::MacHelper::macStandardImage(StandardImage::StandardImageName standardImage, QSize imageSize) {
+QPixmap Nedrysoft::MacHelper::standardImage(StandardImage::StandardImageName standardImage, QSize imageSize) {
     NSBitmapImageRep *bitmapRepresentation = [[NSBitmapImageRep alloc]
         initWithBitmapDataPlanes: nullptr
         pixelsWide: imageSize.width()
@@ -72,23 +72,6 @@ QPixmap Nedrysoft::MacHelper::macStandardImage(StandardImage::StandardImageName 
     [bitmapRepresentation release];
 
     return pixmap;
-}
-
-QString Nedrysoft::MacHelper::resolvedPath(QString filename) {
-    return QFileInfo(QString(filename).replace(QRegularExpression("(^~)"), QDir::homePath())).canonicalFilePath();
-}
-
-QString Nedrysoft::MacHelper::normalizedPath(QString filename) {
-    auto tempFilename = resolvedPath(filename);
-    auto homePath = QDir::homePath();
-
-    auto root = QDir(homePath);
-
-    if (tempFilename.startsWith(homePath)) {
-        return "~/"+root.relativeFilePath(tempFilename);
-    }
-
-    return(QFileInfo(filename).canonicalFilePath());
 }
 
 Nedrysoft::AlertButton::AlertButtonResult Nedrysoft::MacHelper::nativeAlert(QWidget *parent, QString messageText, QString informativeText, QStringList buttons) {
@@ -149,4 +132,26 @@ bool Nedrysoft::MacHelper::imageForFile(QString &filename, char **data, unsigned
     }
 
     return false;
- }
+}
+
+QString Nedrysoft::MacHelper::systemFontName() {
+    NSFont *font = [NSFont systemFontOfSize:12];
+
+    return QString([[font fontName] cStringUsingEncoding:[NSString defaultCStringEncoding]]);
+}
+
+QString Nedrysoft::MacHelper::fontFilename(const QString& fontName) {
+    NSFont *font = [NSFont fontWithName: [NSString stringWithCString:fontName.toLatin1().data() encoding:[NSString defaultCStringEncoding]] size:12];
+
+    if (font) {
+        CTFontDescriptorRef fontRef = CTFontDescriptorCreateWithNameAndSize((CFStringRef) [font fontName], [font pointSize]);
+
+        auto url = static_cast<CFURLRef>(CTFontDescriptorCopyAttribute(fontRef, kCTFontURLAttribute));
+
+        NSString *fontPath = [NSString stringWithString:[(NSURL *) CFBridgingRelease(url) path]];
+
+        return QString([fontPath cStringUsingEncoding:[NSString defaultCStringEncoding]]);
+    }
+
+    return QString();
+}
