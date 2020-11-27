@@ -37,92 +37,93 @@ namespace Nedrysoft {
      *              to present a hterm terminal to the user.
      */
     class HTermWidget :
-        public QWidget {
-            private:
-                Q_OBJECT
+            public QWidget {
 
-            public:
-                /**
-                 * @brief       Constructs a new HTermWidget instance which is a child of the parent.
-                 *
-                 * @param[in]   parent the owner widget.
-                 */
-                explicit HTermWidget(QWidget *parent=nullptr);
+        private:
+            Q_OBJECT
 
-                /**
-                 * @brief       Destroys the HTermWidget.
-                 */
-                ~HTermWidget();
+        public:
+            /**
+             * @brief       Constructs a new HTermWidget instance which is a child of the parent.
+             *
+             * @param[in]   parent the owner widget.
+             */
+            explicit HTermWidget(QWidget *parent=nullptr);
 
-            public:
-                /**
-                 * @brief       This signal is emitted when HTerm has been fully initialised.
-                 */
-                Q_SIGNAL void terminalReady();
+            /**
+             * @brief       Destroys the HTermWidget.
+             */
+            ~HTermWidget();
 
-                /**
-                 * @brief       This signal is emitted when a link has been clicked in the terminal.
-                 *
-                 * @param[in]   url the url that has been requested.
-                 */
-                Q_SIGNAL void openUrl(QString url);
+        public:
+            /**
+             * @brief       This signal is emitted when HTerm has been fully initialised.
+             */
+            Q_SIGNAL void terminalReady();
 
-                /**
-                 * @brief       Prints the string to terminal without a new line.
-                 *
-                 * @param[in]   string the string to be printed,
-                 */
-                void print(QString string);
+            /**
+             * @brief       This signal is emitted when a link has been clicked in the terminal.
+             *
+             * @param[in]   url the url that has been requested.
+             */
+            Q_SIGNAL void openUrl(QString url);
 
-                /**
-                 * @brief       Prints the string to terminal with a new line.
-                 *
-                 * @param[in]   string the string to be printed,
-                 */
-                void println(QString string);
+            /**
+             * @brief       Prints the string to terminal without a new line.
+             *
+             * @param[in]   string the string to be printed,
+             */
+            void print(QString string);
 
-                /**
-                 * @brief       Clears the terminal.
-                 */
-                void clear();
+            /**
+             * @brief       Prints the string to terminal with a new line.
+             *
+             * @param[in]   string the string to be printed,
+             */
+            void println(QString string);
 
-                /**
-                 * @brief       Gets the terminal buffer.
-                 *
-                 * @note        Buffer is returned asynchronously via the terminalBuffer signal.
-                 */
-                void getTerminalBuffer();
+            /**
+             * @brief       Clears the terminal.
+             */
+            void clear();
 
-                /**
-                 * @brief       Returns whether the terminal widget is fully initialised.
-                 *
-                 * @note        There are two stages to iniitalisation, the first is loading the HTML into the webview
-                 *              and waiting to be notified by HTerm that the terminal is ready.  Once this condition
-                 *              is satisfied, the QWebChannel is created.  Once the WebChannel signals that is it ready
-                 *              then we have completed initialision and signal back to c++ that the terminal can be used.
-                 *
-                 * @returns     true if ready; otherwise false.
-                 */
-                bool isReady();
+            /**
+             * @brief       Gets the terminal buffer.
+             *
+             * @note        Buffer is returned asynchronously via the terminalBuffer signal.
+             */
+            void getTerminalBuffer();
 
-                /**
-                 * @brief       This signal is emitted when a context menu is to be displayed.
-                 */
-                Q_SIGNAL void contextMenu();
+            /**
+             * @brief       Returns whether the terminal widget is fully initialised.
+             *
+             * @note        There are two stages to iniitalisation, the first is loading the HTML into the webview
+             *              and waiting to be notified by HTerm that the terminal is ready.  Once this condition
+             *              is satisfied, the QWebChannel is created.  Once the WebChannel signals that is it ready
+             *              then we have completed initialision and signal back to c++ that the terminal can be used.
+             *
+             * @returns     true if ready; otherwise false.
+             */
+            bool isReady();
 
-                /**
-                 * @brief       This signal is emitted when the terminal sends the contents of its buffer.
-                 */
-                Q_SIGNAL void terminalBuffer(QString terminalBuffer);
+            /**
+             * @brief       This signal is emitted when a context menu is to be displayed.
+             */
+            Q_SIGNAL void contextMenu();
 
-            private:
-                QWebEngineView *m_webEngineView;                    //! the instance of the web engine
-                QGridLayout *m_layout;                              //! layout for child widgets
-                QWebChannel *m_apiChannel;                          //! web channel instance for javascript<->c++ communications
-                QWebEngineProfile *m_profile;                       //! the web profile we use for the terminal
-                QWebEnginePage *m_page;                             //! the web page used for rendering
-                HTermApi *m_terminalApi;                            //! terminal api bridge object
-                bool m_terminalReady;                               //! whether the terminal is ready (fully initialised in the browser)
+            /**
+             * @brief       This signal is emitted when the terminal sends the contents of its buffer.
+             */
+            Q_SIGNAL void terminalBuffer(QString terminalBuffer);
+
+        private:
+            QWebEngineView *m_webEngineView;                    //! the instance of the web engine
+            QGridLayout *m_layout;                              //! layout for child widgets
+            QWebChannel *m_apiChannel;                          //! web channel instance for javascript<->c++ communications
+            QWebEngineProfile *m_profile;                       //! the web profile we use for the terminal
+            QWebEnginePage *m_page;                             //! the web page used for rendering
+            HTermApi *m_terminalApi;                            //! terminal api bridge object
+            bool m_terminalReady;                               //! whether the terminal is ready (fully initialised in the browser)
     };
 };
 

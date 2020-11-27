@@ -34,7 +34,9 @@ namespace Nedrysoft::Ribbon {
      * @details     A Slider widget that is styled to match the RibbonBar.
      */
     class NEDRYSOFT_RIBBON_WIDGET_EXPORT RibbonSlider :
-        public QSlider {
+            public QSlider {
+
+        private:
             Q_OBJECT
 
         public:

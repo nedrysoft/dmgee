@@ -41,7 +41,9 @@ namespace Nedrysoft::Ribbon {
      * @details     A PushButton widget that is styled to match the RibbonBar.
      */
     class NEDRYSOFT_RIBBON_WIDGET_EXPORT RibbonPushButton :
-        public QWidget {
+            public QWidget {
+
+        private:
             Q_OBJECT
 
             Q_PROPERTY(QIcon icon READ icon WRITE setIcon)

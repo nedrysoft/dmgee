@@ -26,6 +26,8 @@
 #include <QPainter>
 
 constexpr auto imageDimensions = 14;
+constexpr auto bulletWidth = 24;
+constexpr auto textYAdjustment = -1;
 
 Nedrysoft::BulletWidget::BulletWidget(QWidget *parent) :
         QWidget(parent) {
@@ -38,8 +40,8 @@ Nedrysoft::BulletWidget::BulletWidget(QWidget *parent) :
 
     m_fontDescent = fontMetrics.descent();
 
-    this->setMinimumHeight(m_fontHeight);
-    this->setMaximumHeight(m_fontHeight);
+    setMinimumHeight(m_fontHeight);
+    setMaximumHeight(m_fontHeight);
 }
 
 Nedrysoft::BulletWidget::BulletWidget(QString text, QPixmap pixmap, QString toolTip, QWidget *parent) :
@@ -48,14 +50,13 @@ Nedrysoft::BulletWidget::BulletWidget(QString text, QPixmap pixmap, QString tool
         m_pixmap(pixmap),
         m_toolTip(toolTip) {
 
-    QFont font = this->font();
+    auto tempFont = font();
 
-    QFontMetrics fontMetrics(font);
+    QFontMetrics fontMetrics(tempFont);
 
     m_fontHeight = fontMetrics.boundingRect("X").height();
 
-    this->setMinimumHeight(m_fontHeight);
-    this->setMaximumHeight(m_fontHeight);
+    setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
 }
 
 void Nedrysoft::BulletWidget::paintEvent(QPaintEvent *event) {
@@ -65,8 +66,12 @@ void Nedrysoft::BulletWidget::paintEvent(QPaintEvent *event) {
 
     painter.drawPixmap(0, 0, imageDimensions, imageDimensions, m_pixmap);
 
-    widgetRect.setLeft(24);
-    widgetRect.setTop(-1);
+    widgetRect.setLeft(bulletWidth);
+    widgetRect.setTop(textYAdjustment);
 
     painter.drawText(widgetRect, Qt::AlignTop, m_text);
+}
+
+QSize Nedrysoft::BulletWidget::sizeHint() const {
+    return QSize(100,m_fontHeight);
 }

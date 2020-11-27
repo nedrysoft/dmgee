@@ -21,7 +21,7 @@
 
 #include "Image.h"
 
-#include "ImageLoader.h"
+#include "MacHelper.h"
 
 #include <QDebug>
 #include <IL/ilu.h>
@@ -77,9 +77,9 @@ Nedrysoft::Image::Image(QString filename, bool loadContent, int width, int heigh
     unsigned int imageLength;
 
     if (loadContent) {
-        loadedData = Nedrysoft::ImageLoader::load(filename, &tiffData, &imageLength);
+        loadedData = Nedrysoft::MacHelper::loadImage(filename, &tiffData, &imageLength);
     } else {
-        loadedData = Nedrysoft::ImageLoader::imageForFile(filename, &tiffData, &imageLength, width, height);
+        loadedData = Nedrysoft::MacHelper::imageForFile(filename, &tiffData, &imageLength, width, height);
     }
 
     if (loadedData) {

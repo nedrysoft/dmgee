@@ -43,7 +43,7 @@ Nedrysoft::LicenceTemplatesSettingsPage::LicenceTemplatesSettingsPage(QWidget *p
 
     QDirIterator it(":/choosealicence.com/_licenses", QDirIterator::Subdirectories);
 
-    QStandardItem *builtInLicenses = new QStandardItem(tr("Built In"));
+    QStandardItem *builtInLicenses = new QStandardItem(tr("choosealicense.com"));
 
     builtInLicenses->setEditable(false);
 
@@ -65,6 +65,8 @@ Nedrysoft::LicenceTemplatesSettingsPage::LicenceTemplatesSettingsPage(QWidget *p
     m_licenceModel.appendRow(builtInLicenses);
 
     ui->outlineView->setItemModel(&m_licenceModel);
+
+    //m_licenceModel.sort(0, Qt::AscendingOrder);
 
     connect(ui->outlineView, &ThemedOutlineView::buttonClicked, [=](int buttonIndex) {
         // TODO: handle the buttons
@@ -95,7 +97,7 @@ Nedrysoft::LicenceTemplatesSettingsPage::LicenceTemplatesSettingsPage(QWidget *p
 
         ui->titleLabel->setText(licence.m_title);
         ui->descriptionLabel->setText(licence.m_description);
-        ui->licenseText->setHtml(licence.m_licence);
+        ui->licenseText->setText(licence.m_licence);
 
         createList(Nedrysoft::LicenceTemplatesSettingsPage::Permissions, licence);
         createList(Nedrysoft::LicenceTemplatesSettingsPage::Conditions, licence);

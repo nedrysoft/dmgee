@@ -37,6 +37,7 @@ namespace Nedrysoft::Utils {
      */
     class ThemeSupport :
             public QObject {
+
         public:
             Q_OBJECT
 
@@ -58,6 +59,7 @@ namespace Nedrysoft::Utils {
                 return false;
             }
 #endif
+
             /**
              * @brief       This signal is emitted when OS theme is changed.
              *

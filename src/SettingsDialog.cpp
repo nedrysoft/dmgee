@@ -404,7 +404,7 @@ QIcon Nedrysoft::SettingsDialog::getIcon(SettingsPage::Icon icon) {
 #if defined(Q_OS_MACOS)
     switch(icon) {
         case SettingsPage::General: {
-            return QIcon(":/icons/gear.png");//QIcon(Nedrysoft::MacHelper::macStandardImage(Nedrysoft::StandardImage::NSImageNamePreferencesGeneral, QSize(256,256)));
+            return QIcon(":/icons/gear.png");
         }
 
         case SettingsPage::LicenceTemplates: {
@@ -427,5 +427,9 @@ QIcon Nedrysoft::SettingsDialog::getIcon(SettingsPage::Icon icon) {
 }
 
 void Nedrysoft::SettingsDialog::closeEvent(QCloseEvent *event) {
-    // TODO: something.
+    if (close()) {
+        event->accept();
+    } else {
+        event->ignore();
+    }
 }

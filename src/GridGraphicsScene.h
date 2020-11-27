@@ -29,37 +29,37 @@ namespace Nedrysoft {
      * @brief       The GridGraphicsScene class provides a grid overlay.
      */
     class GridGraphicsScene :
-        public QGraphicsScene {
-            private:
-                Q_OBJECT
+            public QGraphicsScene {
 
-            public:
-                /**
-                 * @brief       Constructs a new GridGraphicsScene.
-                 */
-                GridGraphicsScene();
+        private:
+            Q_OBJECT
 
-                /**
-                 * @brief       Sets the grid size.
-                 *
-                 * @note        An invalid size will result in no grid being drawn.
-                 *
-                 * @params[in]  gridSize the size of grid.
-                 */
-                void setGrid(QSize gridSize);
+        public:
+            /**
+             * @brief       Constructs a new GridGraphicsScene.
+             */
+            GridGraphicsScene();
 
-            protected:
+            /**
+             * @brief       Sets the grid size.
+             *
+             * @note        An invalid size will result in no grid being drawn.
+             *
+             * @params[in]  gridSize the size of grid.
+             */
+            void setGrid(QSize gridSize);
 
-                /**
-                 * @brief       Reimplements: QWidget::drawForeground(QPainter *painter, const QRectF &rect).
-                 *
-                 * @param[in]   painter the painter object to draw to.
-                 * @param[in]   event the event information.
-                 */
-                void drawForeground(QPainter *painter, const QRectF &rect) override;
+        protected:
+            /**
+             * @brief       Reimplements: QWidget::drawForeground(QPainter *painter, const QRectF &rect).
+             *
+             * @param[in]   painter the painter object to draw to.
+             * @param[in]   event the event information.
+             */
+            void drawForeground(QPainter *painter, const QRectF &rect) override;
 
-            private:
-                QBrush m_gridBrush;                         //! A brush that has a single grid cell.
+        private:
+            QBrush m_gridBrush;                         //! A brush that has a single grid cell.
 
     };
 };

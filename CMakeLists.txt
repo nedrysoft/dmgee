@@ -107,8 +107,6 @@ list(APPEND app_SOURCES
     src/ISettingsPage.h
     src/Image.cpp
     src/Image.h
-    src/ImageLoader.h
-    src/ImageLoader.mm
     src/LicenceTemplatesSettingsPage.cpp
     src/LicenceTemplatesSettingsPage.h
     src/LicenceTemplatesSettingsPage.ui

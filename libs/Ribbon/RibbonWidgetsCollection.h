@@ -28,32 +28,33 @@
  * @brief       Designer Collection plugin, provides a list of widgets that this plugin exposes to designer.
  */
 class RibbonWidgetsCollection :
-    public QObject,
-    public QDesignerCustomWidgetCollectionInterface {
-        private:
-            Q_OBJECT
+        public QObject,
+        public QDesignerCustomWidgetCollectionInterface {
 
-            Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QDesignerCustomWidgetCollectionInterface")
+    private:
+        Q_OBJECT
 
-            Q_INTERFACES(QDesignerCustomWidgetCollectionInterface)
+        Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QDesignerCustomWidgetCollectionInterface")
 
-        public:
-            /**
-             * @brief       Constructs a new RibbonWidgetsCollection instance which is a child of the parent.
-             *
-             * @param[in]   parent the owner object.
-             */
-            explicit RibbonWidgetsCollection(QObject *parent = 0);
+        Q_INTERFACES(QDesignerCustomWidgetCollectionInterface)
 
-            /**
-             * @brief       Provides a list of widgets that this designer plugin.
-             *
-             * @returns     the list of widget interfaces this plugin exposes.
-             */
-            [[nodiscard]] QList<QDesignerCustomWidgetInterface*> customWidgets() const override;
+    public:
+        /**
+         * @brief       Constructs a new RibbonWidgetsCollection instance which is a child of the parent.
+         *
+         * @param[in]   parent the owner object.
+         */
+        explicit RibbonWidgetsCollection(QObject *parent = 0);
 
-        private:
-            QList<QDesignerCustomWidgetInterface*> m_widgets;           //! the list of provided widgets
+        /**
+         * @brief       Provides a list of widgets that this designer plugin.
+         *
+         * @returns     the list of widget interfaces this plugin exposes.
+         */
+        [[nodiscard]] QList<QDesignerCustomWidgetInterface*> customWidgets() const override;
+
+    private:
+        QList<QDesignerCustomWidgetInterface*> m_widgets;           //! the list of provided widgets
 };
 
 #endif // NEDRYSOFT_RIBBONWIDGETSCOLLECTION_H

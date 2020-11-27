@@ -34,7 +34,9 @@ namespace Nedrysoft::Ribbon {
      * @details     A CheckBox widget that is styled to match the RibbonBar.
      */
     class NEDRYSOFT_RIBBON_WIDGET_EXPORT RibbonCheckBox :
-        public QCheckBox {
+            public QCheckBox {
+
+        private:
             Q_OBJECT
 
         public:

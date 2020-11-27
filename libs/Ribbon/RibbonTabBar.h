@@ -36,59 +36,60 @@ namespace Nedrysoft::Ribbon {
      *              with an instance of this class.
      */
     class NEDRYSOFT_RIBBON_WIDGET_EXPORT RibbonTabBar :
-        public QTabBar {
-            private:
-                Q_OBJECT
+            public QTabBar {
 
-            public:
-                /**
-                 * @brief       Constructs a new RibbonTabBar instance which is a child of the parent.
-                 *
-                 * @param[in]   parent the owner widget.
-                 */
-                explicit RibbonTabBar(QWidget *parent = nullptr);
+        private:
+            Q_OBJECT
 
-            protected:
-                /**
-                 * @brief       Reimplements: QWidget::paintEvent(QPaintEvent *event).
-                 *
-                 * @param[in]   event the event information.
-                 */
-                void paintEvent(QPaintEvent *event) override;
+        public:
+            /**
+             * @brief       Constructs a new RibbonTabBar instance which is a child of the parent.
+             *
+             * @param[in]   parent the owner widget.
+             */
+            explicit RibbonTabBar(QWidget *parent = nullptr);
 
-                /**
-                 * @brief       Returns the size hint for the tab at position index.
-                 *
-                 * @param[in]   index the index of the page.
-                 *
-                 * @returns     the size hint for the tab at position index.
-                 */
-                [[nodiscard]] QSize tabSizeHint(int index) const override;
+        protected:
+            /**
+             * @brief       Reimplements: QWidget::paintEvent(QPaintEvent *event).
+             *
+             * @param[in]   event the event information.
+             */
+            void paintEvent(QPaintEvent *event) override;
 
-                /**
-                 * @brief       Reimplements: QObject::eventFilter(QObject *watched, QEvent *event).
-                 *
-                 * @param[in]   watched the object that caused the event.
-                 * @param[in]   event the event information.
-                 *
-                 * @returns     true if event was handled, otherwise false.
-                 */
-                bool eventFilter(QObject *watched, QEvent *event) override;
+            /**
+             * @brief       Returns the size hint for the tab at position index.
+             *
+             * @param[in]   index the index of the page.
+             *
+             * @returns     the size hint for the tab at position index.
+             */
+            [[nodiscard]] QSize tabSizeHint(int index) const override;
 
-            private:
-                /**
-                 * @brief       Updates the widgets stylesheet when the operating system theme is changed.
-                 *
-                 * @param[in]   isDarkMode true if dark mode; otherwise false.
-                 */
-                void updateStyleSheet(bool isDarkMode);
+            /**
+             * @brief       Reimplements: QObject::eventFilter(QObject *watched, QEvent *event).
+             *
+             * @param[in]   watched the object that caused the event.
+             * @param[in]   event the event information.
+             *
+             * @returns     true if event was handled, otherwise false.
+             */
+            bool eventFilter(QObject *watched, QEvent *event) override;
 
-            private:
-                QFont m_selectedFont;                                   //! font to use on selected tab
-                QFont m_normalFont;                                     //! font to use on deselected tabs
-                bool m_mouseInWidget;                                   //! tracks whether the mouse is tracked inside the widget
+        private:
+            /**
+             * @brief       Updates the widgets stylesheet when the operating system theme is changed.
+             *
+             * @param[in]   isDarkMode true if dark mode; otherwise false.
+             */
+            void updateStyleSheet(bool isDarkMode);
 
-                Nedrysoft::Utils::ThemeSupport *m_themeSupport;         //! theme support instance
+        private:
+            QFont m_selectedFont;                                   //! font to use on selected tab
+            QFont m_normalFont;                                     //! font to use on deselected tabs
+            bool m_mouseInWidget;                                   //! tracks whether the mouse is tracked inside the widget
+
+            Nedrysoft::Utils::ThemeSupport *m_themeSupport;         //! theme support instance
     };
 }
 #endif // NEDRYSOFT_RIBBONTABBAR_H

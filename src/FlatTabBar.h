@@ -29,17 +29,18 @@ namespace Nedrysoft {
      * @brief       The FlatTabBar class in a flat style tab bar that matches the application style.
      */
     class FlatTabBar :
-        public QTabBar {
-            private:
-                Q_OBJECT;
+            public QTabBar {
 
-            protected:
-                /**
-                 * @brief       Reimplements: QWidget::paintEvent(QPaintEvent *event).
-                 *
-                 * @param[in]   event the event information.
-                 */
-                void paintEvent(QPaintEvent *event) override;
+        private:
+            Q_OBJECT;
+
+        protected:
+            /**
+             * @brief       Reimplements: QWidget::paintEvent(QPaintEvent *event).
+             *
+             * @param[in]   event the event information.
+             */
+            void paintEvent(QPaintEvent *event) override;
     };
 };
 

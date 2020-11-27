@@ -34,7 +34,9 @@ namespace Nedrysoft::Ribbon {
      * @details     A ComboBox widget that is styled to match the RibbonBar.
      */
     class NEDRYSOFT_RIBBON_WIDGET_EXPORT RibbonComboBox :
-        public QComboBox {
+            public QComboBox {
+
+        private:
             Q_OBJECT
 
         public:

@@ -36,6 +36,7 @@ namespace Nedrysoft {
      */
     class SnappedGraphicsPixmapItem :
             public QGraphicsPixmapItem {
+
         public:
             /**
              * @brief       Constructs a new SnappedGraphicsPixmapItem instance with a snap function.

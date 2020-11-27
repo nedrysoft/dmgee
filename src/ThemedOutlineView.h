@@ -37,146 +37,162 @@ namespace Nedrysoft {
      * @brief       the ThemedOutlineButtonBox widget mimics a flat design button box consistent with macOS.
      */
     class ThemedOutlineButtonBox :
-        public QWidget {
-            private:
-                Q_OBJECT;
+            public QWidget {
 
-            public:
-                /**
-                 * @brief       Constructs a new ThemedOutlineButtonBox instance.
-                 */
-                ThemedOutlineButtonBox(QWidget * parent = nullptr);
+        private:
+            Q_OBJECT;
 
-                /**
-                 * @brief       This signal is emitted when a button has been clicked
-                 *
-                 * @param[in]   buttonIndex the index of the button that was blicked.
-                 */
-                Q_SIGNAL void buttonClicked(int buttonIndex);
+        public:
+            /**
+             * @brief       Constructs a new ThemedOutlineButtonBox instance.
+             */
+            ThemedOutlineButtonBox(QWidget * parent = nullptr);
 
-            private:
-                /**
-                 * @brief       Renders the widget content to a pixmap.
-                 *
-                 * @details     This widget draws to a pixmap to ensure that it draws without antialiasing, drawing
-                 *              directly in the paintEvent to the widget on macOS results in antialiasing which doesn't
-                 *              result in pixel perfect rendering.
-                 *
-                 * @param[in]   rect the rectangle of the widget.
-                 */
-                void renderToPixmap(QRect rect);
+            /**
+             * @brief       This signal is emitted when a button has been clicked
+             *
+             * @param[in]   buttonIndex the index of the button that was blicked.
+             */
+            Q_SIGNAL void buttonClicked(int buttonIndex);
 
-                /**
-                 * @brief       Check if the button is highlighted.
-                 *
-                 * @param[in]   buttonIndex the index of the button to check.
-                 *
-                 * @returns     true if highlighted; otherwise false.
-                 */
-                bool buttonIsHighlighted(int buttonIndex);
+        private:
+            /**
+             * @brief       Renders the widget content to a pixmap.
+             *
+             * @details     This widget draws to a pixmap to ensure that it draws without antialiasing, drawing
+             *              directly in the paintEvent to the widget on macOS results in antialiasing which doesn't
+             *              result in pixel perfect rendering.
+             *
+             * @param[in]   rect the rectangle of the widget.
+             */
+            void renderToPixmap(QRect rect);
 
-            protected:
-                /**
-                 * @brief       Reimplements: QWidget::paintEvent(QPaintEvent *event).
-                 *
-                 * @param[in]   event the event information.
-                 */
-                void paintEvent(QPaintEvent *event) override;
+            /**
+             * @brief       Check if the button is highlighted.
+             *
+             * @param[in]   buttonIndex the index of the button to check.
+             *
+             * @returns     true if highlighted; otherwise false.
+             */
+            bool buttonIsHighlighted(int buttonIndex);
 
-                void mousePressEvent(QMouseEvent *event) override;
+        protected:
+            /**
+             * @brief       Reimplements: QWidget::paintEvent(QPaintEvent *event).
+             *
+             * @param[in]   event the event information.
+             */
+            void paintEvent(QPaintEvent *event) override;
 
-                void mouseReleaseEvent(QMouseEvent *event) override;
+            /**
+             * @brief       Reimplements: QWidget::mousePressEvent(QMouseEvent *event).
+             *
+             * @param[in]   event the event information.
+             */
+            void mousePressEvent(QMouseEvent *event) override;
 
-                void mouseMoveEvent(QMouseEvent *event) override;
+            /**
+             * @brief       Reimplements: QWidget::mouseReleaseEvent(QMouseEvent *event).
+             *
+             * @param[in]   event the event information.
+             */
+            void mouseReleaseEvent(QMouseEvent *event) override;
 
-                /**
-                 * @brief       Reimplements: QWidget::sizeHint().
-                 *
-                 * @returns     The size hint
-                 */
-                QSize sizeHint();
+            /**
+             * @brief       Reimplements: QWidget::mouseMoveEvent(QMouseEvent *event).
+             *
+             * @param[in]   event the event information.
+             */
+            void mouseMoveEvent(QMouseEvent *event) override;
 
-                /**
-                 * @brief       Reimplements: QWidget::resizeEvent(QResizeEvent *event).
-                 *
-                 * @param[in]   event the event information.
-                 */
-                void resizeEvent(QResizeEvent *event) override;
+            /**
+             * @brief       Reimplements an access function for property: QWidget::sizeHint.
+             *
+             * @returns     the recommended size for the widget.
+             */
+            QSize sizeHint();
 
-            private:
-                QPixmap m_pixmap;                                       //! the widget pixmap
-                int m_buttonIndex;
+            /**
+             * @brief       Reimplements: QWidget::resizeEvent(QResizeEvent *event).
+             *
+             * @param[in]   event the event information.
+             */
+            void resizeEvent(QResizeEvent *event) override;
+
+        private:
+            QPixmap m_pixmap;                                       //! the widget pixmap
+            int m_buttonIndex;                                      //! the current button index that is "hit"
     };
 
     /**
      * @brief       the ThemedOutlineView widget provides a QTreeView with a button box at the bottom..
      */
     class ThemedOutlineView :
-        public QWidget {
+            public QWidget {
 
-            private:
-                Q_OBJECT;
+        private:
+            Q_OBJECT;
 
-            public:
-                /**
-                 * @brief       Constructs a new ThemedOutlineView instance.
-                 */
-                ThemedOutlineView(QWidget *parent=nullptr);
+        public:
+            /**
+             * @brief       Constructs a new ThemedOutlineView instance.
+             */
+            ThemedOutlineView(QWidget *parent=nullptr);
 
-                /**
-                 * @brief       Sets the item model which the TreeView is bound to
-                 *
-                 * @param[in]   model the item model.
-                 */
-                void setItemModel(QStandardItemModel *model);
+            /**
+             * @brief       Sets the item model which the TreeView is bound to
+             *
+             * @param[in]   model the item model.
+             */
+            void setItemModel(QStandardItemModel *model);
 
-            private:
-                /**
-                 * @brief       Renders the widget content to a pixmap.
-                 *
-                 * @details     This widget draws to a pixmap to ensure that it draws without antialiasing, drawing
-                 *              directly in the paintEvent to the widget on macOS results in antialiasing which doesn't
-                 *              result in pixel perfect rendering.
-                 *
-                 * @param[in]   rect the rectangle of the widget.
-                 */
-                void renderToPixmap(QRect rect);
+        private:
+            /**
+             * @brief       Renders the widget content to a pixmap.
+             *
+             * @details     This widget draws to a pixmap to ensure that it draws without antialiasing, drawing
+             *              directly in the paintEvent to the widget on macOS results in antialiasing which doesn't
+             *              result in pixel perfect rendering.
+             *
+             * @param[in]   rect the rectangle of the widget.
+             */
+            void renderToPixmap(QRect rect);
 
-            protected:
-                /**
-                 * @brief       Reimplements: QWidget::paintEvent(QPaintEvent *event).
-                 *
-                 * @param[in]   event the event information.
-                 */
-                void paintEvent(QPaintEvent *event) override;
+        protected:
+            /**
+             * @brief       Reimplements: QWidget::paintEvent(QPaintEvent *event).
+             *
+             * @param[in]   event the event information.
+             */
+            void paintEvent(QPaintEvent *event) override;
 
-                /**
-                 * @brief       Reimplements: QWidget::resizeEvent(QResizeEvent *event).
-                 *
-                 * @param[in]   event the event information.
-                 */
-                void resizeEvent(QResizeEvent *event) override;
+            /**
+             * @brief       Reimplements: QWidget::resizeEvent(QResizeEvent *event).
+             *
+             * @param[in]   event the event information.
+             */
+            void resizeEvent(QResizeEvent *event) override;
 
-            public:
-                /**
-                 * @brief       This signal is emitted when TreeView selection changes.
-                 *
-                 * @index[in]   index the index of the current selection if valid.
-                 */
-                Q_SIGNAL void clicked(const QModelIndex &index);
+        public:
+            /**
+             * @brief       This signal is emitted when TreeView selection changes.
+             *
+             * @index[in]   index the index of the current selection if valid.
+             */
+            Q_SIGNAL void clicked(const QModelIndex &index);
 
-                /**
-                 * @brief       This signal is emitted when a button has been clicked
-                 *
-                 * @param[in]   buttonIndex the index of the button that was blicked.
-                 */
-                Q_SIGNAL void buttonClicked(int buttonIndex);
+            /**
+             * @brief       This signal is emitted when a button has been clicked
+             *
+             * @param[in]   buttonIndex the index of the button that was blicked.
+             */
+            Q_SIGNAL void buttonClicked(int buttonIndex);
 
-            private:
-                QTreeView *m_treeViewWidget;                                //! the treeview widget
-                QVBoxLayout *m_layout;                                      //! main layout (QTreeView + ThemedOutlineButtonBox)
-                ThemedOutlineButtonBox *m_buttonBox;                        //! the button box at the bottom of the widget
-                QPixmap m_pixmap;                                           //! pixmap for rendering the widget content
+        private:
+            QTreeView *m_treeViewWidget;                                //! the treeview widget
+            QVBoxLayout *m_layout;                                      //! main layout (QTreeView + ThemedOutlineButtonBox)
+            ThemedOutlineButtonBox *m_buttonBox;                        //! the button box at the bottom of the widget
+            QPixmap m_pixmap;                                           //! pixmap for rendering the widget content
     };
 }
 

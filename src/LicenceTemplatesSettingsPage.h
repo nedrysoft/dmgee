@@ -45,8 +45,9 @@ namespace Nedrysoft {
      */
     class LicenceTemplatesSettingsPage :
             public QWidget,
-            public ISettingsPage
-    {
+            public ISettingsPage {
+
+        private:
             Q_OBJECT
 
         public:

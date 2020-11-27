@@ -107,7 +107,35 @@ namespace Nedrysoft {
              */
             static Nedrysoft::AlertButton::AlertButtonResult nativeAlert(QWidget *parent, QString messageText, QString informativeText, QStringList buttons);
 
-            static void addSpacer(QMacToolBar *toolbar);
+            /**
+             * @brief       Loads an image via NSImage and returns a TIFF.
+             *
+             * @details     NSImage is able to load various image types, due to a bug in the DevIL library that causes it to
+             *              crash when loading a .icns file, we use this class as a first stage image loader.
+             *
+             *              If the image is loaded, then a tiff representation of the image is returned in the data parameter,
+             *              ownership of the data is passed to the caller and they are responsible for freeing the allocated memory.
+             *
+             * @param[in]   filename the file to be loaded.
+             * @param[out]  data the binary data containing the TIFF image.
+             * @param[out]  length the size of the TIFF image in bytes.
+             *
+             * @returns     true if the image was loaded successfully; otherwise false.
+             */
+            static bool loadImage(QString &filename, char **data, unsigned int *length);
+
+             /**
+             * @brief       Returns a TIFF image of the files icon.
+             *
+             * @param[in]   filename the file whose icon is to be retrieved.
+             * @param[out]  data the binary data containing the TIFF image.
+             * @param[out]  length the size of the TIFF image in bytes.
+             * @param[in]   width the requested width of the image (images may have multiple sizes inside).
+             * @param[in]   height the requested height of the image (images may have multiple sizes inside).
+             *
+             * @returns     true if the image was loaded successfully; otherwise false.
+             */
+            static bool imageForFile(QString &filename, char **data, unsigned int *length, int width, int height);
     };
 };
 

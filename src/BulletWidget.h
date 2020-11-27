@@ -33,43 +33,51 @@ namespace Nedrysoft {
      *              user defined text.
      */
     class BulletWidget :
-        public QWidget {
-            private:
-                Q_OBJECT
+            public QWidget {
 
-            public:
-                /**
-                 * @brief       Constructs a new SettingsDialog instance which is a child of the parent.
-                 *
-                 * @param[in]   parent is the the owner of the child.
-                 */
-                BulletWidget(QWidget *parent = nullptr);
+        private:
+            Q_OBJECT
 
-                /**
-                 * @brief       Constructs a new SettingsDialog instance which is a child of the parent.
-                 *
-                 * @param[in]   text the text that is to appear next to the bullet.
-                 * @param[in]   pixmap the pixmap bullet to use.
-                 * @param[in]   toolTip the tooltip text that is to appear when hovered.
-                 * @param[in]   parent is the the owner of the child.
-                 */
-                BulletWidget(QString text, QPixmap pixmap, QString toolTip = QString(), QWidget *parent = nullptr);
+        public:
+            /**
+             * @brief       Constructs a new SettingsDialog instance which is a child of the parent.
+             *
+             * @param[in]   parent is the the owner of the child.
+             */
+            BulletWidget(QWidget *parent = nullptr);
 
-            protected:
-                /**
-                 * @brief       Reimplements: QWidget::paintEvent(QPaintEvent *event).
-                 *
-                 * @param[in]   event the event information.
-                 */
-                void paintEvent(QPaintEvent *event) override;
+            /**
+             * @brief       Constructs a new SettingsDialog instance which is a child of the parent.
+             *
+             * @param[in]   text the text that is to appear next to the bullet.
+             * @param[in]   pixmap the pixmap bullet to use.
+             * @param[in]   toolTip the tooltip text that is to appear when hovered.
+             * @param[in]   parent is the the owner of the child.
+             */
+            BulletWidget(QString text, QPixmap pixmap, QString toolTip = QString(), QWidget *parent = nullptr);
 
-            private:
-                QString m_text;                             //! the text to appear to the right of the bullet.
-                QPixmap m_pixmap;                           //! the pixmap to use for the bullet
-                QString m_toolTip;                          //! the tooltip text to display on hover
-                int m_fontHeight;                           //! the calculated font height
-                int m_fontDescent;                          //! the dalculated descent of the font
-                QFont m_font;                               //! the font to use for rendering.
+            /**
+             * @brief       Reimplements an access function for property: QWidget::sizeHint.
+             *
+             * @returns     the recommended size for the widget.
+             */
+            QSize sizeHint() const override;
+
+        protected:
+            /**
+             * @brief       Reimplements: QWidget::paintEvent(QPaintEvent *event).
+             *
+             * @param[in]   event the event information.
+             */
+            void paintEvent(QPaintEvent *event) override;
+
+        private:
+            QString m_text;                             //! the text to appear to the right of the bullet.
+            QPixmap m_pixmap;                           //! the pixmap to use for the bullet
+            QString m_toolTip;                          //! the tooltip text to display on hover
+            int m_fontHeight;                           //! the calculated font height
+            int m_fontDescent;                          //! the dalculated descent of the font
+            QFont m_font;                               //! the font to use for rendering.
      };
 };
 

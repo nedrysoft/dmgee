@@ -41,147 +41,148 @@ namespace Nedrysoft {
      *              of the application or shortcut and also detected feature locations and grid.
      */
     class PreviewWidget :
-        public QWidget {
-            private:
-                Q_OBJECT
+            public QWidget {
 
-            public:
-                /**
-                 * @brief       Types of user defined QGraphicItems
-                 */
-                enum IconType {
-                    Background,                         /**< User defined QGraphicsItem is a background. */
-                    Centroid,                           /**< User defined QGraphicsItem is a centroid. */
-                    Icon,                               /**< User defined QGraphicsItem is a icon. */
-                    Shortcut                            /**< User defined QGraphicsItem is a shortcut. */
-                };
+        private:
+            Q_OBJECT
 
-                Q_ENUM(IconType)
+        public:
+            /**
+             * @brief       Types of user defined QGraphicItems
+             */
+            enum IconType {
+                Background,                         /**< User defined QGraphicsItem is a background. */
+                Centroid,                           /**< User defined QGraphicsItem is a centroid. */
+                Icon,                               /**< User defined QGraphicsItem is a icon. */
+                Shortcut                            /**< User defined QGraphicsItem is a shortcut. */
+            };
 
-            public:
-                /**
-                 * @brief       Constructs a new PreviewWidget instance which is a child of the parent.
-                 *
-                 * @param[in]   parent the owner widget.
-                 */
-                explicit PreviewWidget(QWidget *parent = nullptr);
+            Q_ENUM(IconType)
 
-                /**
-                 * @brief       Sets the builder object for the preview.
-                 *
-                 * @note        The builder object contains the current configuration.
-                 *
-                 * @param[in]   builder the Builder configuration
-                 */
-                void setBuilder(Nedrysoft::Builder *builder);
+        public:
+            /**
+             * @brief       Constructs a new PreviewWidget instance which is a child of the parent.
+             *
+             * @param[in]   parent the owner widget.
+             */
+            explicit PreviewWidget(QWidget *parent = nullptr);
 
-                /**
-                 * @brief       Sets the background pixmap to be displayed.
-                 *
-                 * @param[in]   pixmap the background image pixmap.
-                 */
-                void setPixmap(QPixmap &pixmap);
+            /**
+             * @brief       Sets the builder object for the preview.
+             *
+             * @note        The builder object contains the current configuration.
+             *
+             * @param[in]   builder the Builder configuration
+             */
+            void setBuilder(Nedrysoft::Builder *builder);
 
-                /**
-                 * @brief       Sets the snapping centroid locations.
-                 *
-                 * @param[in]   centroids the list of snap points.
-                 */
-                void setCentroids(QList<QPointF> &centroids);
+            /**
+             * @brief       Sets the background pixmap to be displayed.
+             *
+             * @param[in]   pixmap the background image pixmap.
+             */
+            void setPixmap(QPixmap &pixmap);
 
-                /**
-                 * @brief       Clears the list of centroids.
-                 */
-                void clearCentroids();
+            /**
+             * @brief       Sets the snapping centroid locations.
+             *
+             * @param[in]   centroids the list of snap points.
+             */
+            void setCentroids(QList<QPointF> &centroids);
 
-                /**
-                 * @brief       Sets whether the icons for the application/applications shortcut are shown.
-                 *
-                 * @param[in]   isVisible true if visible; otherwise false.
-                 */
-                void setIconsVisible(bool isVisible);
+            /**
+             * @brief       Clears the list of centroids.
+             */
+            void clearCentroids();
 
-                /**
-                 * @brief       Sets the size of the icons as they should appear in the DMG.
-                 *
-                 * @param[in]   size the width/height in pixels of the icon (square).
-                 */
-                void setIconSize(int size);
+            /**
+             * @brief       Sets whether the icons for the application/applications shortcut are shown.
+             *
+             * @param[in]   isVisible true if visible; otherwise false.
+             */
+            void setIconsVisible(bool isVisible);
 
-                /**
-                 * @brief       Sets the size of the text as ot should appear in the DMG.
-                 *
-                 * @param[in]   size the size of the text in points.
-                 */
-                void setTextSize(int textSize);
+            /**
+             * @brief       Sets the size of the icons as they should appear in the DMG.
+             *
+             * @param[in]   size the width/height in pixels of the icon (square).
+             */
+            void setIconSize(int size);
 
-                /**
-                 * @brief       Sets the grid size.
-                 *
-                 * @param[in]   size the size of the text in points.
-                 */
-                void setGridSize(QSize gridSize);
+            /**
+             * @brief       Sets the size of the text as ot should appear in the DMG.
+             *
+             * @param[in]   size the size of the text in points.
+             */
+            void setTextSize(int textSize);
 
-                /**
-                 * @brief       Scales the graphics view so that the scene fits inside the frame rectangle
-                 */
-                void fitToView();
+            /**
+             * @brief       Sets the grid size.
+             *
+             * @param[in]   size the size of the text in points.
+             */
+            void setGridSize(QSize gridSize);
 
-                /**
-                 * @brief       Adds a text item to the preview.
-                 *
-                 * @param[in]   pos the position of the text
-                 * @param[in]   text the string to be displayed
-                 */
-                void addText(QPoint pos, QString text);
+            /**
+             * @brief       Scales the graphics view so that the scene fits inside the frame rectangle
+             */
+            void fitToView();
 
-            protected:
-                /**
-                 * @brief       Reimplements: QWidget::paintEvent(QPaintEvent *event).
-                 *
-                 * @param[in]   event the event information.
-                 */
-                void paintEvent(QPaintEvent *event) override;
+            /**
+             * @brief       Adds a text item to the preview.
+             *
+             * @param[in]   pos the position of the text
+             * @param[in]   text the string to be displayed
+             */
+            void addText(QPoint pos, QString text);
 
-                /**
-                 * @brief       Reimplements: QWidget::showEvent(QShowEvent *event).
-                 *
-                 * @param[in]   event the event information.
-                 */
-                void showEvent(QShowEvent *event) override;
+        protected:
+            /**
+             * @brief       Reimplements: QWidget::paintEvent(QPaintEvent *event).
+             *
+             * @param[in]   event the event information.
+             */
+            void paintEvent(QPaintEvent *event) override;
 
-                /**
-                 * @brief       Adds an icon to the DMG.
-                 *
-                 * @param[in]   text is the text to be displayed with the icon.
-                 * @param[in]   image the image to be displayed.
-                 * @param[in]   point the initial location of the icon.
-                 * @param[in]   iconType the type of icon being inserted.
-                 * @param[in]   updateFunction the function to be called when the icon is moved.
-                 */
-                void addIcon(QString text, Nedrysoft::Image *image, const QPoint &point, IconType iconType, std::function<void(QPoint &point)> updateFunction);
+            /**
+             * @brief       Reimplements: QWidget::showEvent(QShowEvent *event).
+             *
+             * @param[in]   event the event information.
+             */
+            void showEvent(QShowEvent *event) override;
 
-                /**
-                 * @brief       Reimplements: QWidget::resizeEvent(QResizeEvent *event).
-                 *
-                 * @param[in]   event the event information.
-                 */
-                void resizeEvent(QResizeEvent *event) override;
+            /**
+             * @brief       Adds an icon to the DMG.
+             *
+             * @param[in]   text is the text to be displayed with the icon.
+             * @param[in]   image the image to be displayed.
+             * @param[in]   point the initial location of the icon.
+             * @param[in]   iconType the type of icon being inserted.
+             * @param[in]   updateFunction the function to be called when the icon is moved.
+             */
+            void addIcon(QString text, Nedrysoft::Image *image, const QPoint &point, IconType iconType, std::function<void(QPoint &point)> updateFunction);
 
-            private:
-                QPixmap m_pixmap;                           //! the background image pixmap
-                QPixmap m_targetPixmap;                     //! target snap location image
-                QList<QPointF> m_centroids;                 //! centroid points
+            /**
+             * @brief       Reimplements: QWidget::resizeEvent(QResizeEvent *event).
+             *
+             * @param[in]   event the event information.
+             */
+            void resizeEvent(QResizeEvent *event) override;
 
-                QPointF m_iconPosition;                     //! holds position of icon for drag & drop
+        private:
+            QPixmap m_pixmap;                           //! the background image pixmap
+            QPixmap m_targetPixmap;                     //! target snap location image
+            QList<QPointF> m_centroids;                 //! centroid points
 
-                GridGraphicsScene m_graphicsScene;          //! the graphics scene
-                QGraphicsView m_graphicsView;               //! the rendered graphics scene
-                QGraphicsItemGroup m_grid;                  //! the grid group
+            QPointF m_iconPosition;                     //! holds position of icon for drag & drop
 
-                QGridLayout m_layout;                       //! the layout to hold the widgets
+            GridGraphicsScene m_graphicsScene;          //! the graphics scene
+            QGraphicsView m_graphicsView;               //! the rendered graphics scene
+            QGraphicsItemGroup m_grid;                  //! the grid group
 
-                Nedrysoft::Builder *m_builder;              //! the builder object that contains the current configuration.
+            QGridLayout m_layout;                       //! the layout to hold the widgets
+
+            Nedrysoft::Builder *m_builder;              //! the builder object that contains the current configuration.
     };
 }
 

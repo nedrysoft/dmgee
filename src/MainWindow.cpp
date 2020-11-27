@@ -24,7 +24,6 @@
 
 #include "AboutDialog.h"
 #include "AnsiEscape.h"
-#include "ImageLoader.h"
 #include "MacHelper.h"
 #include "SettingsDialog.h"
 #include "ThemeSupport.h"
@@ -781,6 +780,7 @@ QString Nedrysoft::MainWindow::handleOperationProgress(QVariantMap operationMap)
 }
 
 void Nedrysoft::MainWindow::onPreferencesTriggered() {
+    qDebug() << "onPreferencesTriggered" << m_settingsDialog;
     if (m_settingsDialog) {
         m_settingsDialog->raise();
 
@@ -795,6 +795,8 @@ void Nedrysoft::MainWindow::onPreferencesTriggered() {
         m_settingsDialog->deleteLater();
 
         m_settingsDialog = nullptr;
+
+        qDebug() << "SettingsDialog::closed" << m_settingsDialog;
     });
 }
 

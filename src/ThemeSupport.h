@@ -37,6 +37,7 @@ namespace Nedrysoft::Utils {
      */
     class ThemeSupport :
             public QObject {
+
         public:
             Q_OBJECT
 

@@ -30,127 +30,128 @@ namespace Nedrysoft {
      *              QWebEngineView and the C++ application.  A QWebChannel is used as the transport.
      */
     class HTermApi :
-        public QObject {
-            private:
-                Q_OBJECT
+            public QObject {
 
-            public:
-                /**
-                 * @brief       Constructs a new HTermApi.
-                 */
-                HTermApi() = default;
+        private:
+            Q_OBJECT
 
-                /**
-                 * @brief       This method is called by the javascript after the terminal has been initialised, no
-                 *              other functions may be called until this method has executed.
-                 */
-                Q_INVOKABLE void onTerminalReady();
+        public:
+            /**
+             * @brief       Constructs a new HTermApi.
+             */
+            HTermApi() = default;
 
-                /**
-                 * @brief       This method is called by the javascript when a right click occured in the terminal.
-                 */
-                Q_INVOKABLE void onContextMenu();
+            /**
+             * @brief       This method is called by the javascript after the terminal has been initialised, no
+             *              other functions may be called until this method has executed.
+             */
+            Q_INVOKABLE void onTerminalReady();
 
-                /**
-                 * @brief       his method is called by the javascript to send the contents of the terminal buffer to
-                 *              the C++ backend.
-                 */
-                Q_INVOKABLE void onTerminalBuffer(QString terminalBuffer);
+            /**
+             * @brief       This method is called by the javascript when a right click occured in the terminal.
+             */
+            Q_INVOKABLE void onContextMenu();
 
-                /**
-                 * @brief       This signal is emitted to return the terminal buffer.
-                 *
-                 * @param[in]   terminalNuffer the contents of the terminal buffer.
-                 */
-                Q_SIGNAL void terminalBuffer(QString terminalBuffer);
+            /**
+             * @brief       his method is called by the javascript to send the contents of the terminal buffer to
+             *              the C++ backend.
+             */
+            Q_INVOKABLE void onTerminalBuffer(QString terminalBuffer);
 
-                /**
-                 * @brief       This signal is emitted when the terminal is ready to be used.
-                 */
-                Q_SIGNAL void terminalReady();
+            /**
+             * @brief       This signal is emitted to return the terminal buffer.
+             *
+             * @param[in]   terminalNuffer the contents of the terminal buffer.
+             */
+            Q_SIGNAL void terminalBuffer(QString terminalBuffer);
 
-                /**
-                 * @brief       This method is called by the javascript when a hyperlink has been clicked.
-                 *
-                 * @param[in]   url the url to be opened.
-                 */
-                Q_SLOT void urlClicked(QString url);
+            /**
+             * @brief       This signal is emitted when the terminal is ready to be used.
+             */
+            Q_SIGNAL void terminalReady();
 
-                /**
-                 * @brief       This method prints the given string in the terminal.
-                 *
-                 * @note        Does not append a new line, use @see println which does.
-                 *
-                 * @param[in]   string the string to be printed.
-                 */
-                Q_INVOKABLE void print(QString string);
+            /**
+             * @brief       This method is called by the javascript when a hyperlink has been clicked.
+             *
+             * @param[in]   url the url to be opened.
+             */
+            Q_SLOT void urlClicked(QString url);
 
-                /**
-                 * @brief       This method prints the given string in the terminal and moves to the next line.
-                 *
-                 * @param[in]   string the string to be printed.
-                 */
-                Q_INVOKABLE void println(QString string);
+            /**
+             * @brief       This method prints the given string in the terminal.
+             *
+             * @note        Does not append a new line, use @see println which does.
+             *
+             * @param[in]   string the string to be printed.
+             */
+            Q_INVOKABLE void print(QString string);
 
-                /**
-                 * @brief       This method clears the terminal.
-                 *
-                 * @param[in]   string the string to be printed.
-                 */
-                Q_INVOKABLE void clear();
+            /**
+             * @brief       This method prints the given string in the terminal and moves to the next line.
+             *
+             * @param[in]   string the string to be printed.
+             */
+            Q_INVOKABLE void println(QString string);
 
-                /**
-                 * @brief       This method requests the terminal buffer.
-                 */
-                Q_INVOKABLE void getTerminalBuffer();
+            /**
+             * @brief       This method clears the terminal.
+             *
+             * @param[in]   string the string to be printed.
+             */
+            Q_INVOKABLE void clear();
 
-                /**
-                 * @brief       This signal is emitted by the api to when a hyperlink has been clicked.
-                 *
-                 * @param[in]   string the string to be printed.
-                 */
-                Q_SIGNAL void openUrl(QString url);
+            /**
+             * @brief       This method requests the terminal buffer.
+             */
+            Q_INVOKABLE void getTerminalBuffer();
 
-                /**
-                 * @brief       This signal is emitted by the api on right click.
-                 *
-                 * @param[in]   string the string to be printed.
-                 */
-                Q_SIGNAL void contextMenu();
+            /**
+             * @brief       This signal is emitted by the api to when a hyperlink has been clicked.
+             *
+             * @param[in]   string the string to be printed.
+             */
+            Q_SIGNAL void openUrl(QString url);
 
-            private:
-                /**
-                 * @brief       This signal is emitted by the api to print the given string to the terminal.
-                 *
-                 * @note        The javascript connects to this signal so that it is invoked when we emit from C++.
-                 *
-                 * @param[in]   string the string to be printed.
-                 */
-                Q_SIGNAL void doPrint(QString string);
+            /**
+             * @brief       This signal is emitted by the api on right click.
+             *
+             * @param[in]   string the string to be printed.
+             */
+            Q_SIGNAL void contextMenu();
 
-                /**
-                 * @brief       This signal is emitted by the api to print the given string to the terminal and
-                 *              move to the next line.
-                 *
-                 * @note        The javascript connects to this signal so that it is invoked when we emit from C++.
-                 *
-                 * @param[in]   string the string to be printed.
-                 */
-                Q_SIGNAL void doPrintln(QString string);
+        private:
+            /**
+             * @brief       This signal is emitted by the api to print the given string to the terminal.
+             *
+             * @note        The javascript connects to this signal so that it is invoked when we emit from C++.
+             *
+             * @param[in]   string the string to be printed.
+             */
+            Q_SIGNAL void doPrint(QString string);
 
-                /**
-                 * @brief       This signal is emitted by the api to clear the terminal
-                 *
-                 * @note        The javascript connects to this signal so that it is invoked when we emit from C++.
-                 */
-                Q_SIGNAL void doClear();
+            /**
+             * @brief       This signal is emitted by the api to print the given string to the terminal and
+             *              move to the next line.
+             *
+             * @note        The javascript connects to this signal so that it is invoked when we emit from C++.
+             *
+             * @param[in]   string the string to be printed.
+             */
+            Q_SIGNAL void doPrintln(QString string);
 
-                /**
-                 * @brief       This signal is emitted to tell the javascript to send us back the terminal buffer.
-                 *
-                 * @note        The javascript connects to this signal so that it is invoked when we emit from C++.
-                 */
-                Q_SIGNAL void doGetTerminalBuffer();
+            /**
+             * @brief       This signal is emitted by the api to clear the terminal
+             *
+             * @note        The javascript connects to this signal so that it is invoked when we emit from C++.
+             */
+            Q_SIGNAL void doClear();
+
+            /**
+             * @brief       This signal is emitted to tell the javascript to send us back the terminal buffer.
+             *
+             * @note        The javascript connects to this signal so that it is invoked when we emit from C++.
+             */
+            Q_SIGNAL void doGetTerminalBuffer();
     };
 };
 

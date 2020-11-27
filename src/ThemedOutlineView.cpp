@@ -67,6 +67,9 @@ Nedrysoft::ThemedOutlineView::ThemedOutlineView(QWidget *parent) :
        Q_EMIT buttonClicked(index);
     });
 
+    m_treeViewWidget->sortByColumn(0, Qt::AscendingOrder);
+    m_treeViewWidget->setSortingEnabled(true);
+
     m_treeViewWidget->setHeaderHidden(true);
 }
 

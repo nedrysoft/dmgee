@@ -32,22 +32,23 @@ namespace Nedrysoft {
      *              it is the only way to replace the tab bar.
      */
     class FlatTabWidget :
-        public QTabWidget {
-            public:
-                /**
-                 * Constructs a new FlatTabWidget instance which is a child of the parent.
-                 *
-                 * @param[in]   parent the owner widget.
-                 */
-                FlatTabWidget(QWidget *parent = nullptr);
+            public QTabWidget {
 
-                /**
-                 * @brief       Destroys the FlatTabWidget.
-                 */
-                ~FlatTabWidget();
+        public:
+            /**
+             * Constructs a new FlatTabWidget instance which is a child of the parent.
+             *
+             * @param[in]   parent the owner widget.
+             */
+            FlatTabWidget(QWidget *parent = nullptr);
 
-            private:
-                Nedrysoft::FlatTabBar *m_tabBar;                            //! The customised tab bar
+            /**
+             * @brief       Destroys the FlatTabWidget.
+             */
+            ~FlatTabWidget();
+
+        private:
+            Nedrysoft::FlatTabBar *m_tabBar;                            //! The customised tab bar
     };
 };
 

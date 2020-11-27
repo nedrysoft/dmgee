@@ -21,12 +21,7 @@
 
 #include "MacHelper.h"
 
-#include <QDir>
-#include <QtMac>
-#include <QRegularExpression>
-
 #import <Appkit/AppKit.h>
-#import <Appkit/NSAlert.h>
 
 QPixmap Nedrysoft::MacHelper::macStandardImage(StandardImage::StandardImageName standardImage, QSize imageSize) {
     NSBitmapImageRep *bitmapRepresentation = [[NSBitmapImageRep alloc]
@@ -107,18 +102,51 @@ Nedrysoft::AlertButton::AlertButtonResult Nedrysoft::MacHelper::nativeAlert(QWid
     [alert setInformativeText:informativeText.toNSString()];
     [alert setAlertStyle:NSAlertStyleInformational];
 
-    //[alert release];
+    auto result = static_cast<Nedrysoft::AlertButton::AlertButtonResult>([alert runModal]);
 
-    return static_cast<Nedrysoft::AlertButton::AlertButtonResult>([alert runModal]);
+    [alert release];
+
+    return result;
 }
 
-void Nedrysoft::MacHelper::addSpacer(QMacToolBar *toolbar) {
-    NSToolbar *nativeToolbar = toolbar->nativeToolbar();
+bool Nedrysoft::MacHelper::loadImage(QString &filename, char **data, unsigned int *length) {
+    NSString *fileName = filename.toNSString();
 
-    NSToolbarItem *toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:NSToolbarFlexibleSpaceItemIdentifier] autorelease];
+    NSImage *loadedImage = [[NSImage alloc] initWithContentsOfFile:fileName];
 
-    qDebug() << toolbarItem;
+    if (loadedImage.isValid) {
+        NSData *tiffData = [loadedImage TIFFRepresentation];
 
-    [nativeToolbar insertItemWithItemIdentifier:[toolbarItem itemIdentifier] atIndex:2];
+        *data = (char *) malloc(tiffData.length);
+        *length = static_cast<unsigned int>(tiffData.length);
 
+        memcpy(*data, tiffData.bytes, *length);
+
+        [loadedImage release];
+
+        return true;
+    }
+
+    [loadedImage release];
+
+    return false;
 }
+
+bool Nedrysoft::MacHelper::imageForFile(QString &filename, char **data, unsigned int *length, int width, int height) {
+    auto loadedImage = [[NSWorkspace sharedWorkspace] iconForFile:filename.toNSString()];
+
+    [loadedImage setSize:NSMakeSize(width,height)];
+
+    if (loadedImage.isValid) {
+        NSData *tiffData = [loadedImage TIFFRepresentation];
+
+        *data = (char *) malloc(tiffData.length);
+        *length = static_cast<unsigned int>(tiffData.length);
+
+        memcpy(*data, tiffData.bytes, *length);
+
+        return true;
+    }
+
+    return false;
+ }

@@ -121,31 +121,32 @@ namespace Nedrysoft::Ribbon {
      *              finally each RibbonGroup acts as a container for Ribbon widgets.
      */
     class NEDRYSOFT_RIBBON_WIDGET_EXPORT RibbonWidget :
-        public QTabWidget {
-            private:
-                Q_OBJECT
+            public QTabWidget {
 
-            public:
-                /**
-                 * @brief       Constructs a new RibbonWidget instance which is a child of the parent.
-                 *
-                 * @param[in]   parent the owner widget.
-                 */
-                explicit RibbonWidget(QWidget *parent = nullptr);
+        private:
+            Q_OBJECT
 
-                friend class RibbonTabBar;
-                friend class RibbonGroup;
+        public:
+            /**
+             * @brief       Constructs a new RibbonWidget instance which is a child of the parent.
+             *
+             * @param[in]   parent the owner widget.
+             */
+            explicit RibbonWidget(QWidget *parent = nullptr);
 
-            protected:
-                /**
-                 * @brief       Reimplements: QWidget::paintEvent(QPaintEvent *event).
-                 *
-                 * @param[in]   event the event information.
-                 */
-                void paintEvent(QPaintEvent *event) override;
+            friend class RibbonTabBar;
+            friend class RibbonGroup;
 
-            private:
-                Nedrysoft::Ribbon::RibbonTabBar *m_tabBar;                                  //! The tab bar associated with this ribbon
+        protected:
+            /**
+             * @brief       Reimplements: QWidget::paintEvent(QPaintEvent *event).
+             *
+             * @param[in]   event the event information.
+             */
+            void paintEvent(QPaintEvent *event) override;
+
+        private:
+            Nedrysoft::Ribbon::RibbonTabBar *m_tabBar;                                  //! The tab bar associated with this ribbon
     };
 }
 

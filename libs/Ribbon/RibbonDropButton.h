@@ -43,7 +43,9 @@ namespace Nedrysoft::Ribbon {
      *              is the primary action and a secondary drop down button which can provide further actions.
      */
     class NEDRYSOFT_RIBBON_WIDGET_EXPORT RibbonDropButton :
-        public QWidget {
+            public QWidget {
+
+        private:
             Q_OBJECT
 
             Q_PROPERTY(QIcon icon READ icon WRITE setIcon)

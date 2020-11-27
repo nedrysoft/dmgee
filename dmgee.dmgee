@@ -35,6 +35,9 @@ format = "UDBZ"
 textposition = "bottom"
 outputfile = "./bin/x86_64/Debug/dmgee.dmg"
 
+[license]
+id = "GPL-3.0-or-later"
+
 [[file]]
 x = 140
 y = 248

@@ -28,98 +28,99 @@
  * @brief       Provides the base Ribbon widget
  */
 class RibbonWidgetPlugin :
-    public QObject,
-    public QDesignerCustomWidgetInterface {
-        private:
-            Q_OBJECT
+        public QObject,
+        public QDesignerCustomWidgetInterface {
 
-            Q_INTERFACES(QDesignerCustomWidgetInterface)
+    private:
+        Q_OBJECT
 
-        public:
-            /**
-             * @brief       Constructs a new RibbonWidget instance which is a child of the parent.
-             *
-             * @param[in]   parent the owner widget.
-             */
-            explicit RibbonWidgetPlugin(QObject *parent = nullptr);
+        Q_INTERFACES(QDesignerCustomWidgetInterface)
 
-            /**
-             * @brief       Returns true if the widget is intended to be used as a container; otherwise returns false.
-             *
-             * @returns     true if it container; otherwise false.
-             */
-            [[nodiscard]] bool isContainer() const override;
+    public:
+        /**
+         * @brief       Constructs a new RibbonWidget instance which is a child of the parent.
+         *
+         * @param[in]   parent the owner widget.
+         */
+        explicit RibbonWidgetPlugin(QObject *parent = nullptr);
 
-            /**
-             * @brief       Returns true if the widget has been initialized; otherwise returns false.
-             *
-             * @returns     true if initialised; otherwise false.
-             */
-            [[nodiscard]] bool isInitialized() const override;
+        /**
+         * @brief       Returns true if the widget is intended to be used as a container; otherwise returns false.
+         *
+         * @returns     true if it container; otherwise false.
+         */
+        [[nodiscard]] bool isContainer() const override;
 
-            /**
-             * @brief       Returns the icon used to represent the custom widget in Qt Designer's widget box.
-             *
-             * @returns     the icon used to represent the custom widget in Qt Designer's widget box.
-             */
-            [[nodiscard]] QIcon icon() const override;
+        /**
+         * @brief       Returns true if the widget has been initialized; otherwise returns false.
+         *
+         * @returns     true if initialised; otherwise false.
+         */
+        [[nodiscard]] bool isInitialized() const override;
 
-            /**
-             * @brief       Returns the XML that is used to describe the custom widget's properties to Qt Designer.
-             *
-             * @returns     the XML describing the widgets properties.
-             */
-            [[nodiscard]] QString domXml() const override;
+        /**
+         * @brief       Returns the icon used to represent the custom widget in Qt Designer's widget box.
+         *
+         * @returns     the icon used to represent the custom widget in Qt Designer's widget box.
+         */
+        [[nodiscard]] QIcon icon() const override;
 
-            /**
-             * @brief       Returns the name of the group to which the widget belongs.
-             *
-             * @returns     the name of the group.
-             */
-            [[nodiscard]] QString group() const override;
+        /**
+         * @brief       Returns the XML that is used to describe the custom widget's properties to Qt Designer.
+         *
+         * @returns     the XML describing the widgets properties.
+         */
+        [[nodiscard]] QString domXml() const override;
 
-            /**
-             * @brief       Returns the path to the include file that uic uses when creating code for the widget.
-             *
-             * @returns     the path to the include file.
-             */
-            [[nodiscard]] QString includeFile() const override;
+        /**
+         * @brief       Returns the name of the group to which the widget belongs.
+         *
+         * @returns     the name of the group.
+         */
+        [[nodiscard]] QString group() const override;
 
-            /**
-             * @brief       Returns the class name of the widget supplied by the interface.
-             *
-             * @returns     the name of the widget.
-             */
-            [[nodiscard]] QString name() const override;
+        /**
+         * @brief       Returns the path to the include file that uic uses when creating code for the widget.
+         *
+         * @returns     the path to the include file.
+         */
+        [[nodiscard]] QString includeFile() const override;
 
-            /**
-             * @brief       Returns a short description of the widget that can be used by Qt Designer in a tool tip.
-             *
-             * @returns     the description.
-             */
-             [[nodiscard]] QString toolTip() const override;
+        /**
+         * @brief       Returns the class name of the widget supplied by the interface.
+         *
+         * @returns     the name of the widget.
+         */
+        [[nodiscard]] QString name() const override;
 
-            /**
-             * @brief       Returns a description of the widget that can be used by Qt Designer in "What's This?" help for the widget.
-             *
-             * @returns     the description.
-             */
-            [[nodiscard]] QString whatsThis() const override;
+        /**
+         * @brief       Returns a short description of the widget that can be used by Qt Designer in a tool tip.
+         *
+         * @returns     the description.
+         */
+         [[nodiscard]] QString toolTip() const override;
 
-            /**
-             * @brief       Returns a new instance of the RibbonWidget class, with the given parent.
-             *
-             * @returns     the widget instance.
-             */
-            QWidget *createWidget(QWidget *parent) override;
+        /**
+         * @brief       Returns a description of the widget that can be used by Qt Designer in "What's This?" help for the widget.
+         *
+         * @returns     the description.
+         */
+        [[nodiscard]] QString whatsThis() const override;
 
-            /**
-             * @brief       Initializes the widget for use with the specified formEditor interface.
-             */
-            void initialize(QDesignerFormEditorInterface *core) override;
+        /**
+         * @brief       Returns a new instance of the RibbonWidget class, with the given parent.
+         *
+         * @returns     the widget instance.
+         */
+        QWidget *createWidget(QWidget *parent) override;
 
-        private:
-            bool m_initialized = false;                         //! holds whether designer has initialised the factory yet
+        /**
+         * @brief       Initializes the widget for use with the specified formEditor interface.
+         */
+        void initialize(QDesignerFormEditorInterface *core) override;
+
+    private:
+        bool m_initialized = false;                         //! holds whether designer has initialised the factory yet
 };
 
 #endif // NEDRYSOFT_RIBBONWIDGETPLUGIN_H

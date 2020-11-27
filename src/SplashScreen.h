@@ -29,52 +29,53 @@ namespace Nedrysoft {
     * @brief       The SplashScreen dialog for the application.
     */
     class SplashScreen :
-        public QSplashScreen {
-            private:
-                Q_OBJECT
+            public QSplashScreen {
 
-            private:
-                /**
-                 * @brief       Constructs a new SplashScreen instance.
-                 *
-                 * @note        The constructor is private as SplashScreen is a singleton class, to obtain the SplashScreen
-                 *              use the getInstance() function.
-                 */
-                SplashScreen();
+        private:
+            Q_OBJECT
 
-                /**
-                 * @brief       Destroys the SplashScreen.
-                 */
-                ~SplashScreen() override;
+        private:
+            /**
+             * @brief       Constructs a new SplashScreen instance.
+             *
+             * @note        The constructor is private as SplashScreen is a singleton class, to obtain the SplashScreen
+             *              use the getInstance() function.
+             */
+            SplashScreen();
 
-                /**
-                 * @brief       Delete the copy constructor.
-                 */
-                SplashScreen(const SplashScreen&) = delete;
+            /**
+             * @brief       Destroys the SplashScreen.
+             */
+            ~SplashScreen() override;
 
-                /**
-                 * @brief       Delete the assignment operator.
-                 */
-                SplashScreen& operator=(const SplashScreen&) = delete;
+            /**
+             * @brief       Delete the copy constructor.
+             */
+            SplashScreen(const SplashScreen&) = delete;
 
-            public:
-                /**
-                 * @brief           Returns the instance of the SplashScreen class.
-                 *
-                 * @returns         the SplashScreen instance.
-                 */
-                static SplashScreen *getInstance();
+            /**
+             * @brief       Delete the assignment operator.
+             */
+            SplashScreen& operator=(const SplashScreen&) = delete;
 
-            protected:
-                /**
-                 * @brief           Draw the contents of splash screen.
-                 *
-                 * @details         Draws the splash screen, uses the default implementation and then overlays version
-                 *                  information over the top.
-                 *
-                 * @param[in]       painter the painter to draw to.
-                 */
-                void drawContents(QPainter *painter) override;
+        public:
+            /**
+             * @brief           Returns the instance of the SplashScreen class.
+             *
+             * @returns         the SplashScreen instance.
+             */
+            static SplashScreen *getInstance();
+
+        protected:
+            /**
+             * @brief           Draw the contents of splash screen.
+             *
+             * @details         Draws the splash screen, uses the default implementation and then overlays version
+             *                  information over the top.
+             *
+             * @param[in]       painter the painter to draw to.
+             */
+            void drawContents(QPainter *painter) override;
     };
 }
 

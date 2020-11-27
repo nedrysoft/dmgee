@@ -78,7 +78,7 @@ namespace Nedrysoft {
             QSize sizeHint() const;
 
         private:
-            Ui::GeneralSettingsPage *ui;               //! ui class
+            Ui::GeneralSettingsPage *ui;                //! ui class
 
             QSize m_size;                               //! the calculated size of the widget
     };

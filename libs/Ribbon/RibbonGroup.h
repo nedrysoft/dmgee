@@ -44,50 +44,51 @@ namespace Nedrysoft::Ribbon {
      *              contain multiple groups which in turn contain multiple controls.
      */
     class NEDRYSOFT_RIBBON_WIDGET_EXPORT RibbonGroup :
-        public QWidget {
-            private:
-                Q_OBJECT
-
-                Q_PROPERTY(QString groupName READ groupName WRITE setGroupName)
-
-            public:
-                /**
-                 * @brief       Constructs a new RibbonGroup which is a child of the parent.
-                 *
-                 * @param[in]   parent the owner widget.
-                 */
-                explicit RibbonGroup(QWidget *parent = nullptr);
-
-                /**
-                 * @brief       Destroys the RibbonGroup.
-                 */
-                QString groupName() const;
-
-                /**
-                 * @brief       Sets the displayed name of the group.
-                 *
-                 * @param[in]   name the name of the group which is displayed at the bottom of the group.
-                 */
-                void setGroupName(const QString &name);
-
-                /**
-                 * @brief       Updates the margins to account for the group bordere.
-                 */
-                void updateMargins();
-
-            protected:
-                /**
-                 * @brief       Reimplements: QWidget::paintEvent(QPaintEvent *event).
-                 *
-                 * @param[in]   event the event information.
-                 */
-                virtual void paintEvent(QPaintEvent *event) override;
+            public QWidget {
 
         private:
-                QString m_groupName;                                    //! Group name that is displayed
-                QFont m_font;                                           //! Font used to draw the group name
-                QFontMetrics m_fontMetrics;                             //! The font metrics of the selected font
-                QRect m_textRect;                                       //! The rectangle of the group name in the selected font
+            Q_OBJECT
+
+            Q_PROPERTY(QString groupName READ groupName WRITE setGroupName)
+
+        public:
+            /**
+             * @brief       Constructs a new RibbonGroup which is a child of the parent.
+             *
+             * @param[in]   parent the owner widget.
+             */
+            explicit RibbonGroup(QWidget *parent = nullptr);
+
+            /**
+             * @brief       Destroys the RibbonGroup.
+             */
+            QString groupName() const;
+
+            /**
+             * @brief       Sets the displayed name of the group.
+             *
+             * @param[in]   name the name of the group which is displayed at the bottom of the group.
+             */
+            void setGroupName(const QString &name);
+
+            /**
+             * @brief       Updates the margins to account for the group bordere.
+             */
+            void updateMargins();
+
+        protected:
+            /**
+             * @brief       Reimplements: QWidget::paintEvent(QPaintEvent *event).
+             *
+             * @param[in]   event the event information.
+             */
+            virtual void paintEvent(QPaintEvent *event) override;
+
+        private:
+            QString m_groupName;                                    //! Group name that is displayed
+            QFont m_font;                                           //! Font used to draw the group name
+            QFontMetrics m_fontMetrics;                             //! The font metrics of the selected font
+            QRect m_textRect;                                       //! The rectangle of the group name in the selected font
     };
 }
 
