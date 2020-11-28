@@ -129,6 +129,11 @@ list(APPEND app_SOURCES
     src/SettingsDialog.h
     src/SnappedGraphicsPixmapItem.cpp
     src/SnappedGraphicsPixmapItem.h
+    src/SpdxLicence.cpp
+    src/SpdxLicence.h
+    src/SpdxLicenceWidget.cpp
+    src/SpdxLicenceWidget.h
+    src/SpdxLicenceWidget.ui
     src/SplashScreen.cpp
     src/SplashScreen.h
     src/ThemeSupport.h

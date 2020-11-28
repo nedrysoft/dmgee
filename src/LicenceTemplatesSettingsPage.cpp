@@ -24,6 +24,7 @@
 #include "BulletWidget.h"
 #include "ChooseALicenseLicence.h"
 #include "MainWindow.h"
+#include "SpdxLicence.h"
 #include "ui_LicenceTemplatesSettingsPage.h"
 
 #include <QDebug>
@@ -40,31 +41,49 @@ Nedrysoft::LicenceTemplatesSettingsPage::LicenceTemplatesSettingsPage(QWidget *p
 
     ui->setupUi(this);
 
-    QDirIterator it(":/choosealicence.com/_licenses", QDirIterator::Subdirectories);
-
     QStandardItem *chooseALicenseItem = new QStandardItem(tr("choosealicense.com"));
     QStandardItem *spdxItem = new QStandardItem(tr("spdx.org"));
 
     chooseALicenseItem->setEditable(false);
     spdxItem->setEditable(false);
 
-    while (it.hasNext()) {
-        auto filename = it.next();
-        auto licence = Nedrysoft::ChooseALicenseLicence(filename);
+    QDirIterator chooseALicenseIterator(":/choosealicence.com/_licenses", QDirIterator::Subdirectories);
 
-        if (licence.valid()) {
+    while (chooseALicenseIterator.hasNext()) {
+        auto filename = chooseALicenseIterator.next();
+        auto licence = new Nedrysoft::ChooseALicenseLicence(filename);
+
+        if (licence->valid()) {
             auto item = new QStandardItem;
 
-            if (!licence.nickname().isEmpty()) {
-                item->setText(licence.nickname());
+            if (!licence->nickname().isEmpty()) {
+                item->setText(licence->nickname());
             } else {
-                item->setText(licence.spdxId());
+                item->setText(licence->spdxId());
             }
 
-            item->setData(QVariant::fromValue<Nedrysoft::ChooseALicenseLicence>(licence), Qt::UserRole);
+            item->setData(QVariant::fromValue<Nedrysoft::ILicence *>(licence), Qt::UserRole);
             item->setEditable(false);
 
             chooseALicenseItem->appendRow(item);
+        }
+    }
+
+    QDirIterator spdxIterator(":/spdx/json/details", QDirIterator::Subdirectories);
+
+    while (spdxIterator.hasNext()) {
+        auto filename = spdxIterator.next();
+        auto licence = new Nedrysoft::SpdxLicence(filename);
+
+        if (licence->valid()) {
+            auto item = new QStandardItem;
+
+            item->setText(licence->licenseId());
+
+            item->setData(QVariant::fromValue<Nedrysoft::ILicence *>(licence), Qt::UserRole);
+            item->setEditable(false);
+
+            spdxItem->appendRow(item);
         }
     }
 
@@ -78,22 +97,23 @@ Nedrysoft::LicenceTemplatesSettingsPage::LicenceTemplatesSettingsPage(QWidget *p
     });
 
     connect(ui->outlineView, &ThemedOutlineView::clicked, [=](const QModelIndex &index) {
-        auto licence = index.data(Qt::UserRole).value<Nedrysoft::ChooseALicenseLicence>();
+        ILicence *licence = nullptr;
 
         if ((!index.parent().isValid()) || (!index.isValid())) {
             return;
         }
 
+        licence = index.data(Qt::UserRole).value<Nedrysoft::ILicence *>();
+
         if (ui->detailsWidget->currentIndex()!=0) {
             ui->detailsWidget->removeWidget(ui->detailsWidget->currentWidget());
         }
 
-        auto licenseWidget = licence.widget();
+        auto licenceWidget = licence->widget();
 
-        ui->detailsWidget->addWidget(licenseWidget);
-        ui->detailsWidget->setCurrentWidget(licenseWidget);
+        ui->detailsWidget->addWidget(licenceWidget);
+        ui->detailsWidget->setCurrentWidget(licenceWidget);
     });
-
 
 #if defined(Q_OS_MACOS)
     m_size = QSize(qMax(minimumSizeHint().width(), size().width()), qMax(minimumSizeHint().height(), size().height()));

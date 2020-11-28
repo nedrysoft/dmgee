@@ -43,7 +43,7 @@ Nedrysoft::ChooseALicenseLicenceWidget::ChooseALicenseLicenceWidget(QWidget *par
 
     ui->titleLine ->setVisible(false);
     ui->licenceLine ->setVisible(false);
-    ui->attributesLime->setVisible(false);
+    ui->attributesLine->setVisible(false);
     ui->descriptionLabel->setVisible(false);
     ui->titleLabel->setVisible(false);
 
@@ -187,7 +187,7 @@ QMap<QString, Nedrysoft::ChooseALicenseLicenceWidget::Rule> Nedrysoft::ChooseALi
 void Nedrysoft::ChooseALicenseLicenceWidget::updateContent(void) {
     ui->licenceLine->setVisible(m_licence->valid());
     ui->titleLine ->setVisible(m_licence->valid());
-    ui->attributesLime->setVisible(m_licence->valid());
+    ui->attributesLine->setVisible(m_licence->valid());
     ui->descriptionLabel->setVisible(m_licence->valid());
     ui->titleLabel->setVisible(m_licence->valid());
 

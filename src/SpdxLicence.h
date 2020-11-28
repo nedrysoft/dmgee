@@ -19,8 +19,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef NEDRYSOFT_CHOOSEALICENSELICENCE_H
-#define NEDRYSOFT_CHOOSEALICENSELICENCE_H
+#ifndef NEDRYSOFT_SPDXLICENCE_H
+#define NEDRYSOFT_SPDXLICENCE_H
 
 #include "ILicence.h"
 #include "Nedrysoft.h"
@@ -32,38 +32,38 @@ namespace Nedrysoft {
      * @brief       The ChooseALicenseLicence class holds decoded data from choosealicense.com and
      *              provides a ILicence interface for using it.
      */
-    class ChooseALicenseLicence :
+    class SpdxLicence :
             public ILicence {
 
         public:
             /**
-             * @brief       Constructs a new ChooseALicenseLicence.
+             * @brief       Constructs a new SpdxLicence.
              */
-            ChooseALicenseLicence();
+            SpdxLicence();
 
             /**
-             * @brief       Constructs a new ChooseALicenseLicence from the content of the file.
+             * @brief       Constructs a new SpdxLicence from the content of the file.
              *
              * @param[in]   filename the filename of the license to load.
              */
-            ChooseALicenseLicence(QString filename);
+            SpdxLicence(QString filename);
 
              /**
              * @brief       Constructs a new ChooseALicenseLicence from an existing license.
              *
              * @param[in]   licence the licence to copy
              */
-            ChooseALicenseLicence(ChooseALicenseLicence &licence);
+            SpdxLicence(SpdxLicence &licence);
 
             /**
              * @brief       Constructs a copy of other.
              */
-            ChooseALicenseLicence(const Nedrysoft::ChooseALicenseLicence &other) = default;
+            SpdxLicence(const Nedrysoft::SpdxLicence &other) = default;
 
             /**
              * @brief       Assigns other to this licence and returns a reference to this licence..
              */
-            Nedrysoft::ChooseALicenseLicence & operator=(const Nedrysoft::ChooseALicenseLicence &other) = default;
+            Nedrysoft::SpdxLicence & operator=(const Nedrysoft::SpdxLicence &other) = default;
 
             /**
              * @brief       Loads the license file.
@@ -94,23 +94,15 @@ namespace Nedrysoft {
              * Properties
              */
 
-            NEDRY_PROPERTY(QString, title, title, setTitle);
-            NEDRY_PROPERTY(QString, spdxId, spdxId, setSpdxId);
-            NEDRY_PROPERTY(QString, description, description, setDescription);
-            NEDRY_PROPERTY(QString, how, how, setHow);
-            NEDRY_PROPERTY(QStringMap, projectsUsing, projectsUsing, setProjectsUsing);
-            NEDRY_PROPERTY(QStringList, permissions, permissions, setPermissions);
-            NEDRY_PROPERTY(QStringList, conditions, conditions, setConditions);
-            NEDRY_PROPERTY(QStringList, limitations, limitations, setLimitations);
-            NEDRY_PROPERTY(bool, featured, featured, setFeatured);
-            NEDRY_PROPERTY(bool, hidden, hidden, setHidden);
-            NEDRY_PROPERTY(QString, nickname, nickname, setNickname);
-            NEDRY_PROPERTY(QString, note, note, setNote);
-            NEDRY_PROPERTY(QString, redirectFrom, redirectFrom, setRedirectFrom);
             NEDRY_PROPERTY(QString, licenceText, licenceText, setLicenceText);
             NEDRY_PROPERTY(bool, valid, valid, setValid);
             NEDRY_PROPERTY(QString, filename, filename, setFilename);
+            NEDRY_PROPERTY(bool, isDeprecatedLicenseId, isDeprecatedLicenseId, setIsDeprecatedLicenseId);
+            NEDRY_PROPERTY(QString, standardLicenseTemplate, standardLicenseTemplate, setStandardLicenseTemplate);
+            NEDRY_PROPERTY(QString, name, name, setName);
+            NEDRY_PROPERTY(QString, licenseId, licenseId, setLicenseId);
+            NEDRY_PROPERTY(bool, isOsiApproved, isOsiApproved, setIsOsiApproved);
     };
 }
 
-#endif //NEDRYSOFT_CHOOSEALICENSELICENCE_H
+#endif //NEDRYSOFT_SPDXLICENCE_H

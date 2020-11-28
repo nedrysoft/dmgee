@@ -36,7 +36,7 @@ namespace Ui {
 
 namespace Nedrysoft {
     /**
-     * @brief       The AboutDialog dialog provides information about the application.
+     * @brief       The ChooseALicenseLicenceWidget displays the detail of a choosealicense.com license.
      */
     class ChooseALicenseLicenceWidget :
             public QWidget {

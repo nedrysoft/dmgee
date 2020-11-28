@@ -32,6 +32,11 @@
         <file>../icons/build.png</file>
         <file>../icons/build@2x.png</file>
 
+        <file>../icons/tick.png</file>
+        <file>../icons/tick@2x.png</file>
+        <file>../icons/cross.png</file>
+        <file>../icons/cross@2x.png</file>
+
         <file>../icons/template.png</file>
         <file>../icons/gear.png</file>
         <file>../icons/invalid.png</file>

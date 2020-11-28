@@ -51,4 +51,7 @@ namespace Nedrysoft {
     };
 }
 
+Q_DECLARE_METATYPE(Nedrysoft::ILicence *);
+
+
 #endif // NEDRYSOFT_ILICENCE_H
