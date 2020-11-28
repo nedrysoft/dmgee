@@ -25,13 +25,19 @@
 #include <QMap>
 #include <QString>
 
-#define NEDRY_PROPERTY(type,name,getter,setter)                         \
-    private:                                                            \
-        type m_##name;                                                  \
-    public:                                                             \
-        virtual type getter()          { return m_##name; }             \
-        virtual void setter(type name) { this->m_##name = name; }       \
+#define NEDRY_PROPERTY(type,name,getter,setter)                                                             \
+    private:                                                                                                \
+        type m_##name;                                                                                      \
+    public:                                                                                                 \
+        virtual type getter()          { return m_##name; }                                                 \
+        virtual void setter(type name) { this->m_##name = name; }
 
-#define QStringMap QMap<QString, QString>
+#define NEDRY_SETTING(type, name, getter, setter, defaultValue)                                             \
+    public:                                                                                                 \
+        virtual type getter()          { return m_settings.value(name, defaultValue).value<type>(); }       \
+        virtual void setter(type value) { m_settings.setValue(name, value); }
+
+#define StringMap QMap<QString, QString>
+#define StringMapIterator(map) QMapIterator<QString, QString>(map)
 
 #endif //NEDRYSOFT_NEDRYSOFT_H

@@ -19,38 +19,45 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "GeneralSettingsPage.h"
+#include "UserSettingsPage.h"
 
-#include "ui_GeneralSettingsPage.h"
+#include "SettingsManager.h"
+#include "ui_UserSettingsPage.h"
 
 #include <QDebug>
 #include <QMessageBox>
+#include <QSettings>
+#include <QShowEvent>
 
-Nedrysoft::GeneralSettingsPage::GeneralSettingsPage(QWidget *parent) :
+Nedrysoft::UserSettingsPage::UserSettingsPage(QWidget *parent) :
         QWidget(parent),
-        ui(new Ui::GeneralSettingsPage) {
+        ui(new Ui::UserSettingsPage) {
 
     ui->setupUi(this);
 
 #if defined(Q_OS_MACOS)
-    m_size = QSize(qMax(minimumSizeHint().width(), size().width()), qMax(minimumSizeHint().height(), size().height()));
+    m_size = QSize(qMax(minimumSizeHint().width(), size().width()), minimumSizeHint().height());
 #else
     m_size = minimumSizeHint();
 #endif
+    Nedrysoft::SettingsManager settingsManager;
 
+    ui->fullNameLineEdit->setText(settingsManager.fullname());
+    ui->userNameLineEdit->setText(settingsManager.username());
+    ui->emailAddressLineEdit->setText(settingsManager.email());
 }
 
-Nedrysoft::GeneralSettingsPage::~GeneralSettingsPage() {
+Nedrysoft::UserSettingsPage::~UserSettingsPage() {
     delete ui;
 }
 
-bool Nedrysoft::GeneralSettingsPage::canAcceptSettings() {
+bool Nedrysoft::UserSettingsPage::canAcceptSettings() {
     return true;
 }
 
-void Nedrysoft::GeneralSettingsPage::acceptSettings() {
+void Nedrysoft::UserSettingsPage::acceptSettings() {
 }
 
-QSize Nedrysoft::GeneralSettingsPage::sizeHint() const {
+QSize Nedrysoft::UserSettingsPage::sizeHint() const {
     return m_size;
 }

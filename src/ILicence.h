@@ -22,6 +22,8 @@
 #ifndef NEDRYSOFT_ILICENCE_H
 #define NEDRYSOFT_ILICENCE_H
 
+#include "Nedrysoft.h"
+
 #include <QString>
 #include <QWidget>
 
@@ -34,13 +36,20 @@ namespace Nedrysoft {
     class ILicence {
         public:
             /**
+             * @brief       Returns the indenti for this type of license.
+             *
+             * @returns     the unqiue identifer.
+             */
+            virtual QString id() = 0;
+
+            /**
              * @brief       Returns the licence text for this licence.
              *
              * @param[in]   replacements the map containing any field values that should be replaced in the licence text.
              *
              * @returns     A licence as a string.
              */
-            virtual QString licence(QMap<QString, QString> replacements) = 0;
+            virtual QString licence(StringMap replacements) = 0;
 
             /**
              * @brief       Returns a new viewer widget for this type of license.

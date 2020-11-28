@@ -37,8 +37,19 @@
         <file>../icons/cross.png</file>
         <file>../icons/cross@2x.png</file>
 
-        <file>../icons/template.png</file>
-        <file>../icons/gear.png</file>
+        <file>../icons/template-dark.png</file>
+        <file>../icons/template-dark@2x.png</file>
+        <file>../icons/template-light.png</file>
+        <file>../icons/template-light@2x.png</file>
+        <file>../icons/user-light.png</file>
+        <file>../icons/user-light@2x.png</file>
+        <file>../icons/user-dark.png</file>
+        <file>../icons/user-dark@2x.png</file>
+        <file>../icons/general-dark.png</file>
+        <file>../icons/general-dark@2x.png</file>
+        <file>../icons/general-light.png</file>
+        <file>../icons/general-light@2x.png</file>
+
         <file>../icons/invalid.png</file>
 
         <file>../images/spinner-dark.gif</file>

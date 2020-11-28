@@ -24,7 +24,9 @@
 #include "GeneralSettingsPage.h"
 #include "ISettingsPage.h"
 #include "LicenceTemplatesSettingsPage.h"
+#include "ThemeSupport.h"
 #include "TransparentWidget.h"
+#include "UserSettingsPage.h"
 
 #if defined(Q_OS_MACOS)
 #include <QtMac>
@@ -185,9 +187,8 @@ Nedrysoft::SettingsDialog::SettingsDialog(QWidget *parent) :
 #endif
 
     addPage(tr("General"), tr("General"), tr("General settings"), SettingsPage::Icon::General, new GeneralSettingsPage, true);
-    addPage(tr("Licence Templates"), tr("Licence Templates"), tr("Licence Templates"), SettingsPage::Icon::LicenceTemplates, new LicenceTemplatesSettingsPage, true);
-
-    m_toolBar->addAllowedStandardItem(QMacToolBarItem::FlexibleSpace);
+    addPage(tr("User"), tr("User"), tr("User"), SettingsPage::Icon::User, new UserSettingsPage, true);
+    addPage(tr("Licences"), tr("Licences"), tr("Licence Templates"), SettingsPage::Icon::LicenceTemplates, new LicenceTemplatesSettingsPage, true);
 
 #if defined(Q_OS_MACOS)
     m_toolBar->attachToWindow(nativeWindowHandle());
@@ -201,18 +202,30 @@ Nedrysoft::SettingsDialog::SettingsDialog(QWidget *parent) :
     QPoint parentCentre(parent->frameGeometry().center());
     QPoint point((parentCentre.x()+size.width())/2, (parentCentre.y()+size.height())/2);
 
-    move(point);
+    //move(point);
 
     m_toolbarHeight = frameGeometry().size().height()-geometry().size().height();
+    m_maximumWidth = size.width();
 
     if (m_currentPage) {
-        auto minSize = QSize(qMax(toolbarItemWidth*m_pages.count(), m_currentPage->m_widget->sizeHint().width()), m_currentPage->m_widget->sizeHint().height());
+        auto minSize = QSize(m_maximumWidth, m_currentPage->m_widget->sizeHint().height());
 
         setMinimumSize(minSize);
         setMaximumSize(minSize);
 
         resize(minSize);
     }
+
+    for(auto page : m_pages) {
+        auto pageSize = QSize(m_maximumWidth, m_currentPage->m_widget->sizeHint().height());
+
+        setMinimumSize(pageSize);
+        setMaximumSize(pageSize);
+
+        page->m_widget->setFixedWidth(m_maximumWidth);
+        page->m_widget->resize(pageSize);
+    }
+
 #endif
 }
 
@@ -301,7 +314,7 @@ Nedrysoft::SettingsPage *Nedrysoft::SettingsDialog::addPage(QString section, QSt
 
         m_animationGroup = new QParallelAnimationGroup;
 
-        auto minSize = QSize(qMax(toolbarItemWidth*m_pages.count(), nextItem->sizeHint().width()), nextItem->sizeHint().height());
+        auto minSize = QSize(m_maximumWidth, nextItem->sizeHint().height());
 
         auto propertyNames = {"size", "minimumSize", "maximumSize"};
 
@@ -401,13 +414,19 @@ Nedrysoft::SettingsPage *Nedrysoft::SettingsDialog::addPage(QString section, QSt
 }
 
 QIcon Nedrysoft::SettingsDialog::getIcon(SettingsPage::Icon icon) {
+    auto modeString = Nedrysoft::Utils::ThemeSupport::isDarkMode() ? QStringLiteral("dark") : QStringLiteral("light");
+
     switch(icon) {
         case SettingsPage::General: {
-            return QIcon(":/icons/gear.png");
+            return QIcon(QString(":/icons/general-%1@2x.png").arg(modeString));
         }
 
         case SettingsPage::LicenceTemplates: {
-            return QIcon(":/icons/template.png");
+            return QIcon(QString(":/icons/template-%1@2x.png").arg(modeString));
+        }
+
+        case SettingsPage::User: {
+            return QIcon(QString(":/icons/user-%1.png").arg(modeString));
         }
     }
 

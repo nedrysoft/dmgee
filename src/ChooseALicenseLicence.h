@@ -75,13 +75,20 @@ namespace Nedrysoft {
             bool load(QString filename);
 
             /**
-             * @brief       Reimplements: ILicense::license(QStringMap replacements)
+             * @brief       Reimplements: ILicense::license(StringMap replacements)
              *
              * @param[in]   replacements the replacements contains a map of variables to replace in the licence text.
              *
              * @returns     the license text.
              */
-            QString licence(QStringMap replacements) override;
+            QString licence(StringMap replacements) override;
+
+            /**
+             * @brief       Reimplements: ILicense::id()
+             *
+             * @returns     the identifier for this license.
+             */
+            QString id() override;
 
              /**
              * @brief       Reimplements: ILicense::widget()
@@ -98,7 +105,7 @@ namespace Nedrysoft {
             NEDRY_PROPERTY(QString, spdxId, spdxId, setSpdxId);
             NEDRY_PROPERTY(QString, description, description, setDescription);
             NEDRY_PROPERTY(QString, how, how, setHow);
-            NEDRY_PROPERTY(QStringMap, projectsUsing, projectsUsing, setProjectsUsing);
+            NEDRY_PROPERTY(StringMap, projectsUsing, projectsUsing, setProjectsUsing);
             NEDRY_PROPERTY(QStringList, permissions, permissions, setPermissions);
             NEDRY_PROPERTY(QStringList, conditions, conditions, setConditions);
             NEDRY_PROPERTY(QStringList, limitations, limitations, setLimitations);

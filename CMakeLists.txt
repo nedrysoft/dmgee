@@ -124,9 +124,9 @@ list(APPEND app_SOURCES
     src/Python.cpp
     src/Python.h
     src/SettingsDialog.cpp
-    src/SettingsDialog.cpp
     src/SettingsDialog.h
-    src/SettingsDialog.h
+    src/SettingsManager.cpp
+    src/SettingsManager.h
     src/SnappedGraphicsPixmapItem.cpp
     src/SnappedGraphicsPixmapItem.h
     src/SpdxLicence.cpp
@@ -144,6 +144,9 @@ list(APPEND app_SOURCES
     src/ThemedOutlineViewButtonBox.h
     src/TransparentWidget.cpp
     src/TransparentWidget.h
+    src/UserSettingsPage.cpp
+    src/UserSettingsPage.h
+    src/UserSettingsPage.ui
     src/hterm.qrc
     src/main.cpp
 

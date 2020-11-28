@@ -22,9 +22,11 @@
 #include "ChooseALicenseLicence.h"
 
 #include "ChooseALicenseLicenceWidget.h"
+#include "Nedrysoft.h"
 
 #include <QFile>
 #include <QFileInfo>
+#include <QMapIterator>
 #include <QTextStream>
 #include "yaml-cpp/yaml.h"
 
@@ -56,8 +58,22 @@ Nedrysoft::ChooseALicenseLicence::ChooseALicenseLicence(Nedrysoft::ChooseALicens
     m_filename = licence.filename();
 }
 
-QString Nedrysoft::ChooseALicenseLicence::licence(QStringMap replacements) {
-    return QString();
+QString Nedrysoft::ChooseALicenseLicence::licence(StringMap replacements) {
+    QString licenceText = m_licenceText;
+
+    auto mapIterator = StringMapIterator(replacements);
+
+    while(mapIterator.hasNext()) {
+        mapIterator.next();
+
+        licenceText.replace("["+mapIterator.key()+"]", mapIterator.value());
+    }
+
+    return licenceText;
+}
+
+QString Nedrysoft::ChooseALicenseLicence::id() {
+    return QStringLiteral("choosealicense.org");
 }
 
 QWidget *Nedrysoft::ChooseALicenseLicence::widget() {
@@ -145,7 +161,7 @@ bool Nedrysoft::ChooseALicenseLicence::load(QString filename) {
             }
 
             if (header["using"].IsMap()) {
-                QStringMap usingMap;
+                StringMap usingMap;
                 auto stdMap = header["using"].as<std::map<std::string, std::string>>();
 
                 for (auto project : stdMap) {

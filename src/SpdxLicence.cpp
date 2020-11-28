@@ -50,8 +50,12 @@ Nedrysoft::SpdxLicence::SpdxLicence(Nedrysoft::SpdxLicence &licence) {
     m_isOsiApproved = licence.isOsiApproved();
 }
 
-QString Nedrysoft::SpdxLicence::licence(QStringMap replacements) {
+QString Nedrysoft::SpdxLicence::licence(StringMap replacements) {
     return QString();
+}
+
+QString Nedrysoft::SpdxLicence::id() {
+    return QStringLiteral("spdx.org");
 }
 
 QWidget *Nedrysoft::SpdxLicence::widget() {

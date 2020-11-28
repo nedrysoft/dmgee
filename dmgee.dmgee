@@ -19,6 +19,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+# general project configuration
+
+project = "dmgee"
+description = "The open source DMG builder."
+year = 2020
+projecturl = "https://github.com/fizzyade/dmgee"
+
+# dmg configuration
+
 background = "./images/dmg_background.tiff"
 icon = "./icons/dmgee.icns"
 volumename = "dmgee"
@@ -35,8 +44,19 @@ format = "UDBZ"
 textposition = "bottom"
 outputfile = "./bin/x86_64/Debug/dmgee.dmg"
 
-[license]
+# the license to use for this project (optional, if omitted no license will be used)
+
+[licence]
+provider = "choosealicense.com"
 id = "GPL-3.0-or-later"
+
+# user details (optional), these are used to replace fields in the generated licence.   This will override the application
+# wide configuration
+
+[user]
+fullname = "John Doe"
+login = "johndoe"
+email = "john.doer@example.com"
 
 [[file]]
 x = 140

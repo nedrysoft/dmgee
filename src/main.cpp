@@ -37,6 +37,8 @@
 #include <QResource>
 #include <QStyle>
 
+#include "SettingsManager.h"
+
 constexpr auto applicationName = APPLICATION_LONG_NAME;                     //! Provided by CMake to the preprocessor
 constexpr auto applicationFontsPrefix = ":/fonts";                          //! Fonts are stored under :/fonts (recursive search is performed)
 

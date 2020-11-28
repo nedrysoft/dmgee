@@ -53,7 +53,8 @@ namespace Nedrysoft {
              */
             enum Icon {
                 General,                        /**< General settings page */
-                LicenceTemplates                /**< License templates page */
+                LicenceTemplates,               /**< License templates page */
+                User                            /**< User settings page */
             };
 
         public:
@@ -137,7 +138,7 @@ namespace Nedrysoft {
              *
              * @param[in]   event the event information.
              */
-            virtual void resizeEvent(QResizeEvent *event) override;
+            void resizeEvent(QResizeEvent *event) override;
 
             /**
              * @brief       Adds a setting page to the settings dialog.
@@ -158,6 +159,7 @@ namespace Nedrysoft {
             QMacToolBar *m_toolBar;                             //! A native macOS toolbar (unified style)
             SettingsPage *m_currentPage;                        //! current widget
             int m_toolbarHeight;                                //! the height of the unified toolbar
+            int m_maximumWidth;                                 //! the maximal width of all the settings page.
             QParallelAnimationGroup *m_animationGroup;          //! the currently active animation
 #else
             QVBoxLayout *m_layout;                              //! details layout + main layout + control layout
