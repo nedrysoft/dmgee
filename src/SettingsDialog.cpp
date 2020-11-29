@@ -250,16 +250,20 @@ Nedrysoft::SettingsDialog::~SettingsDialog() {
 #endif
 }
 
-bool Nedrysoft::SettingsDialog::close() {
-#if defined(Q_OS_MACOS)
+bool Nedrysoft::SettingsDialog::okToClose() {
+#if !defined(Q_OS_MACOS)
+    auto acceptable = true;
+
     for(auto page : m_pages) {
-        page->m_pageSettings->acceptSettings();
+        if (!page->m_pageSettings->canAcceptSettings()) {
+            acceptable = false;
+            break;
+        }
     }
 #endif
-    Q_EMIT closed();
-
-    return QWidget::close();
+    return true;
 }
+
 
 void Nedrysoft::SettingsDialog::resizeEvent(QResizeEvent *event) {
     for(auto page : m_pages) {
@@ -434,7 +438,11 @@ QIcon Nedrysoft::SettingsDialog::getIcon(SettingsPage::Icon icon) {
 }
 
 void Nedrysoft::SettingsDialog::closeEvent(QCloseEvent *event) {
-    if (close()) {
+    if (okToClose()) {
+        for (auto page : m_pages) {
+            page->m_pageSettings->acceptSettings();
+        }
+
         event->accept();
     } else {
         event->ignore();

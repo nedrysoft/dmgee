@@ -45,6 +45,24 @@ Nedrysoft::UserSettingsPage::UserSettingsPage(QWidget *parent) :
     ui->fullNameLineEdit->setText(settingsManager.fullname());
     ui->userNameLineEdit->setText(settingsManager.username());
     ui->emailAddressLineEdit->setText(settingsManager.email());
+
+    connect(ui->fullNameLineEdit, &QLineEdit::textEdited, [this](const QString &text) {
+        Nedrysoft::SettingsManager settingsManager;
+
+        settingsManager.setFullname(text);
+    });
+
+    connect(ui->userNameLineEdit, &QLineEdit::textEdited, [this](const QString &text) {
+        Nedrysoft::SettingsManager settingsManager;
+
+        settingsManager.setUsername(text);
+    });
+
+    connect(ui->emailAddressLineEdit, &QLineEdit::textEdited, [this](const QString &text) {
+        Nedrysoft::SettingsManager settingsManager;
+
+        settingsManager.setEmail(text);
+    });
 }
 
 Nedrysoft::UserSettingsPage::~UserSettingsPage() {
@@ -52,6 +70,10 @@ Nedrysoft::UserSettingsPage::~UserSettingsPage() {
 }
 
 bool Nedrysoft::UserSettingsPage::canAcceptSettings() {
+    // under macOS settings are stored on change rather than a separate apply or cancel stage
+    //
+    // https://developer.apple.com/design/human-interface-guidelines/macos/app-architecture/preferences/
+
     return true;
 }
 

@@ -74,6 +74,7 @@ find_package(Python3 COMPONENTS Development REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(DevIL REQUIRED)
 find_package(Git QUIET)
+find_package(Catch2 REQUIRED)
 
 # the source files
 
@@ -148,7 +149,6 @@ list(APPEND app_SOURCES
     src/UserSettingsPage.h
     src/UserSettingsPage.ui
     src/hterm.qrc
-    src/main.cpp
 
     src/app.qrc
     icons/dmgee.icns
@@ -164,46 +164,53 @@ set(MACOSX_BUNDLE_ICON_FILE dmgee.icns)
 set(dmgee_ICON ${CMAKE_CURRENT_SOURCE_DIR}/icons/dmgee.icns)
 set_source_files_properties(${dmgee_ICON} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
 
-add_executable(${APPLICATION_SHORT_NAME} MACOSX_BUNDLE ${all_SOURCES})
-
+option(BUILD_OPTION_TESTS "Build Tests" OFF)
 option(BUILD_OPTION_COPY_PYTHON "Copy Python frameworks to bundle." OFF)
 
-if(BUILD_OPTION_COPY_PYTHON)
-    # copy our python script and it's dependant modules
+if (BUILD_OPTION_TESTS)
+    set(APPLICATION_SHORT_NAME "tests")
+    add_executable(${APPLICATION_SHORT_NAME} tests/tests.cpp ${all_SOURCES})
+    add_subdirectory(tests)
+else()
+    add_executable(${APPLICATION_SHORT_NAME} MACOSX_BUNDLE src/main.cpp ${all_SOURCES})
 
-    add_custom_command(TARGET ${APPLICATION_SHORT_NAME} PRE_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${PROJECT_SOURCE_DIR}/python
-        ${BUNDLE_DIR}/Resources/python
-        DEPENDS
-        "${PROJECT_SOURCE_DIR}/python"
-    )
+    if(BUILD_OPTION_COPY_PYTHON)
+        # copy our python script and it's dependant modules
 
-    # create the path to the python framework so we can copy it to the bundle
+        add_custom_command(TARGET ${APPLICATION_SHORT_NAME} PRE_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_directory
+            ${PROJECT_SOURCE_DIR}/python
+            ${BUNDLE_DIR}/Resources/python
+            DEPENDS
+            "${PROJECT_SOURCE_DIR}/python"
+        )
 
-    string(REPLACE "/" ";" Python3_Path ${Python3_LIBRARY})
+        # create the path to the python framework so we can copy it to the bundle
 
-    set(Python3_Framework "")
+        string(REPLACE "/" ";" Python3_Path ${Python3_LIBRARY})
 
-    foreach(currentPart IN LISTS Python3_Path)
-        if (currentPart STREQUAL "")
-            continue()
-        endif()
+        set(Python3_Framework "")
 
-        string(APPEND Python3_Framework "/" ${currentPart})
+        foreach(currentPart IN LISTS Python3_Path)
+            if (currentPart STREQUAL "")
+                continue()
+            endif()
 
-        if (currentPart STREQUAL "Python.framework")
-            break()
-        endif()
-    endforeach()
+            string(APPEND Python3_Framework "/" ${currentPart})
 
-    # copy the python framework to our bundle
+            if (currentPart STREQUAL "Python.framework")
+                break()
+            endif()
+        endforeach()
 
-    add_custom_command(TARGET ${APPLICATION_SHORT_NAME} PRE_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${Python3_Framework}
-        ${FRAMEWORK_OUTPUT}/Python.framework
-    )
+        # copy the python framework to our bundle
+
+        add_custom_command(TARGET ${APPLICATION_SHORT_NAME} PRE_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_directory
+            ${Python3_Framework}
+            ${FRAMEWORK_OUTPUT}/Python.framework
+        )
+    endif()
 endif()
 
 # create lists for includes
@@ -366,7 +373,7 @@ set_target_properties(${APPLICATION_SHORT_NAME} PROPERTIES XCODE_ATTRIBUTE_LD_RU
 
 add_custom_command(TARGET ${APPLICATION_SHORT_NAME} POST_BUILD
         COMMAND ${CMAKE_INSTALL_NAME_TOOL} -add_rpath "@executable_path/../Frameworks/"
-        $<TARGET_FILE:dmgee>
+        $<TARGET_FILE:${APPLICATION_SHORT_NAME}>
 )
 
 set(APPLICATION_QT_LINK_LIBRARIES "")

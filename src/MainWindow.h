@@ -386,6 +386,11 @@ namespace Nedrysoft {
              */
             Q_SLOT void updateGUI();
 
+            /**
+             * @brief       Called when the output tool button is clicked.
+             */
+            Q_SLOT void onOutputClicked(bool checked);
+
         private:
             Ui::MainWindow *ui;                                     //! ui class for the main window
             static MainWindow *m_instance;                          //! instance of the main window

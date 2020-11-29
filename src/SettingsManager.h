@@ -25,18 +25,38 @@
 #include "Nedrysoft.h"
 
 #include <QSettings>
-\
+
 namespace Nedrysoft {
+    /**
+     * @brief       The SettingsManager class acts as a thin proxy to a QSettings instance.
+     *
+     * @details     Settings should be created using the NEDRY_SETTING macro, this creates specific setters & getters
+     *              for every setting that is defined, in addition when the setting is defined the default value can
+     *              be set in a single place.
+     */
     class SettingsManager {
         public:
+            /**
+             * Constructs a new SettingsManager instance.
+             */
             SettingsManager();
+
+            /**
+             * @defgroup       Settings    the application settings exposed via getters & setters
+             *
+             * @{
+             */
 
             NEDRY_SETTING(QString, "user/fullname", fullname, setFullname, "John Doe");
             NEDRY_SETTING(QString, "user/username", username, setUsername, "john.doe");
             NEDRY_SETTING(QString, "user/email", email, setEmail, "john@example.com");
 
+            /**
+             * @}
+             */
+
         private:
-            QSettings m_settings;
+            QSettings m_settings;                                       //! the QSettings object that backs the SettingManager instance.
     };
 };
 

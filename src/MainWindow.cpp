@@ -1009,6 +1009,8 @@ void Nedrysoft::MainWindow::setupSignals() {
     connect(ui->newButton, &Nedrysoft::Ribbon::RibbonPushButton::clicked, this, &MainWindow::onNewClicked);
     connect(ui->saveButton, &Nedrysoft::Ribbon::RibbonPushButton::clicked, this, &MainWindow::onSaveClicked);
 
+    connect(ui->outputToolButton, &Nedrysoft::Ribbon::RibbonToolButton::clicked, this, &MainWindow::onOutputClicked);
+
     // menu actions
 
     connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::onLoadClicked);
@@ -1019,4 +1021,8 @@ void Nedrysoft::MainWindow::setupSignals() {
     connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::close);
     connect(ui->actionPreferences, &QAction::triggered, this, &MainWindow::onPreferencesTriggered);
     connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::onAboutDialogTriggered);
+}
+
+void Nedrysoft::MainWindow::onOutputClicked(bool checked) {
+    qDebug() << "ainWindow::onOutputClicked";
 }

@@ -96,13 +96,6 @@ namespace Nedrysoft {
             ~SettingsDialog();
 
             /**
-             * @brief       The close event is called when the window is requesting to be closed.
-             *
-             * @returns     true if closed; otherwise false.
-             */
-            bool close();
-
-            /**
              * @brief       This signal is emitted when the window is closed by the user.
              */
             Q_SIGNAL void closed();
@@ -131,6 +124,13 @@ namespace Nedrysoft {
              * @returns     the requested icon.
              */
             QIcon getIcon(SettingsPage::Icon icon);
+
+            /**
+             * @brief       Checks if the settings dialog can be closed.
+             *
+             * @returns     true if closable; otherwise false.
+             */
+            bool okToClose();
 
         protected:
             /**

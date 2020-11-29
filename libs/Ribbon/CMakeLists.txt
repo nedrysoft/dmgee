@@ -46,6 +46,10 @@ set(library_SOURCES
     RibbonSpec.h
     RibbonTabBar.cpp
     RibbonTabBar.h
+    RibbonToolButton.cpp
+    RibbonToolButton.h
+    RibbonToolButtonPlugin.cpp
+    RibbonToolButtonPlugin.h
     RibbonWidget.cpp
     RibbonWidget.h
     ThemeSupport.h

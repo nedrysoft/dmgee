@@ -98,9 +98,10 @@ namespace Nedrysoft {
             QWidget *widget() override;
 
             /**
-             * Properties
+             * @defgroup       Properties       the properties that describe a choosealicense.com data file.
+             *
+             * @{
              */
-
             NEDRY_PROPERTY(QString, title, title, setTitle);
             NEDRY_PROPERTY(QString, spdxId, spdxId, setSpdxId);
             NEDRY_PROPERTY(QString, description, description, setDescription);
@@ -117,6 +118,9 @@ namespace Nedrysoft {
             NEDRY_PROPERTY(QString, licenceText, licenceText, setLicenceText);
             NEDRY_PROPERTY(bool, valid, valid, setValid);
             NEDRY_PROPERTY(QString, filename, filename, setFilename);
+            /**
+             * @}
+             */
     };
 }
 

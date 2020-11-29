@@ -33,7 +33,7 @@
     <item row="0" column="0">
      <widget class="Nedrysoft::Ribbon::RibbonWidget" name="ribbonWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="homeRibboonPage">
        <attribute name="title">
@@ -205,7 +205,7 @@
             <number>12</number>
            </property>
            <property name="verticalSpacing">
-            <number>-1</number>
+            <number>4</number>
            </property>
            <item row="2" column="1">
             <widget class="Nedrysoft::Ribbon::RibbonSlider" name="minFeatureSlider">
@@ -361,7 +361,7 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">
            <property name="spacing">
-            <number>8</number>
+            <number>4</number>
            </property>
            <property name="leftMargin">
             <number>0</number>
@@ -510,7 +510,7 @@
               <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
              </property>
              <property name="verticalSpacing">
-              <number>8</number>
+              <number>4</number>
              </property>
              <item row="0" column="0">
               <widget class="QLabel" name="fonSizeLabel">
@@ -576,13 +576,13 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_2">
            <property name="spacing">
-            <number>8</number>
+            <number>4</number>
            </property>
            <property name="leftMargin">
             <number>0</number>
            </property>
            <property name="topMargin">
-            <number>6</number>
+            <number>4</number>
            </property>
            <property name="rightMargin">
             <number>0</number>
@@ -883,7 +883,7 @@
               <number>-1</number>
              </property>
              <property name="verticalSpacing">
-              <number>8</number>
+              <number>4</number>
              </property>
              <item row="0" column="0">
               <widget class="QLabel" name="formatComboBoxLabel">
@@ -937,9 +937,56 @@
                </property>
               </widget>
              </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="outputLabel">
+               <property name="text">
+                <string>Output:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <layout class="QHBoxLayout" name="horizontalLayout_4">
+               <property name="spacing">
+                <number>4</number>
+               </property>
+               <property name="sizeConstraint">
+                <enum>QLayout::SetDefaultConstraint</enum>
+               </property>
+               <item>
+                <widget class="Nedrysoft::Ribbon::RibbonLineEdit" name="outputLineEdit">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="Nedrysoft::Ribbon::RibbonToolButton" name="outputToolButton">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="MinimumExpanding">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>...</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
             </layout>
            </item>
           </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="Nedrysoft::Ribbon::RibbonGroup" name="ribbonGroup">
+          <property name="groupName">
+           <string>Group</string>
+          </property>
          </widget>
         </item>
         <item>
@@ -1300,6 +1347,12 @@
    <class>Nedrysoft::Ribbon::RibbonCheckBox</class>
    <extends>QCheckBox</extends>
    <header>Ribbon/RibbonCheckBox.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Nedrysoft::Ribbon::RibbonToolButton</class>
+   <extends>QToolButton</extends>
+   <header>Ribbon/RibbonToolButton.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

@@ -3,7 +3,7 @@
  *
  * https://github.com/fizzyade
  *
- * Created by Adrian Carpenter on 15/11/2020.
+ * Created by Adrian Carpenter on 29/11/2020.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,39 +19,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "RibbonSlider.h"
+#include "RibbonToolButton.h"
 
 #include "RibbonFontManager.h"
+#include "RibbonWidget.h"
 #include "ThemeSupport.h"
 
 #include <QApplication>
 #include <QSpacerItem>
+#include <QStyle>
+
+#include <QDebug>
 
 constexpr auto ThemeStylesheet = R"(
-    QSlider {
-        margin-top:4px;
-        margin-bottom:4px;
-    }
-
-    QSlider::groove:horizontal {
-        height: 4px;
+    QToolButton {
+        border: 0px none;
         background: [background-colour];
-        margin: 2px 0;
+        margin: 0px;
     }
 
-    QSlider::handle:horizontal {
-        image: url(':/Nedrysoft/Ribbon/icons/slider-[theme]@2x.png');
-        width: 10px;
-        height: 10px;
-        margin: -5px 0px;
+    QToolButton::hover {
+        background: [hover-colour];
     }
 )";
 
-Nedrysoft::Ribbon::RibbonSlider::RibbonSlider(QWidget *parent) :
-        QSlider(parent),
+Nedrysoft::Ribbon::RibbonToolButton::RibbonToolButton(QWidget *parent) :
+        QToolButton(parent),
         m_themeSupport(new Nedrysoft::Utils::ThemeSupport) {
-
-    setAttribute(Qt::WA_MacShowFocusRect,false);
 
     connect(m_themeSupport, &Nedrysoft::Utils::ThemeSupport::themeChanged, [=](bool isDarkMode) {
         updateStyleSheet(isDarkMode);
@@ -60,18 +54,19 @@ Nedrysoft::Ribbon::RibbonSlider::RibbonSlider(QWidget *parent) :
     updateStyleSheet(Nedrysoft::Utils::ThemeSupport::isDarkMode());
 }
 
-Nedrysoft::Ribbon::RibbonSlider::~RibbonSlider() {
+Nedrysoft::Ribbon::RibbonToolButton::~RibbonToolButton() {
 }
 
-void Nedrysoft::Ribbon::RibbonSlider::updateStyleSheet(bool isDarkMode) {
+void Nedrysoft::Ribbon::RibbonToolButton::updateStyleSheet(bool isDarkMode) {
     QString styleSheet(ThemeStylesheet);
-
-    styleSheet.replace("[theme]", isDarkMode ? "dark" : "light");
 
     if (isDarkMode) {
         styleSheet.replace("[background-colour]", "#434343");
+        styleSheet.replace("[hover-colour]", "#616161");
+        //styleSheet.replace("[border-colour]", "none");
     } else {
-        styleSheet.replace("[background-colour]", "#c8c9c8");
+        styleSheet.replace("[background-colour]", "#ffffff");
+        //styleSheet.replace("[border-colour]", "#B9B9B9");
     }
 
     setStyleSheet(styleSheet);

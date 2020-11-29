@@ -28,6 +28,11 @@
 #include <QSpacerItem>
 
 constexpr auto ThemeStylesheet = R"(
+    QCheckBox {
+        margin-top:4px;
+        margin-bottom:4px;
+    }
+
     QCheckBox::indicator:checked {
         image: url(':/Nedrysoft/Ribbon/icons/checked-[theme]@2x.png');
         width: 14px;

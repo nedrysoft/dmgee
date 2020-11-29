@@ -27,6 +27,9 @@
 #include <QDebug>
 #include <QFile>
 
+constexpr auto iconSize = 64;
+constexpr auto fontName = "Fira Code";
+
 Nedrysoft::SpdxLicenceWidget::SpdxLicenceWidget(QWidget *parent) :
         QWidget(parent),
         ui(new Ui::SpdxLicenceWidget),
@@ -34,7 +37,7 @@ Nedrysoft::SpdxLicenceWidget::SpdxLicenceWidget(QWidget *parent) :
 
     ui->setupUi(this);
 
-    ui->licenseText->setFont(QFont("Fira Code", ui->licenseText->font().pointSize()));
+    ui->licenseText->setFont(QFont(fontName, ui->licenseText->font().pointSize()));
 }
 
 Nedrysoft::SpdxLicenceWidget::SpdxLicenceWidget(Nedrysoft::SpdxLicence *licence) :
@@ -49,14 +52,12 @@ void Nedrysoft::SpdxLicenceWidget::updateContent(void) {
     ui->titleLabel->setText(m_licence->name());
     ui->licenseText->setText(m_licence->licenceText());
 
-    int iconSize = 64;
-
     if (m_licence->isOsiApproved()) {
-        ui->osiApprovedLabel->setText("OSI Approved");
+        ui->osiApprovedLabel->setText(tr("OSI Approved"));
         ui->osiApprovedIconLabel->setPixmap(QPixmap(":/icons/tick@2x.png").scaled(iconSize, iconSize));
 
     } else {
-        ui->osiApprovedLabel->setText("Not OSI Approved");
+        ui->osiApprovedLabel->setText(tr("Not OSI Approved"));
         ui->osiApprovedIconLabel->setPixmap(QPixmap(":/icons/cross@2x.png").scaled(iconSize, iconSize));
     }
 }
