@@ -70,11 +70,14 @@ Third-party libraries/assets/tools/services were used in the development of dmge
 - [dmgbuild](https://pypi.org/project/dmgbuild/) - Python module for creating DMG files, licensed under the [MIT license](https://github.com/al45tair/dmgbuild/blob/master/LICENSE).
 - [opencv](https://opencv.org) - Computer vision and learning libraries, licensed under the [Apache License](https://github.com/opencv/opencv/blob/master/LICENSE).
 - [DevIL](http://openil.sourceforge.net) - Image loading library, licensed under the [LGPL-2.1](http://openil.sourceforge.net/license.php).
-- [toml](https://github.com/marzer/tomlplusplus) - A toml C++ parser library, licensed under the [MIT license](https://github.com/marzer/tomlplusplus/blob/master/LICENSE)
-- [hterm](https://chromium.googlesource.com/apps/libapps/+/master/hterm/) - A javascipt terminal emulator used to proide rich output, licensed under the [BSD license](https://chromium.googlesource.com/apps/libapps/+/HEAD/hterm/LICENSE)
-- [yaml-cpp](https://github.com/jbeder/yaml-cpp) - A YAML parser and emitter used to decode the metadata in the licence files, licensed under the [MIT license](https://raw.githubusercontent.com/jbeder/yaml-cpp/master/LICENSE)
-- [choosealicense.com](https://github.com/github/choosealicense.com) - Provides a repository of open source licenses which contain metadata to show extra information, licensed under the [Creative Commons Attribution 3.0 Unported license](https://creativecommons.org/licenses/by/3.0/)
-- [spdx.org](https://spdx.org) - The official repository of SPDX licenses, licensed under the [PDDL-1.0 license](https://opendatacommons.org/licenses/pddl/1-0/)
+- [toml](https://github.com/marzer/tomlplusplus) - A toml C++ parser library, licensed under the [MIT license](https://github.com/marzer/tomlplusplus/blob/master/LICENSE).
+- [hterm](https://chromium.googlesource.com/apps/libapps/+/master/hterm/) - A javascipt terminal emulator used to proide rich output, licensed under the [BSD license](https://chromium.googlesource.com/apps/libapps/+/HEAD/hterm/LICENSE).
+- [yaml-cpp](https://github.com/jbeder/yaml-cpp) - A YAML parser and emitter used to decode the metadata in the licence files, licensed under the [MIT license](https://raw.githubusercontent.com/jbeder/yaml-cpp/master/LICENSE).
+- [choosealicense.com](https://github.com/github/choosealicense.com) - Provides a repository of open source licenses which contain metadata to show extra information, licensed under the [Creative Commons Attribution 3.0 Unported license](https://creativecommons.org/licenses/by/3.0/).
+- [spdx.org](https://spdx.org) - The official repository of SPDX licenses, licensed under the [PDDL-1.0 license](https://opendatacommons.org/licenses/pddl/1-0/).
+- [Open Sans](https://fonts.google.com/specimen/Open+Sans) - The open sans font, licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
+- [Poppins](https://fonts.google.com/specimen/Poppins) - The poppins font, licensed under the [Open Font License](https://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL).
+- [Fira Code](https://fonts.google.com/specimen/Fira+Code) - The fira code font, licensed under the [Open Font License](https://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL).
 
 Other propriety or licensed tools/services used during development.
 

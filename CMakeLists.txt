@@ -154,6 +154,7 @@ list(APPEND app_SOURCES
     icons/dmgee.icns
 
     licences/licences.qrc
+    fonts/fonts.qrc
 )
 
 list(APPEND all_SOURCES ${app_SOURCES})
@@ -278,6 +279,30 @@ string(APPEND LicenceFiles "</RCC>\r\n")
 file(GENERATE OUTPUT "${APPLICATON_SOURCE_ROOT}/licences/licences.qrc" CONTENT "${LicenceFiles}" TARGET ${APPLICATION_SHORT_NAME})
 
 set_source_files_properties(${APPLICATON_SOURCE_ROOT}/licences/licences.qrc PROPERTIES GENERATED TRUE)
+
+# fonts
+set(FontFiles "")
+
+string(APPEND FontFiles "<RCC>\r\n")
+string(APPEND FontFiles "  <qresource prefix=\"/fonts\">\r\n")
+
+file(GLOB_RECURSE files "${APPLICATON_SOURCE_ROOT}/fonts/*.ttf")
+
+foreach(file ${files})
+    file(RELATIVE_PATH RelativeFontPath  ${APPLICATON_SOURCE_ROOT}/fonts ${file})
+
+    message(WARNING ${RelativeFontPath})
+
+    string(APPEND FontFiles "    <file>${RelativeFontPath}</file>\r\n")
+endforeach()
+
+string(APPEND FontFiles "  </qresource>\r\n")
+
+string(APPEND FontFiles "</RCC>\r\n")
+
+file(GENERATE OUTPUT "${APPLICATON_SOURCE_ROOT}/fonts/fonts.qrc" CONTENT "${FontFiles}" TARGET ${APPLICATION_SHORT_NAME})
+
+set_source_files_properties(${APPLICATON_SOURCE_ROOT}/fonts.qrc PROPERTIES GENERATED TRUE)
 
 # add the libraries we need to link to
 

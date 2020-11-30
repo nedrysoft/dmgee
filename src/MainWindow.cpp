@@ -24,6 +24,8 @@
 
 #include "AboutDialog.h"
 #include "AnsiEscape.h"
+#include "ChooseALicenseLicence.h"
+#include "SpdxLicence.h"
 #include "Helper.h"
 #include "MacHelper.h"
 #include "SettingsDialog.h"
@@ -50,6 +52,7 @@
 #include <QStyleFactory>
 #include <QTemporaryDir>
 #include <QTimer>
+#include <QTreeView>
 #include <QWebEngineProfile>
 #include <QWebEngineSettings>
 #include <QWindow>
@@ -474,6 +477,71 @@ void Nedrysoft::MainWindow::setupComboBoxes() {
 
     ui->positionComboBox->addItems(QStringList() << tr("Bottom") << tr("Right"));
     ui->positionComboBox->setCurrentIndex(configValue("textposition", Nedrysoft::Builder::Bottom).value<Nedrysoft::Builder::TextPosition>());
+
+    // licences combo box
+
+    QFont font(ui->licenceComboBox->font());
+
+    font.setWeight(QFont::ExtraBold);
+    font.setItalic(true);
+
+    auto model = new QStandardItemModel();
+
+    auto chooseALicenseItem = new QStandardItem("choosealicence.com");
+
+    chooseALicenseItem->setSelectable(false);
+    chooseALicenseItem->setFont(font);
+
+    model->appendRow(chooseALicenseItem);
+
+    QDirIterator chooseALicenseIterator(":/choosealicence.com/_licenses", QDirIterator::Subdirectories);
+
+    while (chooseALicenseIterator.hasNext()) {
+        auto filename = chooseALicenseIterator.next();
+        auto licence = new Nedrysoft::ChooseALicenseLicence(filename);
+
+        if (licence->valid()) {
+            auto item = new QStandardItem;
+
+            if (!licence->nickname().isEmpty()) {
+                item->setText("    "+licence->nickname());
+            } else {
+                item->setText("    "+licence->spdxId());
+            }
+
+            item->setData(QVariant::fromValue<Nedrysoft::ILicence *>(licence), Qt::UserRole);
+            item->setEditable(false);
+
+            model->appendRow(item);
+        }
+    }
+
+    auto spdxItem = new QStandardItem("spdx.org");
+
+    spdxItem->setSelectable(false);
+    spdxItem->setFont(font);
+
+    model->appendRow(spdxItem);
+
+    QDirIterator spdxIterator(":/spdx/json/details", QDirIterator::Subdirectories);
+
+    while (spdxIterator.hasNext()) {
+        auto filename = spdxIterator.next();
+        auto licence = new Nedrysoft::SpdxLicence(filename);
+
+        if (licence->valid()) {
+            auto item = new QStandardItem;
+
+            item->setText("    "+licence->licenseId());
+
+            item->setData(QVariant::fromValue<Nedrysoft::ILicence *>(licence), Qt::UserRole);
+            item->setEditable(false);
+
+            model->appendRow(item);
+        }
+    }
+
+    ui->licenceComboBox->setModel(model);
 }
 
 void Nedrysoft::MainWindow::onDesignFilesAddButtonClicked(bool dropdown) {

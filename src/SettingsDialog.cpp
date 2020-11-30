@@ -202,8 +202,6 @@ Nedrysoft::SettingsDialog::SettingsDialog(QWidget *parent) :
     QPoint parentCentre(parent->frameGeometry().center());
     QPoint point((parentCentre.x()+size.width())/2, (parentCentre.y()+size.height())/2);
 
-    //move(point);
-
     m_toolbarHeight = frameGeometry().size().height()-geometry().size().height();
     m_maximumWidth = size.width();
 

@@ -24,11 +24,11 @@
 #include <QPainter>
 
 constexpr auto splashScreenFilename = ":/images/splashscreen.png";
-constexpr auto fontFamily = "Futura";
+constexpr auto fontFamily = "Poppins";
 constexpr auto fontSize = 20;
 constexpr auto splashScreenWidth = 700;
 constexpr auto textColour = qRgba(0xFF, 0xFF, 0xFF, 0xB0);
-constexpr auto versionPosition = QPoint(45, 133);
+constexpr auto versionPosition = QPoint(45, 123);
 
 Nedrysoft::SplashScreen::SplashScreen() :
         QSplashScreen(QPixmap(), Qt::WindowStaysOnTopHint) {

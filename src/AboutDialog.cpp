@@ -29,18 +29,24 @@
 #include <QPainter>
 #include <QString>
 
-constexpr auto splashScreenFilename = ":/images/splash_620x375@2x.png";
-constexpr auto fontFamily = "Open Sans";
-constexpr auto fontSize = 14;
+#include <QDebug>
+
+constexpr auto splashScreenFilename = ":/images/splashscreen@2x.png";
+constexpr auto fontFamily = "Poppins";
+constexpr auto fontSize = 20;
+constexpr auto aboutScreenWidth = 700;
+constexpr auto textColour = qRgba(0xFF, 0xFF, 0xFF, 0xB0);
+constexpr auto versionPosition = QPoint(45, 123);
+constexpr auto bottomMargin = 28;
 
 Nedrysoft::AboutDialog::AboutDialog(QWidget *parent) :
         QDialog(parent, Qt::FramelessWindowHint) {
 
     m_backgroundPixmap = QPixmap(splashScreenFilename);
 
-    auto dialogSize = (QSizeF(m_backgroundPixmap.size())/m_backgroundPixmap.devicePixelRatioF());
+    m_backgroundPixmap = m_backgroundPixmap.scaledToWidth(aboutScreenWidth*m_backgroundPixmap.devicePixelRatio(), Qt::SmoothTransformation);
 
-    resize((dialogSize.toSize()));
+    resize((m_backgroundPixmap.size()/m_backgroundPixmap.devicePixelRatio()));
 
     setAttribute(Qt::WA_TranslucentBackground);
     setAttribute(Qt::WA_AlwaysStackOnTop);
@@ -69,23 +75,31 @@ bool Nedrysoft::AboutDialog::event(QEvent *event) {
 }
 
 void Nedrysoft::AboutDialog::paintEvent(QPaintEvent *paintEvent) {
-    QDialog::paintEvent(paintEvent);
-
-    auto font = QFont(fontFamily, fontSize, QFont::Weight::Normal);
-    auto versionText = QString("%1.%2.%3 (%4 %5)").arg(APPLICATION_GIT_YEAR).arg(APPLICATION_GIT_MONTH).arg(APPLICATION_GIT_DAY).arg(APPLICATION_GIT_BRANCH).arg(APPLICATION_GIT_HASH);
+    auto font = QFont(fontFamily, fontSize, QFont::Weight::Bold);
+    auto versionText = QString("%1.%2.%3").arg(APPLICATION_GIT_YEAR).arg(APPLICATION_GIT_MONTH).arg(APPLICATION_GIT_DAY);
+    auto gitDetails = QString("%1 (%2)").arg(APPLICATION_GIT_BRANCH).arg(APPLICATION_GIT_HASH);
 
     QPainter painter(this);
 
+    painter.drawPixmap(0,0, m_backgroundPixmap);
+
     painter.save();
 
-    painter.drawPixmap(0, 0, m_backgroundPixmap);
-
-    painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
-    painter.setPen(Qt::white);
-    painter.setBrush(Qt::white);
     painter.setFont(font);
 
-    painter.drawText(QRect(350, 300, 250, 71), Qt::AlignRight | Qt::AlignVCenter, versionText);
+    painter.setPen(QColor::fromRgba(textColour));
+
+    auto textRect = QRect(versionPosition, rect().bottomRight()-versionPosition);
+
+    painter.drawText(textRect, Qt::AlignLeft | Qt::AlignTop, versionText);
+
+    painter.setPen(Qt::white);
+
+    font = QFont(fontFamily, fontSize, QFont::Weight::Light);
+
+    painter.setFont(font);
+
+    painter.drawText(QPoint(textRect.left(), rect().bottom()-bottomMargin), gitDetails);
 
     painter.restore();
 }

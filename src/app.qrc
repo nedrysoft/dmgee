@@ -3,24 +3,6 @@
         <file>../images/splashscreen.png</file>
         <file>../images/splashscreen@2x.png</file>
 
-        <file>../fonts/Open_Sans/OpenSans-Bold.ttf</file>
-        <file>../fonts/Open_Sans/OpenSans-BoldItalic.ttf</file>
-        <file>../fonts/Open_Sans/OpenSans-ExtraBold.ttf</file>
-        <file>../fonts/Open_Sans/OpenSans-ExtraBoldItalic.ttf</file>
-        <file>../fonts/Open_Sans/OpenSans-Italic.ttf</file>
-        <file>../fonts/Open_Sans/OpenSans-Light.ttf</file>
-        <file>../fonts/Open_Sans/OpenSans-LightItalic.ttf</file>
-        <file>../fonts/Open_Sans/OpenSans-Regular.ttf</file>
-        <file>../fonts/Open_Sans/OpenSans-SemiBold.ttf</file>
-        <file>../fonts/Open_Sans/OpenSans-SemiBoldItalic.ttf</file>
-
-        <file>../fonts/FiraCode/FiraCode-Bold.ttf</file>
-        <file>../fonts/FiraCode/FiraCode-Light.ttf</file>
-        <file>../fonts/FiraCode/FiraCode-Medium.ttf</file>
-        <file>../fonts/FiraCode/FiraCode-Regular.ttf</file>
-        <file>../fonts/FiraCode/FiraCode-Retina.ttf</file>
-        <file>../fonts/FiraCode/FiraCode-SemiBold.ttf</file>
-
         <file>../icons/target.png</file>
 
         <file>../icons/save.png</file>
