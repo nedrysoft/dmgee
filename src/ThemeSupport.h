@@ -84,6 +84,20 @@ namespace Nedrysoft::Utils {
              * @returns     the colour
              */
             static QColor getHighlightedBackground();
+
+            /**
+             * @brief       Returns a string indicating which mode the OS is in.
+             *
+             * @returns     "dark" if dark mode; otherwise "light".
+             */
+            static QString theme();
+
+            /**
+             * @brief       Returns a string and replaces [theme] with the actual theme in use.
+             *
+             * @returns     the resulting string.
+             */
+            static QString themedString(QString string);
     };
 }
 

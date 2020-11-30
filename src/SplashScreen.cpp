@@ -23,13 +23,19 @@
 
 #include <QPainter>
 
-constexpr auto splashScreenFilename = ":/images/splash_620x375@2x.png";
-constexpr auto fontFamily = "Open Sans";
-constexpr auto fontSize = 14;
+constexpr auto splashScreenFilename = ":/images/splashscreen.png";
+constexpr auto fontFamily = "Futura";
+constexpr auto fontSize = 20;
+constexpr auto splashScreenWidth = 700;
+constexpr auto textColour = qRgba(0xFF, 0xFF, 0xFF, 0xB0);
+constexpr auto versionPosition = QPoint(45, 133);
 
 Nedrysoft::SplashScreen::SplashScreen() :
-        QSplashScreen(QPixmap(splashScreenFilename),
-        Qt::WindowStaysOnTopHint) {
+        QSplashScreen(QPixmap(), Qt::WindowStaysOnTopHint) {
+
+    auto pixmap = QPixmap(splashScreenFilename);
+
+    setPixmap(pixmap.scaledToWidth(splashScreenWidth*pixmap.devicePixelRatio(), Qt::SmoothTransformation));
 
     setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
 
@@ -51,19 +57,18 @@ Nedrysoft::SplashScreen *Nedrysoft::SplashScreen::getInstance() {
 }
 
 void Nedrysoft::SplashScreen::drawContents(QPainter *painter) {
-    auto font = QFont(fontFamily, fontSize, QFont::Weight::Normal);
-    auto versionText = QString("%1.%2.%3 (%4 %5)").arg(APPLICATION_GIT_YEAR).arg(APPLICATION_GIT_MONTH).arg(APPLICATION_GIT_DAY).arg(APPLICATION_GIT_BRANCH).arg(APPLICATION_GIT_HASH);
-
-    QSplashScreen::drawContents(painter);
+    auto font = QFont(fontFamily, fontSize, QFont::Weight::Bold);
+    auto versionText = QString("%1.%2.%3").arg(APPLICATION_GIT_YEAR).arg(APPLICATION_GIT_MONTH).arg(APPLICATION_GIT_DAY);
 
     painter->save();
 
-    painter->setRenderHint(QPainter::SmoothPixmapTransform, true);
-    painter->setPen(Qt::white);
-    painter->setBrush(Qt::white);
     painter->setFont(font);
 
-    painter->drawText(QRect(350, 300, 250, 71), Qt::AlignRight | Qt::AlignVCenter, versionText);
+    painter->setPen(QColor::fromRgba(textColour));
+
+    auto textRect = QRect(versionPosition, rect().bottomRight()-versionPosition);
+
+    painter->drawText(textRect, Qt::AlignLeft | Qt::AlignTop, versionText);
 
     painter->restore();
 }

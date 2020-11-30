@@ -72,3 +72,15 @@ QColor Nedrysoft::Utils::ThemeSupport::getHighlightedBackground() {
     return qobject_cast<QApplication *>(QCoreApplication::instance())->style()->standardPalette().color(QPalette::Highlight);
 #endif
 }
+
+QString Nedrysoft::Utils::ThemeSupport::theme() {
+    if (isDarkMode()) {
+        return QStringLiteral("dark");
+    }
+
+    return QStringLiteral("light");
+}
+
+QString Nedrysoft::Utils::ThemeSupport::themedString(QString string) {
+    return string.replace("[theme]", theme());
+}

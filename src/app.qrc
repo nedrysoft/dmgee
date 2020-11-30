@@ -1,7 +1,7 @@
 <RCC>
     <qresource prefix="/">
-        <file>../images/splash_620x375.png</file>
-        <file>../images/splash_620x375@2x.png</file>
+        <file>../images/splashscreen.png</file>
+        <file>../images/splashscreen@2x.png</file>
 
         <file>../fonts/Open_Sans/OpenSans-Bold.ttf</file>
         <file>../fonts/Open_Sans/OpenSans-BoldItalic.ttf</file>
@@ -31,6 +31,15 @@
         <file>../icons/add@2x.png</file>
         <file>../icons/build.png</file>
         <file>../icons/build@2x.png</file>
+
+        <file>../icons/variable-add.png</file>
+        <file>../icons/variable-add@2x.png</file>
+        <file>../icons/variable-new.png</file>
+        <file>../icons/variable-new@2x.png</file>
+        <file>../icons/variable-delete.png</file>
+        <file>../icons/variable-delete@2x.png</file>
+        <file>../icons/variable-edit.png</file>
+        <file>../icons/variable-edit@2x.png</file>
 
         <file>../icons/tick.png</file>
         <file>../icons/tick@2x.png</file>

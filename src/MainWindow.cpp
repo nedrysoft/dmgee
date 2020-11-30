@@ -66,7 +66,7 @@
 
 using namespace std::chrono_literals;
 
-constexpr auto splashScreenDuration = 100ms;//3s;
+constexpr auto splashScreenDuration = 2000ms;//3s;
 constexpr auto repositoryUrl = "https://github.com/fizzyade/dmgee";
 constexpr auto menuIconSize = 32;
 constexpr auto spinnerSize = 16;
@@ -413,18 +413,14 @@ void Nedrysoft::MainWindow::setupStatusBar() {
     m_progressBar = new QProgressBar;
     m_spinnerMovie = new QMovie;
 
-    if (Nedrysoft::Utils::ThemeSupport::isDarkMode()) {
-        m_spinnerMovie->setFileName(":/images/spinner-dark.gif");
-    } else {
-        m_spinnerMovie->setFileName(":/images/spinner-light.gif");
-    }
+    using Nedrysoft::Utils::ThemeSupport;
+
+    m_spinnerMovie->setFileName(ThemeSupport::themedString(":/images/spinner-[theme]].gif"));
 
     connect(m_themeSupport, &Nedrysoft::Utils::ThemeSupport::themeChanged, [=](bool isDarkMode) {
-        if (isDarkMode) {
-            m_spinnerMovie->setFileName(":/images/spinner-dark.gif");
-        } else {
-            m_spinnerMovie->setFileName(":/images/spinner-light.gif");
-        }
+        Q_UNUSED(isDarkMode);
+
+        m_spinnerMovie->setFileName(ThemeSupport::themedString(":/images/spinner-[theme]].gif"));
     });
 
     m_spinnerMovie->setScaledSize(QSize(spinnerSize, spinnerSize));
@@ -558,7 +554,7 @@ void Nedrysoft::MainWindow::onCreateDMG() {
 void Nedrysoft::MainWindow::onTerminalReady() {
     auto versionText = QString("%1.%2.%3 %4 %5").arg(APPLICATION_GIT_YEAR).arg(APPLICATION_GIT_MONTH).arg(APPLICATION_GIT_DAY).arg(APPLICATION_GIT_BRANCH).arg(APPLICATION_GIT_HASH);
 
-    ui->stackedWidget->setCurrentIndex(TerminalView::Terminal);
+    ui->consoleStackedWidget->setCurrentIndex(TerminalView::Terminal);
 
     ui->terminalWidget->println(
             fore(Qt::lightGray)+
@@ -574,7 +570,7 @@ void Nedrysoft::MainWindow::onTerminalReady() {
 void Nedrysoft::MainWindow::initialiseLoader() {
     m_loadingMovie = new QMovie;
 
-    ui->stackedWidget->setCurrentIndex(TerminalView::Loader);
+    ui->consoleStackedWidget->setCurrentIndex(TerminalView::Loader);
 
     m_loadingMovie->setFileName(":/images/loading.gif");
 
@@ -588,15 +584,11 @@ void Nedrysoft::MainWindow::initialiseLoader() {
 
 void Nedrysoft::MainWindow::onTerminalContextMenuTriggered() {
     QMenu menu(this);
-    QIcon copyIcon, trashIcon;
 
-    if (Nedrysoft::Utils::ThemeSupport::isDarkMode()) {
-        copyIcon = QIcon(QPixmap(":/icons/copy-dark@2x.png").scaled(menuIconSize, menuIconSize));
-        trashIcon = QIcon(QPixmap(":/icons/trash-dark@2x.png").scaled(menuIconSize, menuIconSize));
-    } else {
-        copyIcon = QIcon(QPixmap(":/icons/copy-light@2x.png").scaled(menuIconSize, menuIconSize));
-        trashIcon = QIcon(QPixmap(":/icons/trash-light@2x.png").scaled(menuIconSize, menuIconSize));
-    }
+    using Nedrysoft::Utils::ThemeSupport;
+
+    auto copyIcon = QIcon(QPixmap(ThemeSupport::themedString(":/icons/copy-[theme]@2x.png")).scaled(menuIconSize, menuIconSize));
+    auto trashIcon = QIcon(QPixmap(ThemeSupport::themedString(":/icons/trash-[theme]@2x.png")).scaled(menuIconSize, menuIconSize));
 
     auto clearTerminalAction = menu.addAction(trashIcon, tr("Clear"));
     auto copyToClipboardAction = menu.addAction(copyIcon, tr("Copy to clipboard"));
@@ -890,9 +882,7 @@ void Nedrysoft::MainWindow::onLoadClicked() {
     auto filename = QFileDialog::getOpenFileName(this, tr("Open Configuration"), defaultPath, tr("dmgee configuration(*.dmgee)"));
 
     if (!filename.isNull()) {
-        if (loadConfiguration(filename)) {
-
-        }
+        loadConfiguration(filename);
     }
 }
 
