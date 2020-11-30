@@ -70,6 +70,7 @@ constexpr auto splashScreenDuration = 100ms;//3s;
 constexpr auto repositoryUrl = "https://github.com/fizzyade/dmgee";
 constexpr auto menuIconSize = 32;
 constexpr auto spinnerSize = 16;
+constexpr auto defaultOutputFilename = "My DMG.dmg";
 
 Nedrysoft::MainWindow *Nedrysoft::MainWindow::m_instance = nullptr;
 
@@ -1046,16 +1047,16 @@ void Nedrysoft::MainWindow::onOutputClicked(bool checked) {
         if (!volumeName.isEmpty()) {
             filename = volumeName + ".dmg";
         } else {
-            filename = tr("My Disk Image")+".dmg";
+            filename = defaultOutputFilename;
         }
     }
 
     filename = QFileDialog::getSaveFileName(this, tr("Select Disk Image"), filename, tr("Disk Image (*.dmg)"));
 
-    if (!filename.isNull()) {
+    if (!filename.isEmpty()) {
         m_builder->setProperty("outputfile", filename);
 
-        ui->outputLineEdit->setText(filename);
+        ui->outputLineEdit->setText(outputFilename());
     }
 }
 
@@ -1074,11 +1075,13 @@ QString Nedrysoft::MainWindow::outputFilename() {
             filename = Nedrysoft::Helper::normalizedPath(QDir::cleanPath(filename+"/My DMG.dmg"));
         }
     } else {
+        // check if filename is emptu
+
         if (!m_builder->filename().isEmpty()) {
-            // we have a filename set, so we need the path relative to the configuration file
+            // not empty, so we generate the path relative to the configuration file.
 
             auto rootPath = m_builder->filename().mid(0, m_builder->filename().lastIndexOf("/"));
-            QDir dir(rootPath);
+            auto dir = QDir(rootPath);
 
             filename = dir.relativeFilePath(m_builder->outputFilename());
 
@@ -1086,15 +1089,14 @@ QString Nedrysoft::MainWindow::outputFilename() {
                 filename = Nedrysoft::Helper::normalizedPath(m_builder->outputFilename());
             }
         } else {
-            // the configuraiton has not been saved/loaded, this is a new document, so figure out a suitable name
-            // for the output file and normalise the filepath
+            // empty, so we generate the full filepath relative to the home folder.
 
             QString currentPath = QDir::currentPath();
 
             if (!m_builder->property("volumename").toString().isEmpty()) {
                 currentPath = currentPath + "/" + m_builder->property("volumename").toString();
             } else {
-                currentPath = currentPath + "/My DMG.dmg";
+                currentPath = currentPath + "/"+defaultOutputFilename;
             }
 
             filename = Nedrysoft::Helper::normalizedPath(currentPath);
@@ -1104,7 +1106,7 @@ QString Nedrysoft::MainWindow::outputFilename() {
     // if this is a relative path, then prepend "./" for clarity
 
     if (!( (filename.startsWith("/"))  ||  (filename.startsWith("~")))) {
-        filename = "./"+QDir::cleanPath(filename);
+        filename = "./" + QDir::cleanPath(filename);
     }
 
     return filename;

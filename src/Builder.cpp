@@ -97,7 +97,7 @@ QString Nedrysoft::Builder::normalisedFilename(QString filename) {
 }
 
 QString Nedrysoft::Builder::outputFilename() {
-    return  normalisedFilename(property("outputfile").toString());
+    return normalisedFilename(property("outputfile").toString());
 }
 
 bool Nedrysoft::Builder::createDMG(QString filename) {
