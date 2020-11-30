@@ -192,6 +192,17 @@ namespace Nedrysoft {
             QString timespan(int milliseconds, QString &hours, QString &minutes, QString &seconds);
 
             /**
+             * @brief       Returns the normalised path for the output file.
+             *
+             * @details     Returns the filename of the output file.  If no filename has been set or if the project
+             *              has not yet been saved, then the output file is relative to the PWD.  If the configuration
+             *              has been saved, then the path is relative to the location of the output file.
+             *
+             * @returns     The normalised output filename.
+             */
+            QString outputFilename();
+
+            /**
              * @brief       Updates the GUI with the current progress.
              * @param[in]   updateData the JSON update as a string.
              */

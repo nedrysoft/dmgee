@@ -97,7 +97,7 @@ QString Nedrysoft::Builder::normalisedFilename(QString filename) {
 }
 
 QString Nedrysoft::Builder::outputFilename() {
-    return  normalisedFilename(m_outputFilename);
+    return  normalisedFilename(property("outputfile").toString());
 }
 
 bool Nedrysoft::Builder::createDMG(QString filename) {
@@ -107,8 +107,6 @@ bool Nedrysoft::Builder::createDMG(QString filename) {
     auto dmgFilename = normalisedFilename(filename);
     auto backgroundFilename = normalisedFilename(property("background").toString());
     auto iconFilename = normalisedFilename(property("icon").toString());
-
-    m_outputFilename = dmgFilename;
 
     if (QFileInfo(backgroundFilename).exists()) {
         auto backgroundImage = Nedrysoft::Image(backgroundFilename, true);
@@ -495,10 +493,10 @@ void Nedrysoft::Builder::clear() {
 
     setProperty("background", "");
     setProperty("icon", "");
-    setProperty("filename", "output");
+    setProperty("filename", "");
     setProperty("volumename", "New DMG");
     setProperty("textposition", "Bottom");
-    setProperty("outputfile", "output.dmg");
+    setProperty("outputfile", "");
 
     m_configuration.m_textPosition = Right;
 

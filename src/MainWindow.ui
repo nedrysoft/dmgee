@@ -947,7 +947,7 @@
              <item row="2" column="1">
               <layout class="QHBoxLayout" name="horizontalLayout_4">
                <property name="spacing">
-                <number>4</number>
+                <number>2</number>
                </property>
                <property name="sizeConstraint">
                 <enum>QLayout::SetDefaultConstraint</enum>

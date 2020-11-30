@@ -285,7 +285,6 @@ namespace Nedrysoft {
         private:
             Configuration m_configuration;                      //! the configuration for the DMG
             QString m_filename;                                 //! the filename of the configuration that was loaded.
-            QString m_outputFilename;                           //! the filename of the output file.
             bool m_isModified;                                  //! whether the configuration has changed.
 
             static PyMethodDef m_moduleMethods[];               //! module method table for the dmgee module

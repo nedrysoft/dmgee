@@ -26,18 +26,16 @@
 #include <QRegularExpression>
 
 QString Nedrysoft::Helper::resolvedPath(QString filename) {
-    return QFileInfo(QString(filename).replace(QRegularExpression("(^~)"), QDir::homePath())).canonicalFilePath();
+    return QString(filename).replace(QRegularExpression("(^~)"), QDir::homePath());
 }
 
 QString Nedrysoft::Helper::normalizedPath(QString filename) {
     auto tempFilename = resolvedPath(filename);
     auto homePath = QDir::homePath();
 
-    auto root = QDir(homePath);
-
     if (tempFilename.startsWith(homePath)) {
-        return "~/"+root.relativeFilePath(tempFilename);
+        filename = tempFilename.replace(QRegularExpression("^"+QRegularExpression::escape(homePath)),"~");
     }
 
-    return QFileInfo(filename).canonicalFilePath();
+    return filename;
 }

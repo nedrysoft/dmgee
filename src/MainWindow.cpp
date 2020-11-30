@@ -309,6 +309,8 @@ void Nedrysoft::MainWindow::updateGUI() {
         ui->positionComboBox->setCurrentText("Bottom");
     }
 
+    ui->outputLineEdit->setText(outputFilename());
+
     // TODO: need to add this checkbox to ribbon
     //
     // ui->featureSnapCheckbox->setCheckState(configValue("snaptofeatures", true).toBool() ? Qt::Checked : Qt::Unchecked);
@@ -1024,5 +1026,86 @@ void Nedrysoft::MainWindow::setupSignals() {
 }
 
 void Nedrysoft::MainWindow::onOutputClicked(bool checked) {
-    qDebug() << "ainWindow::onOutputClicked";
+    QString filename;
+    QString volumeName = m_builder->property("volumename").toString();
+
+    if (m_builder->outputFilename().isEmpty()) {
+        QString defaultPath;
+        auto defaultPaths = QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation);
+
+        if (defaultPaths.length()) {
+            defaultPath = defaultPaths.at(0);
+
+            if (!volumeName.isEmpty()) {
+                filename = defaultPath + "/" + volumeName + ".dmg";
+            }
+        }
+    }
+
+    if (filename.isEmpty()) {
+        if (!volumeName.isEmpty()) {
+            filename = volumeName + ".dmg";
+        } else {
+            filename = tr("My Disk Image")+".dmg";
+        }
+    }
+
+    filename = QFileDialog::getSaveFileName(this, tr("Select Disk Image"), filename, tr("Disk Image (*.dmg)"));
+
+    if (!filename.isNull()) {
+        m_builder->setProperty("outputfile", filename);
+
+        ui->outputLineEdit->setText(filename);
+    }
+}
+
+QString Nedrysoft::MainWindow::outputFilename() {
+    QString filename = Nedrysoft::Helper::resolvedPath(m_builder->outputFilename());
+
+    // check if the output filename is a directory, if so then we need to create a name for the output file
+
+    if (QFileInfo(filename).isDir()) {
+        // check for volumename, if it's not set then generate
+        if (!m_builder->property("volumename").toString().isEmpty()) {
+            filename = QDir::cleanPath(filename+"/"+m_builder->property("volumename").toString()+".dmg");
+
+            return Nedrysoft::Helper::normalizedPath(filename);
+        } else {
+            filename = Nedrysoft::Helper::normalizedPath(QDir::cleanPath(filename+"/My DMG.dmg"));
+        }
+    } else {
+        if (!m_builder->filename().isEmpty()) {
+            // we have a filename set, so we need the path relative to the configuration file
+
+            auto rootPath = m_builder->filename().mid(0, m_builder->filename().lastIndexOf("/"));
+            QDir dir(rootPath);
+
+            filename = dir.relativeFilePath(m_builder->outputFilename());
+
+            if (filename.startsWith("/")) {
+                filename = Nedrysoft::Helper::normalizedPath(m_builder->outputFilename());
+            }
+        } else {
+            // the configuraiton has not been saved/loaded, this is a new document, so figure out a suitable name
+            // for the output file and normalise the filepath
+
+            QString currentPath = QDir::currentPath();
+
+            if (!m_builder->property("volumename").toString().isEmpty()) {
+                currentPath = currentPath + "/" + m_builder->property("volumename").toString();
+            } else {
+                currentPath = currentPath + "/My DMG.dmg";
+            }
+
+            filename = Nedrysoft::Helper::normalizedPath(currentPath);
+        }
+    }
+
+    // if this is a relative path, then prepend "./" for clarity
+
+    if (!( (filename.startsWith("/"))  ||  (filename.startsWith("~")))) {
+        filename = "./"+QDir::cleanPath(filename);
+    }
+
+    return filename;
 }
